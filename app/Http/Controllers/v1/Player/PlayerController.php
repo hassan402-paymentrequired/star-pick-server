@@ -12,6 +12,7 @@ use App\Utils\Helper\HelperService;
 use App\Utils\Service\V1\Player\PlayerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class PlayerController extends Controller
 {
@@ -106,6 +107,15 @@ class PlayerController extends Controller
 
 
 
+    public function refetch(Request $request)
+    {
+        $league = $request->league;
+        $season = $request->season;
+        Artisan::call('fetch:players', ['league' => $league, 'season' => $season]);
+        return $this->respondWithCustomData([
+            'message' => 'Players refetched successfully'
+        ], 200);
+    }
 
 
 
@@ -149,6 +159,8 @@ class PlayerController extends Controller
         $re = $this->getLeague();
 
         return response()->json(['data' => $re->result]);
+
+
         ImportPlayersAndTeams::dispatch();
         return response()->json(['data' => 'suucess']);
 

@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('external_id');
             $table->string('name');
-            $table->string('team');
+            $table->string('team_id');
             $table->string('position');
             $table->string('image');
             $table->string('nationality');
-            $table->unsignedInteger('rating')->default(1);
+            $table->unsignedInteger('player_rating')->default(1);
             $table->timestamps();
         });
     }

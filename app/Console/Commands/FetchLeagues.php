@@ -9,14 +9,13 @@ use Illuminate\Support\Facades\Http;
 
 class FetchLeagues extends Command
 {
-    protected $signature = 'fetch:leagues';
+    protected $signature = 'fetch:leagues {country?}';
     protected $description = 'Truncate leagues table and fetch all leagues from the API';
 
     public function handle()
     {
+        $country = $this->argument('country');
         $this->info('Deleting all leagues...');
-        Leagues::query()->delete();
-        DB::statement("ALTER TABLE leagues AUTO_INCREMENT = 1");
 
         $page = 1;
         $totalPages = 1;
@@ -25,10 +24,15 @@ class FetchLeagues extends Command
         do {
             $this->info("Fetching page $page...");
 
+            $params = [
+                'season' => 2023,
+            ];
+
+
             $response = Http::withHeaders([
                 'x-rapidapi-key' => env('SPORT_API_KEY')
             ])->get("https://v3.football.api-sports.io/leagues", [
-                'season' => 2023,
+                'country' => strtolower($country ?? ''),
             ]);
 
             $body = $response->json();
@@ -36,37 +40,28 @@ class FetchLeagues extends Command
             $leagues = $body['response'] ?? [];
             $count = count($leagues);
             $this->info("Total league $count...");
-            // $this->info("Total response $count...");
 
             foreach ($leagues as $item) {
-                $insertBatch[] = [
-                    'external_id'  => $item['league']['id'],
-                    'name'         => $item['league']['name'],
-                    'type'         => $item['league']['type'],
-                    'logo'         => $item['league']['logo'],
-                    'country'      => $item['country']['name'],
-                    'country_flag' => $item['country']['flag'] ?? '',
-                    'season'       => json_encode($item['seasons']),
-                    'created_at'   => now(),
-                    'updated_at'   => now()
-                ];
-            }
-
-            // Insert in batches of 500
-            if (count($insertBatch) >= 500) {
-                $this->bulkInsert($insertBatch);
-                $insertBatch = [];
+                Leagues::updateOrCreate(
+                    [
+                        'external_id' => $item['league']['id'],
+                    ],
+                    [
+                        'name'         => $item['league']['name'],
+                        'type'         => $item['league']['type'],
+                        'logo'         => $item['league']['logo'],
+                        'country'      => $item['country']['name'],
+                        'country_flag' => $item['country']['flag'] ?? '',
+                        'season'       => json_encode($item['seasons']),
+                        'updated_at'   => now(),
+                    ]
+                );
             }
 
             $page++;
         } while ($page <= $totalPages);
 
-        // Insert any remaining records
-        if (!empty($insertBatch)) {
-            $this->bulkInsert($insertBatch);
-        }
-
-        $this->info('All leagues fetched and inserted successfully.');
+        $this->info('All leagues fetched and upserted successfully.');
     }
 
     private function bulkInsert(array $batch)
