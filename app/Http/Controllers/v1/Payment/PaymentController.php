@@ -46,4 +46,9 @@ class PaymentController extends Controller
             'message' => 'Payment initialized successfully'
         ], 200);
     }
+
+    public function increaseWalletBalance()
+    {
+    
+    }
 }

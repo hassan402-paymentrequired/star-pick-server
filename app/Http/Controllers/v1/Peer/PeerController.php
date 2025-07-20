@@ -93,4 +93,66 @@ class PeerController extends Controller
             'message' => 'join exited successfully'
         ], 200);
     }
+
+
+
+    // PeerController.php
+public function show1($id)
+{
+    $peer = Peer::with(['users.user', 'users.squads'])->findOrFail($id);
+
+    $matchDate = now()->subDay()->toDateString(); // Or from request
+
+    $data = [
+        'peer' => [
+            'id' => $peer->id,
+            'entry_fee' => $peer->entry_fee,
+            'status' => $peer->status,
+        ],
+        'users' => $peer->users->map(function ($peerUser) use ($matchDate) {
+            $userData = [
+                'id' => $peerUser->user->id,
+                'name' => $peerUser->user->name,
+                'total_points' => 0,
+                'squad' => [],
+            ];
+
+            foreach ($peerUser->squads as $squad) {
+                // Get main player stats
+                $mainStats = PlayerStatistic::where('player_id', $squad->main_player_id)
+                    ->where('match_date', $matchDate)->first();
+
+                // Get sub player stats
+                $subStats = PlayerStatistic::where('player_id', $squad->sub_player_id)
+                    ->where('match_date', $matchDate)->first();
+
+                $useSub = !$mainStats || !$mainStats->did_play;
+                $playerUsed = $useSub ? $subStats : $mainStats;
+
+                $playerTotal = $playerUsed ? $playerUsed->points : 0;
+
+                $userData['total_points'] += $playerTotal;
+
+                $userData['squad'][] = [
+                    'star' => $squad->star_rating,
+                    'type' => $useSub ? 'sub' : 'main',
+                    'player_name' => $useSub ? $squad->subPlayer->name : $squad->mainPlayer->name,
+                    'goals' => $playerUsed->goals ?? 0,
+                    'assists' => $playerUsed->assists ?? 0,
+                    'shots' => $playerUsed->shots ?? 0,
+                    'shots_on_target' => $playerUsed->shots_on_target ?? 0,
+                    'yellow_cards' => $playerUsed->yellow_cards ?? 0,
+                    'red_cards' => $playerUsed->red_cards ?? 0,
+                    'did_play' => $playerUsed->did_play ?? false,
+                    'total' => $playerTotal,
+                ];
+            }
+
+            return $userData;
+        }),
+    ];
+
+    return response()->json($data);
+}
+
 }

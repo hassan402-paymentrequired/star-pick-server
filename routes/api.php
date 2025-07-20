@@ -21,7 +21,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::prefix('players')->group(function () {
             Route::get('/', [\App\Http\Controllers\V1\Player\PlayerController::class, 'index']);
-            Route::get('/group-star', [\App\Http\Controllers\V1\Player\PlayerController::class, 'getPlayersByStar']);
+
             Route::post('/', [\App\Http\Controllers\V1\Player\PlayerController::class, 'store']);
             Route::get('/{player}', [\App\Http\Controllers\V1\Player\PlayerController::class, 'show']);
             Route::patch('/{player}', [\App\Http\Controllers\V1\Player\PlayerController::class, 'update']);
@@ -42,12 +42,14 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::prefix('match')->group(function () {
             Route::get('/', [\App\Http\Controllers\V1\Match\MatchController::class, 'index']);
+            Route::get('/group-by-star', [\App\Http\Controllers\V1\Player\PlayerController::class, 'getPlayersByStar']);
         });
 
         Route::prefix('payment')->group(function () {
             Route::post('/initialize', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'initialize'])->name('paystack.initialize');
             Route::get('/callback', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'callback'])->name('paystack.callback');
             Route::get('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'cancel'])->name('paystack.cancel');
+            Route::post('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'increaseWalletBalance'])->name('paystack.cancel');
         });
     });
 });

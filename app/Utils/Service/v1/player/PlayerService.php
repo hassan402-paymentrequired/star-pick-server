@@ -71,7 +71,7 @@ class PlayerService
 
         // Group by player star rating
         $grouped = $matches->groupBy(function ($match) {
-            return $match->player->star_rating;
+            return $match->player->rating;
         });
 
         // Format the response
@@ -80,10 +80,13 @@ class PlayerService
                 'star' => (int) $star,
                 'players' => $matches->map(function ($match) {
                     return [
+                        'player_avatar' => $match->player->image,
+                        'player_position' => $match->player->position,
                         'player_match_id' => $match->id,
                         'player_id' => $match->player_id,
+                        'player_team' => $match->player->teams->name,
                         'player_name' => $match->player->name,
-                        'team_name' => $match->team->name,
+                        'against_team_name' => $match->team->name,
                         'date' => $match->date,
                         'time' => $match->time,
                     ];
