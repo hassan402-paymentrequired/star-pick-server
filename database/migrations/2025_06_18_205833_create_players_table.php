@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('nationality');
             $table->unsignedInteger('player_rating')->default(1);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

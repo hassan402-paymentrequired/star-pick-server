@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_completed')->default(false);
             $table->foreignId('player_id')->constrained('players')->cascadeOnDelete();
             $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
+            
             $table->timestamps();
         });
     }

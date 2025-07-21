@@ -17,8 +17,8 @@ class Player extends Model
         return $this->hasMany(Bet::class);
     }
 
-    public function teams()
+    public function team()
     {
-        return $this->belongsTo(Team::class, 'team', 'external_id');
+        return $this->belongsTo(Team::class, 'team_id', 'external_id');
     }
 }

@@ -61,7 +61,6 @@ class FetchTeams extends Command
                     'code'        => $team['code'] ?? '',
                     'country'     => $team['country'] ?? '',
                     'logo'        => $team['logo'] ?? '',
-                    'status'      => 'active',
                     'created_at'  => now(),
                     'updated_at'  => now(),
                 ];

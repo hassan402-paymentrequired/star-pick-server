@@ -66,7 +66,7 @@ class PlayerController extends Controller
             'rating' => 'required|integer|min:1|max:5'
         ]);
         $player->update([
-            'rating' => $request->rating
+            'player_rating' => $request->rating
         ]);
         return $this->respondWithCustomData([
             'message' => 'player star updated successfully'

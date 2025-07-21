@@ -21,12 +21,14 @@ class PlayerService
 
     public function players(Request $request): LengthAwarePaginator|Collection
     {
-        $players = Cache::tags(CacheKey::PLAYER->value)->remember('page_' . $request->query('page'), now()->addDay(), function () use ($request) {
-            return Player::when(
+        // $players = Cache::tags(CacheKey::PLAYER->value)->remember('page_' . $request->query('page'), now()->addDay(), function () use ($request) {
+        //     return ;
+        // });
+
+      $players =  Player::when(
                 $request->query('team'),
                 fn($query, $teamId) => $query->whereHas('team', fn($q) => $q->where('id', $teamId))
-            )->with('team')->paginate(350);
-        });
+            )->with('team')->paginate(50);
 
         return $players;
     }
@@ -71,7 +73,7 @@ class PlayerService
 
         // Group by player star rating
         $grouped = $matches->groupBy(function ($match) {
-            return $match->player->rating;
+            return $match->player->player_rating;
         });
 
         // Format the response
@@ -84,7 +86,7 @@ class PlayerService
                         'player_position' => $match->player->position,
                         'player_match_id' => $match->id,
                         'player_id' => $match->player_id,
-                        'player_team' => $match->player->teams->name,
+                        'player_team' => $match->player->team->name,
                         'player_name' => $match->player->name,
                         'against_team_name' => $match->team->name,
                         'date' => $match->date,

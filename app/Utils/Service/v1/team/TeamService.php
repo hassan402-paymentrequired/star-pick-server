@@ -11,7 +11,8 @@ class TeamService
 {
     public function teams(): Collection
     {
-        Cache::forever(CacheKey::TEAM->value, $teams =  Team::withCount('players')->get());
-        return $teams;
+        return Cache::remember(CacheKey::TEAMS->value, now()->addDay(), function () {
+            return Team::withCount('players')->get();
+        });
     }
 }

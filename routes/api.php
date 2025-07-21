@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::prefix('match')->group(function () {
             Route::get('/', [\App\Http\Controllers\V1\Match\MatchController::class, 'index']);
             Route::get('/group-by-star', [\App\Http\Controllers\V1\Player\PlayerController::class, 'getPlayersByStar']);
+            
         });
 
         Route::prefix('payment')->group(function () {

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('country');
             $table->string('logo');
-            $table->string('status')->default('active');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
