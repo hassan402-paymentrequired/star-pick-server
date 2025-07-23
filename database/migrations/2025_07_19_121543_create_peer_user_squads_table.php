@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('peer_user_squads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('peer_user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('peer_user_id')->constrained('peer_users')->cascadeOnDelete();
             $table->tinyInteger('star_rating'); // 1 to 5
-            $table->foreignId('main_player_id')->constrained('players');
-            $table->foreignId('sub_player_id')->constrained('players');
+            $table->foreignId('main_player_id')->constrained('players')->cascadeOnDelete();
+            $table->foreignId('sub_player_id')->constrained('players')->cascadeOnDelete();
             $table->timestamps();
         });
     }

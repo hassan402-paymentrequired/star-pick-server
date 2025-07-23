@@ -74,19 +74,38 @@ class PeerService
 
     public function playBet(Request $request, Peer $peer): void
     {
+        // Check if peer is open
+        if ($peer->status !== 'open') {
+            throw new ClientErrorException('This peer is not open for joining.');
+        }
 
-        if ($peer->users()->count() ===  $peer->limit) {
+        // Check if peer is full
+        if ($peer->users()->count() === $peer->limit) {
             throw new ClientErrorException('You cannot join this peer, it has reached its limit');
         }
 
-        $peer->addUser(Auth::id());
+        // Check if user already joined
+        if ($peer->users()->where('user_id', Auth::id())->exists()) {
+            throw new ClientErrorException('You have already joined this peer.');
+        }
 
+        // Create peer_user record
+        $peerUser = \App\Models\PeerUser::create([
+            'peer_id' => $peer->id,
+            'user_id' => Auth::guard('api')->id(),
+            'total_points' => 0,
+            'is_winner' => false
+        ]);
+
+        // Create peer_user_squad records for each squad member
         foreach ($request->peers as $value) {
-            PlayerMatchStatistics::create([
-                'player_id' => $value['main'],
-                'peer_id' => $peer->id,
+            \App\Models\PeerUserSquad::create([
+                'peer_user_id' => $peerUser->id,
+                'star_rating' => $value['star'] ?? 1,
+                'main_player_id' => $value['main'],
                 'sub_player_id' => $value['sub'],
-                'rate' => $value['rate'],
+                'main_player_match_id' => $value['main_player_match_id'],
+                'sub_player_match_id' => $value['sub_player_match_id'],
             ]);
         }
     }
@@ -144,6 +163,4 @@ class PeerService
             return response()->json(['message' => 'Something went wrong', 'error' => $e->getMessage()], 500);
         }
     }
-
-   
 }

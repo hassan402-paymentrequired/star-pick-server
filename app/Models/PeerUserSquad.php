@@ -13,11 +13,11 @@ class PeerUserSquad extends Model
 
     public function mainPlayer()
     {
-        return $this->belongsTo(Player::class, 'main_player_id');
+        return $this->belongsTo(\App\Models\Player::class, 'main_player_id');
     }
 
     public function subPlayer()
     {
-        return $this->belongsTo(Player::class, 'sub_player_id');
+        return $this->belongsTo(\App\Models\Player::class, 'sub_player_id');
     }
 }

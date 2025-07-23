@@ -12,7 +12,7 @@ class FetchTeams extends Command
      *
      * @var string
      */
-    protected $signature = 'app:fetch-teams {league} {season}';
+    protected $signature = 'fetch:teams {league} {season}';
 
     /**
      * The console command description.

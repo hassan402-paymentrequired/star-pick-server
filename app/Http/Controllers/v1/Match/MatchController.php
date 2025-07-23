@@ -127,6 +127,43 @@ class MatchController extends Controller
                 'fixture_id' => $fixture->id,
                 'is_completed' => false,
             ]);
+
+            PlayerStatistic::updateOrCreate(
+                [
+                    'player_id' => $matchData['playerId'],
+                    'fixture_id' => $fixture->id,
+                ],
+                [
+                    'match_date' => now(),
+                    'team_id' => $team->id,
+                    'minutes' => 0,
+                    'number' => 0,
+                    'rating' => '0',
+                    'captain' => 0,
+                    'substitute' => 0,
+                    'offsides' => 0,
+                    'shots_total' => 0,
+                    'shots_on' => 0,
+                    'goals_total' => 0,
+                    'goals_conceded' => 0,
+                    'goals_assists' => 0,
+                    'goals_saves' => 0,
+                    'passes_total' => 0,
+                    'passes_key' => 0,
+                    'tackles_total' => 0,
+                    'tackles_blocks' => 0,
+                    'tackles_interceptions' => 0,
+                    'duels_total' => 0,
+                    'duels_won' => 0,
+                    'dribbles_attempts' => 0,
+                    'dribbles_success' => 0,
+                    'dribbles_past' => 0,
+                    'fouls_drawn' => 0,
+                    'fouls_committed' => 0,
+                    'cards_yellow' => 0,
+                    'cards_red' => 0,
+                ]
+            );
         }
 
         return $this->respondWithCustomData([

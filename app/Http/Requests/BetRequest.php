@@ -26,7 +26,8 @@ class BetRequest extends FormRequest
             'peers' => ['array', 'min:5', 'max:5'],
             'peers.*.main' => ['required', 'exists:players,id'],
             'peers.*.sub' => ['required', 'exists:players,id'],
-            'player_match_id' => ['required', 'numeric', 'gt:0'],
+            'peers.*.main_player_match_id' => ['required', 'exists:player_matches,id'],
+            'peers.*.sub_player_match_id' => ['required', 'exists:player_matches,id'],
         ];
     }
 }

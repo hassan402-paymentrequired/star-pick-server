@@ -21,7 +21,6 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::prefix('players')->group(function () {
             Route::get('/', [\App\Http\Controllers\V1\Player\PlayerController::class, 'index']);
-
             Route::post('/', [\App\Http\Controllers\V1\Player\PlayerController::class, 'store']);
             Route::get('/{player}', [\App\Http\Controllers\V1\Player\PlayerController::class, 'show']);
             Route::patch('/{player}', [\App\Http\Controllers\V1\Player\PlayerController::class, 'update']);
@@ -35,15 +34,16 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/', [\App\Http\Controllers\V1\Peer\PeerController::class, 'store']);
             Route::post('/{peer}/join-peer', [\App\Http\Controllers\V1\Peer\PeerController::class, 'joinPeer']);
             Route::post('/{peer}/leave-peer', [\App\Http\Controllers\V1\Peer\PeerController::class, 'leavePeer']);
-            Route::get('/{peer}', [\App\Http\Controllers\V1\Peer\PeerController::class, 'show']);
+            Route::get('/{id}', [\App\Http\Controllers\V1\Peer\PeerController::class, 'show']);
             Route::patch('/{peer}', [\App\Http\Controllers\V1\Peer\PeerController::class, 'update']);
             Route::delete('/{peer}', [\App\Http\Controllers\V1\Peer\PeerController::class, 'destroy']);
+            Route::get('/my-peers/ongoing', [\App\Http\Controllers\V1\Peer\PeerController::class, 'myOngoingPeers']);
+            Route::get('/my-peers/completed', [\App\Http\Controllers\V1\Peer\PeerController::class, 'myCompletedPeers']);
         });
 
         Route::prefix('match')->group(function () {
             Route::get('/', [\App\Http\Controllers\V1\Match\MatchController::class, 'index']);
             Route::get('/group-by-star', [\App\Http\Controllers\V1\Player\PlayerController::class, 'getPlayersByStar']);
-            
         });
 
         Route::prefix('payment')->group(function () {
@@ -52,5 +52,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'cancel'])->name('paystack.cancel');
             Route::post('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'increaseWalletBalance'])->name('paystack.cancel');
         });
+
+        // Add route to get all peers the authenticated user belongs to
+        Route::get('my-peers', [\App\Http\Controllers\V1\Peer\PeerController::class, 'myPeers']);
+        // Add routes to get ongoing and completed peers the authenticated user belongs to
+
     });
 });

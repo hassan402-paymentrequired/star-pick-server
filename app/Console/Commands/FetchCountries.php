@@ -13,7 +13,7 @@ class FetchCountries extends Command
      *
      * @var string
      */
-    protected $signature = 'app:fetch-countries';
+    protected $signature = 'fetch:countries';
 
     /**
      * The console command description.
