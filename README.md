@@ -1,318 +1,418 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  LayoutAnimation,
-  Platform,
-  UIManager,
-  ScrollView,
-  Pressable,
-  Image,
-} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
-
-if (Platform.OS === 'android') {
-  UIManager.setLayoutAnimationEnabledExperimental?.(true);
-}
-
-// Define the user interface
-interface User {
-  id: number;
-  username: string;
-  avatar: string;
-  email: string;
-  created_at: string;
-  pivot?: {
-    peer_id: number;
-    user_id: number;
-    created_at: string;
-    updated_at: string;
-  };
-}
-
-interface PeerUserCardProps {
-  user?: User;
-}
-
-const PeerUserCard = ({ user }: PeerUserCardProps) => {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded(!expanded);
-  };
-
-  // Use provided user data or fallback to mock data
-  const userData = user || {
-    username: 'Owner',
-    avatar: 'https://api.dicebear.com/9.x/bottts/png?seed=Felix&backgroundColor=b6e3f4',
-    created_at: new Date().toISOString(),
-  };
-
-  // Calculate time since joined
-  const getTimeSinceJoined = (createdAt: string) => {
-    const now = new Date();
-    const joined = new Date(createdAt);
-    const diffInMinutes = Math.floor((now.getTime() - joined.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
-    return `${Math.floor(diffInMinutes / 1440)} days ago`;
-  };
-
-  // Mock players data (this would come from the user's selected players)
-  const mockPlayers = [
-    // Star 1
+[
     {
-      star: 1,
-      type: 'Main',
-      name: 'Vinicius Jr',
-      goals: 1,
-      assists: 1,
-      shots: 3,
-      onTarget: 2,
-      crosses: 2,
-      tackles: 1,
-      saves: 0,
-      cleanSheet: 0,
-      yellowCard: 0,
-      redCard: 0,
-      total: 10,
+        "id": 7,
+        "peer_id": 46,
+        "user_id": 11,
+        "total_points": 0,
+        "is_winner": 0,
+        "created_at": "2025-07-23T01:22:34.000000Z",
+        "updated_at": "2025-07-23T01:22:34.000000Z",
+        "user": {
+            "id": 11,
+            "username": "Latamoc",
+            "avatar": "https://api.dicebear.com/9.x/notionists-neutral/png?seed=Felix",
+            "email": "tested@gmail.com",
+            "phone": "0807946166",
+            "is_active": 1,
+            "email_verified_at": null,
+            "created_at": "2025-07-22T23:24:14.000000Z",
+            "updated_at": "2025-07-22T23:24:28.000000Z",
+            "deleted_at": null
+        },
+        "squads": [
+            {
+                "id": 6,
+                "peer_user_id": 7,
+                "star_rating": 1,
+                "main_player_id": 34,
+                "sub_player_id": 36,
+                "created_at": "2025-07-23T01:22:34.000000Z",
+                "updated_at": "2025-07-23T01:22:34.000000Z",
+                "main_player_match_id": 53,
+                "sub_player_match_id": 54,
+                "main_player": {
+                    "id": 34,
+                    "external_id": "278075",
+                    "name": "C. Cîrjan",
+                    "team_id": "42",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/278075.png",
+                    "nationality": "Romania",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:20.000000Z",
+                    "updated_at": "2025-07-22T23:29:20.000000Z"
+                },
+                "sub_player": {
+                    "id": 36,
+                    "external_id": "284062",
+                    "name": "K. Edwards",
+                    "team_id": "42",
+                    "position": "Attacker",
+                    "image": "https://media.api-sports.io/football/players/284062.png",
+                    "nationality": "England",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:20.000000Z",
+                    "updated_at": "2025-07-22T23:29:20.000000Z"
+                }
+            },
+            {
+                "id": 7,
+                "peer_user_id": 7,
+                "star_rating": 2,
+                "main_player_id": 33,
+                "sub_player_id": 30,
+                "created_at": "2025-07-23T01:22:34.000000Z",
+                "updated_at": "2025-07-23T01:22:34.000000Z",
+                "main_player_match_id": 52,
+                "sub_player_match_id": 81,
+                "main_player": {
+                    "id": 33,
+                    "external_id": "197448",
+                    "name": "Yan Couto",
+                    "team_id": "50",
+                    "position": "Defender",
+                    "image": "https://media.api-sports.io/football/players/197448.png",
+                    "nationality": "Brazil",
+                    "player_rating": 2,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:20.000000Z",
+                    "updated_at": "2025-07-22T23:29:20.000000Z"
+                },
+                "sub_player": {
+                    "id": 30,
+                    "external_id": "152980",
+                    "name": "Remmi Eugene Savage",
+                    "team_id": "34",
+                    "position": "Defender",
+                    "image": "https://media.api-sports.io/football/players/152980.png",
+                    "nationality": "England",
+                    "player_rating": 2,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:20.000000Z",
+                    "updated_at": "2025-07-22T23:29:20.000000Z"
+                }
+            },
+            {
+                "id": 8,
+                "peer_user_id": 7,
+                "star_rating": 3,
+                "main_player_id": 38,
+                "sub_player_id": 42,
+                "created_at": "2025-07-23T01:22:34.000000Z",
+                "updated_at": "2025-07-23T01:22:34.000000Z",
+                "main_player_match_id": 61,
+                "sub_player_match_id": 65,
+                "main_player": {
+                    "id": 38,
+                    "external_id": "284446",
+                    "name": "F. Potts",
+                    "team_id": "48",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/284446.png",
+                    "nationality": "England",
+                    "player_rating": 3,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:20.000000Z",
+                    "updated_at": "2025-07-22T23:29:20.000000Z"
+                },
+                "sub_player": {
+                    "id": 42,
+                    "external_id": "18751",
+                    "name": "Ivan Cavaleiro",
+                    "team_id": "36",
+                    "position": "Attacker",
+                    "image": "https://media.api-sports.io/football/players/18751.png",
+                    "nationality": "Portugal",
+                    "player_rating": 3,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:21.000000Z",
+                    "updated_at": "2025-07-22T23:29:21.000000Z"
+                }
+            },
+            {
+                "id": 9,
+                "peer_user_id": 7,
+                "star_rating": 4,
+                "main_player_id": 46,
+                "sub_player_id": 48,
+                "created_at": "2025-07-23T01:22:34.000000Z",
+                "updated_at": "2025-07-23T01:22:34.000000Z",
+                "main_player_match_id": 66,
+                "sub_player_match_id": 82,
+                "main_player": {
+                    "id": 46,
+                    "external_id": "278086",
+                    "name": "I. Odutayo",
+                    "team_id": "36",
+                    "position": "Defender",
+                    "image": "https://media.api-sports.io/football/players/278086.png",
+                    "nationality": "England",
+                    "player_rating": 4,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:21.000000Z",
+                    "updated_at": "2025-07-22T23:29:21.000000Z"
+                },
+                "sub_player": {
+                    "id": 48,
+                    "external_id": "284305",
+                    "name": "Jamie Miley",
+                    "team_id": "34",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/284305.png",
+                    "nationality": "England",
+                    "player_rating": 4,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:21.000000Z",
+                    "updated_at": "2025-07-22T23:29:21.000000Z"
+                }
+            },
+            {
+                "id": 10,
+                "peer_user_id": 7,
+                "star_rating": 5,
+                "main_player_id": 50,
+                "sub_player_id": 54,
+                "created_at": "2025-07-23T01:22:34.000000Z",
+                "updated_at": "2025-07-23T01:22:34.000000Z",
+                "main_player_match_id": 68,
+                "sub_player_match_id": 69,
+                "main_player": {
+                    "id": 50,
+                    "external_id": "284559",
+                    "name": "Alexander Paul Borto",
+                    "team_id": "36",
+                    "position": "Goalkeeper",
+                    "image": "https://media.api-sports.io/football/players/284559.png",
+                    "nationality": "USA",
+                    "player_rating": 5,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:21.000000Z",
+                    "updated_at": "2025-07-22T23:29:21.000000Z"
+                },
+                "sub_player": {
+                    "id": 54,
+                    "external_id": "327728",
+                    "name": "Delano McCoy-Splatt\\t",
+                    "team_id": "36",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/327728.png",
+                    "nationality": "Jamaica",
+                    "player_rating": 5,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:21.000000Z",
+                    "updated_at": "2025-07-22T23:29:21.000000Z"
+                }
+            }
+        ]
     },
     {
-      star: 1,
-      type: 'Sub',
-      name: 'Osimhen',
-      goals: 0,
-      assists: 0,
-      shots: 1,
-      onTarget: 0,
-      crosses: 0,
-      tackles: 1,
-      saves: 0,
-      cleanSheet: 0,
-      yellowCard: 1,
-      redCard: 0,
-      total: 3,
-    },
-    // Star 2
-    {
-      star: 2,
-      type: 'Main',
-      name: 'Bellingham',
-      goals: 2,
-      assists: 0,
-      shots: 4,
-      onTarget: 3,
-      crosses: 1,
-      tackles: 2,
-      saves: 0,
-      cleanSheet: 0,
-      yellowCard: 0,
-      redCard: 0,
-      total: 12,
-    },
-    // Star 3
-    {
-      star: 3,
-      type: 'Main',
-      name: 'Modric',
-      goals: 0,
-      assists: 1,
-      shots: 2,
-      onTarget: 1,
-      crosses: 3,
-      tackles: 3,
-      saves: 0,
-      cleanSheet: 0,
-      yellowCard: 0,
-      redCard: 0,
-      total: 9,
-    },
-    // Star 4
-    {
-      star: 4,
-      type: 'Main',
-      name: 'Casemiro',
-      goals: 0,
-      assists: 0,
-      shots: 1,
-      onTarget: 1,
-      crosses: 0,
-      tackles: 5,
-      saves: 0,
-      cleanSheet: 1,
-      yellowCard: 1,
-      redCard: 0,
-      total: 8,
-    },
-    // Star 5
-    {
-      star: 5,
-      type: 'Main',
-      name: 'Allison Becker',
-      goals: 0,
-      assists: 0,
-      shots: 0,
-      onTarget: 0,
-      crosses: 0,
-      tackles: 0,
-      saves: 6,
-      cleanSheet: 1,
-      yellowCard: 0,
-      redCard: 0,
-      total: 11,
-    },
-  ];
-
-  // Group players by star
-  const groupedByStar = Array.from({ length: 5 }, (_, i) => {
-    const star = i + 1;
-    return {
-      star,
-      players: mockPlayers.filter((p) => p.star === star),
-    };
-  });
-
-  return (
-    <View style={{ marginBottom: 12 }}>
-      <BlurView intensity={50} tint="dark" style={styles.card}>
-        <Pressable onPress={toggleExpand}>
-          <View style={styles.header}>
-            <Image
-              source={{ uri: userData.avatar }}
-              style={styles.avatar}
-              defaultSource={{
-                uri: 'https://api.dicebear.com/9.x/bottts/png?seed=default&backgroundColor=b6e3f4',
-              }}
-            />
-
-            <View style={{ marginLeft: 10, flex: 1 }}>
-              <Text style={styles.username}>@{userData.username}</Text>
-              <Text style={styles.subInfo}>
-                5⭐ squad · Joined {getTimeSinceJoined(userData.created_at)}
-              </Text>
-            </View>
-
-            <AntDesign
-              name={expanded ? 'up' : 'down'}
-              size={16}
-              color="white"
-              style={{ marginLeft: 'auto' }}
-            />
-          </View>
-        </Pressable>
-
-        {expanded && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.tableWrapper}>
-            <View>
-              {groupedByStar.map(({ star, players }) =>
-                players.length > 0 ? (
-                  <View key={star} style={{ marginBottom: 10 }}>
-                    <Text style={styles.starLabel}>⭐ Star {star} Players</Text>
-
-                    <View style={styles.tableHeader}>
-                      <Text style={styles.cell}>Type</Text>
-                      <Text style={[styles.cell, { width: 100 }]}>Player</Text>
-                      <Text style={styles.cell}>G</Text>
-                      <Text style={styles.cell}>A</Text>
-                      <Text style={styles.cell}>Sh</Text>
-                      <Text style={styles.cell}>On T</Text>
-                      <Text style={styles.cell}>Cross</Text>
-                      <Text style={styles.cell}>Tack</Text>
-                      <Text style={styles.cell}>Save</Text>
-                      <Text style={styles.cell}>CS</Text>
-                      <Text style={styles.cell}>YC</Text>
-                      <Text style={styles.cell}>RC</Text>
-                      <Text style={styles.cell}>Total</Text>
-                    </View>
-
-                    {players.map((player, index) => (
-                      <View key={index} style={styles.tableRow}>
-                        <Text style={styles.cell}>{player.type}</Text>
-                        <Text style={[styles.cell, { width: 100 }]}>{player.name}</Text>
-                        <Text style={styles.cell}>{player.goals}</Text>
-                        <Text style={styles.cell}>{player.assists}</Text>
-                        <Text style={styles.cell}>{player.shots}</Text>
-                        <Text style={styles.cell}>{player.onTarget}</Text>
-                        <Text style={styles.cell}>{player.crosses}</Text>
-                        <Text style={styles.cell}>{player.tackles}</Text>
-                        <Text style={styles.cell}>{player.saves}</Text>
-                        <Text style={styles.cell}>{player.cleanSheet}</Text>
-                        <Text style={styles.cell}>{player.yellowCard}</Text>
-                        <Text style={styles.cell}>{player.redCard}</Text>
-                        <Text style={styles.cell}>{player.total}</Text>
-                      </View>
-                    ))}
-                  </View>
-                ) : null
-              )}
-            </View>
-          </ScrollView>
-        )}
-      </BlurView>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 8,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#1F2937',
-    overflow: 'hidden',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderColor: '#1F2937',
-    borderWidth: 1,
-  },
-  username: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: '600',
-  },
-  subInfo: {
-    color: 'gray',
-    fontSize: 12,
-  },
-  tableWrapper: {
-    marginTop: 12,
-  },
-  starLabel: {
-    color: '#fff',
-    fontWeight: '700',
-    marginBottom: 6,
-    marginTop: 10,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingVertical: 6,
-    borderRadius: 4,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    paddingVertical: 6,
-    borderBottomWidth: 0.5,
-    borderColor: 'rgba(255,255,255,0.1)',
-  },
-  cell: {
-    color: 'white',
-    fontSize: 12,
-    width: 60,
-    textAlign: 'center',
-  },
-});
-
-export default PeerUserCard;
+        "id": 8,
+        "peer_id": 46,
+        "user_id": 12,
+        "total_points": 0,
+        "is_winner": 0,
+        "created_at": "2025-07-23T01:40:33.000000Z",
+        "updated_at": "2025-07-23T01:40:33.000000Z",
+        "user": {
+            "id": 12,
+            "username": "Manup",
+            "avatar": "https://api.dicebear.com/9.x/big-ears-neutral/png?flip=false",
+            "email": "tested1@gmail.com",
+            "phone": "0805649133",
+            "is_active": 1,
+            "email_verified_at": null,
+            "created_at": "2025-07-23T01:27:39.000000Z",
+            "updated_at": "2025-07-23T01:27:58.000000Z",
+            "deleted_at": null
+        },
+        "squads": [
+            {
+                "id": 11,
+                "peer_user_id": 8,
+                "star_rating": 1,
+                "main_player_id": 10,
+                "sub_player_id": 2,
+                "created_at": "2025-07-23T01:40:33.000000Z",
+                "updated_at": "2025-07-23T01:40:33.000000Z",
+                "main_player_match_id": 99,
+                "sub_player_match_id": 67,
+                "main_player": {
+                    "id": 10,
+                    "external_id": "18849",
+                    "name": "J. McArthur",
+                    "team_id": "52",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/18849.png",
+                    "nationality": "Scotland",
+                    "player_rating": 4,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                },
+                "sub_player": {
+                    "id": 2,
+                    "external_id": "178",
+                    "name": "Lucas Moura",
+                    "team_id": "47",
+                    "position": "Attacker",
+                    "image": "https://media.api-sports.io/football/players/178.png",
+                    "nationality": "Brazil",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                }
+            },
+            {
+                "id": 12,
+                "peer_user_id": 8,
+                "star_rating": 1,
+                "main_player_id": 3,
+                "sub_player_id": 4,
+                "created_at": "2025-07-23T01:40:33.000000Z",
+                "updated_at": "2025-07-23T01:40:33.000000Z",
+                "main_player_match_id": 87,
+                "sub_player_match_id": 86,
+                "main_player": {
+                    "id": 3,
+                    "external_id": "297",
+                    "name": "A. Oxlade-Chamberlain",
+                    "team_id": "40",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/297.png",
+                    "nationality": "England",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                },
+                "sub_player": {
+                    "id": 4,
+                    "external_id": "888",
+                    "name": "P. Jones",
+                    "team_id": "33",
+                    "position": "Defender",
+                    "image": "https://media.api-sports.io/football/players/888.png",
+                    "nationality": "England",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                }
+            },
+            {
+                "id": 13,
+                "peer_user_id": 8,
+                "star_rating": 1,
+                "main_player_id": 3,
+                "sub_player_id": 6,
+                "created_at": "2025-07-23T01:40:33.000000Z",
+                "updated_at": "2025-07-23T01:40:33.000000Z",
+                "main_player_match_id": 78,
+                "sub_player_match_id": 54,
+                "main_player": {
+                    "id": 3,
+                    "external_id": "297",
+                    "name": "A. Oxlade-Chamberlain",
+                    "team_id": "40",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/297.png",
+                    "nationality": "England",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                },
+                "sub_player": {
+                    "id": 6,
+                    "external_id": "2473",
+                    "name": "M. Lanzini",
+                    "team_id": "48",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/2473.png",
+                    "nationality": "Argentina",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                }
+            },
+            {
+                "id": 14,
+                "peer_user_id": 8,
+                "star_rating": 1,
+                "main_player_id": 7,
+                "sub_player_id": 8,
+                "created_at": "2025-07-23T01:40:33.000000Z",
+                "updated_at": "2025-07-23T01:40:33.000000Z",
+                "main_player_match_id": 90,
+                "sub_player_match_id": 91,
+                "main_player": {
+                    "id": 7,
+                    "external_id": "2677",
+                    "name": "João Moutinho",
+                    "team_id": "39",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/2677.png",
+                    "nationality": "Portugal",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                },
+                "sub_player": {
+                    "id": 8,
+                    "external_id": "18753",
+                    "name": "Adama Traoré",
+                    "team_id": "39",
+                    "position": "Attacker",
+                    "image": "https://media.api-sports.io/football/players/18753.png",
+                    "nationality": "Spain",
+                    "player_rating": 5,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                }
+            },
+            {
+                "id": 15,
+                "peer_user_id": 8,
+                "star_rating": 1,
+                "main_player_id": 9,
+                "sub_player_id": 10,
+                "created_at": "2025-07-23T01:40:33.000000Z",
+                "updated_at": "2025-07-23T01:40:33.000000Z",
+                "main_player_match_id": 104,
+                "sub_player_match_id": 103,
+                "main_player": {
+                    "id": 9,
+                    "external_id": "18762",
+                    "name": "T. Davies",
+                    "team_id": "45",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/18762.png",
+                    "nationality": "England",
+                    "player_rating": 1,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                },
+                "sub_player": {
+                    "id": 10,ye
+                    "external_id": "18849",
+                    "name": "J. McArthur",
+                    "team_id": "52",
+                    "position": "Midfielder",
+                    "image": "https://media.api-sports.io/football/players/18849.png",
+                    "nationality": "Scotland",
+                    "player_rating": 4,
+                    "status": 1,
+                    "created_at": "2025-07-22T23:29:18.000000Z",
+                    "updated_at": "2025-07-22T23:29:18.000000Z"
+                }
+            }
+        ]
+    }
+]

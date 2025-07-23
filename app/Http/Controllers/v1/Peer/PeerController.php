@@ -194,86 +194,10 @@ class PeerController extends Controller
 
             // Get all users who joined this peer, with their squads
             $peerUsers = \App\Models\PeerUser::with(['user', 'squads.mainPlayer', 'squads.subPlayer'])->where('peer_id', $peer->id)->get();
-            return $peerUsers;
 
-            $users = $peerUsers->map(function ($peerUser) {
-                // dd($peerUser);
-                $user = $peerUser->user;
-                $players = collect();
-                foreach ($peerUser->squads as $squad) {
-                    // Get main player stats using player_id and main_player_match_id
-                    $fixture = PlayerMatch::find($squad->main_player_match_id);
-
-
-                    $mainStats = \App\Models\PlayerStatistic::where('player_id', $squad->main_player_id)
-                        ->where('fixture_id', $fixture->fixture_id)
-                        ->first();
-
-
-                    $fixture = PlayerMatch::find($squad->main_player_match_id);
-                    // Get sub player stats using player_id and sub_player_match_id
-                    $subStats = \App\Models\PlayerStatistic::where('player_id', $squad->sub_player_id)
-                        ->where('fixture_id', $fixture->fixture_id)
-                        ->first();
-
-                    $useSub = !$mainStats || !$mainStats->did_play;
-
-                    return $players;
-
-                    // Main player object
-                    $players->push([
-                        'star' => $squad->star_rating,
-                        'type' => 'Main',
-                        'name' => optional($squad->mainPlayer)->name,
-                        'goals' => $mainStats->goals ?? 0,
-                        'assists' => $mainStats->assists ?? 0,
-                        'shots' => $mainStats->shots ?? 0,
-                        'onTarget' => $mainStats->shots_on_target ?? 0,
-                        'crosses' => $mainStats->crosses ?? 0,
-                        'tackles' => $mainStats->tackles ?? 0,
-                        'saves' => $mainStats->saves ?? 0,
-                        'cleanSheet' => $mainStats->clean_sheet ?? 0,
-                        'yellowCard' => $mainStats->yellow_cards ?? 0,
-                        'redCard' => $mainStats->red_cards ?? 0,
-                        'total' => $mainStats->points ?? 0,
-                        'did_play' => $mainStats->did_play ?? false,
-                        'used' => !$useSub,
-                    ]);
-
-                    // Sub player object
-                    $players->push([
-                        'star' => $squad->star_rating,
-                        'type' => 'Sub',
-                        'name' => optional($squad->subPlayer)->name,
-                        'goals' => $subStats->goals ?? 0,
-                        'assists' => $subStats->assists ?? 0,
-                        'shots' => $subStats->shots ?? 0,
-                        'onTarget' => $subStats->shots_on_target ?? 0,
-                        'crosses' => $subStats->crosses ?? 0,
-                        'tackles' => $subStats->tackles ?? 0,
-                        'saves' => $subStats->saves ?? 0,
-                        'cleanSheet' => $subStats->clean_sheet ?? 0,
-                        'yellowCard' => $subStats->yellow_cards ?? 0,
-                        'redCard' => $subStats->red_cards ?? 0,
-                        'total' => $subStats->points ?? 0,
-                        'did_play' => $subStats->did_play ?? false,
-                        'used' => $useSub,
-                    ]);
-                }
-
-                return [
-                    'id' => $user->id,
-                    'username' => $user->username,
-                    'avatar' => $user->avatar,
-                    'email' => $user->email,
-                    'created_at' => $user->created_at,
-                    'players' => $players,
-                ];
-            });
 
             return $this->respondWithCustomData([
-                'peer' => $peer,
-                'users' => $users,
+                'peer' => $peerUsers,
             ], 200);
         } catch (Exception $e) {
             // dd($e);
