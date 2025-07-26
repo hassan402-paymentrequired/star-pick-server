@@ -136,6 +136,13 @@ class Handler extends ExceptionHandler
                         \n URL:: {$request->fullUrl()} \n";
             }
 
+            Log::error($message, [
+                'status' => $status,
+                'exception' => get_class($e),
+                'trace' => $e->getTraceAsString(),
+                'url' => $request->fullUrl(),
+            ]);
+
             return $this->responseWithError(message: $message, error: $errors ?? $message, code: $status);
         }
 

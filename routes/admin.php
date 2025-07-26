@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\Player\PlayerController;
+use App\Http\Controllers\V1\Sofa\SofaController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:admin'])->group(function () {
@@ -39,6 +40,15 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::prefix('leagues')->group(function () {
         Route::get('/', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'index']);
+        Route::get('/season/{leagueId}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeason']);
+        Route::get('/season/{leagues}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeasonAndRound']);
+        Route::post('/refetch', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'refetch']);
+    });
+
+     Route::prefix('seasons')->group(function () {
+        Route::get('/', [\App\Http\Controllers\V1\Season\SeasonController::class, 'index']);
+        
+
         Route::post('/refetch', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'refetch']);
     });
 
@@ -49,5 +59,14 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::prefix('fixtures')->group(function () {
         Route::get('/', [\App\Http\Controllers\V1\Fixture\FixtureController::class, 'index']);
         Route::post('/refetch', [\App\Http\Controllers\V1\Fixture\FixtureController::class, 'refetch']);
+    });
+
+    Route::prefix('sofa')->group(function () {
+        Route::post('/countries', [SofaController::class, 'countries']);
+        Route::post('/leagues', [SofaController::class, 'leagues']);
+        Route::post('/teams', [SofaController::class, 'teams']);
+        Route::post('/players', [SofaController::class, 'players']);
+        Route::post('/seasons', [SofaController::class, 'seasons']);
+        Route::post('/rounds', [SofaController::class, 'rounds']);
     });
 });

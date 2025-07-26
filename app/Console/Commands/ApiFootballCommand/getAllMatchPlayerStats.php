@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\ApiFootballCommand;
 
 use App\Models\PlayerStatistic;
 use Illuminate\Console\Command;

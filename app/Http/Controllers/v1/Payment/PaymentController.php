@@ -29,7 +29,7 @@ class PaymentController extends Controller
             'Cache-Control' => 'no-cache',
         ])->post('https://api.paystack.co/transaction/initialize', [
             'email' => $request->email,
-            'amount' => $request->amount, 
+            'amount' => $request->amount,
             'callback_url' => route('paystack.callback'),
             'metadata' => [
                 'cancel_action' => route('paystack.cancel'),
@@ -47,8 +47,26 @@ class PaymentController extends Controller
         ], 200);
     }
 
-    public function increaseWalletBalance()
+    public function increaseWalletBalance(Request $request)
     {
-    
+        $request->validate([
+            'amount' => 'integer|min:100'
+        ]);
+        increaseWallet($request->amount);
+
+        return $this->respondWithCustomData([
+            'message' => 'Deposite successfully'
+        ]);
+    }
+
+    public function decreaseWalletBalance(Request $request)
+    {
+        $request->validate([
+            'amount' => 'integer|min:100'
+        ]);
+        decreaseWallet($request->amount);
+        return $this->respondWithCustomData([
+            'message' => 'money withdrawn successfully'
+        ]);
     }
 }

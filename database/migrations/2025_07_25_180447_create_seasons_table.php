@@ -6,21 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('seasons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->nullable();
-            $table->string('flag')->nullable();
             $table->string('external_id')->nullable();
-            $table->string('status')->default('active');
+            $table->foreignId('league_id')->constrained('leagues')->cascadeOnDelete();
+            $table->string('year')->nullable();
+            $table->boolean('is_current')->nullable()->default(false);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('seasons');
     }
 };
