@@ -4,6 +4,10 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+const ADMIN = 'admin';
+const API = 'api';
+const WEB = 'web';
+
 function getUserBalance()
 {
     return Auth::guard('api')->user()->wallet->balance;
