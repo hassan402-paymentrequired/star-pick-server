@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -56,9 +57,19 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e): Response|\Symfony\Component\HttpFoundation\Response
+    public function render($request, Throwable $e)
     {
-        if ($request->wantsJson() || $request->is('api/*')) return $this->handleApiException($request, $e); //add Accept: application/json in request
+        if (! $request->expectsJson() && ! $request->is('api/*')) {
+            if ($this->isHttpException($e)) {
+                $status = $e->getStatusCode();
+
+                if (in_array($status, [403, 404, 500])) {
+                    return Inertia::render("Errors/{$status}")
+                        ->toResponse($request)
+                        ->setStatusCode($status);
+                }
+            }
+        }
 
         return parent::render($request, $e);
     }
