@@ -15,6 +15,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/', [PeerController::class, 'index'])->name('home');
+
+    // Peer routes
+    Route::get('/peers', [PeerController::class, 'index'])->name('peers.index');
+    Route::get('/peers/create', [PeerController::class, 'create'])->name('peers.create');
+    Route::post('/peers', [PeerController::class, 'store'])->name('peers.store');
+    Route::get('/peers/{peer}', [PeerController::class, 'show'])->name('peers.show');
 });
 
 Route::get('/verify-otp', [AuthenticationController::class, 'otpIndex'])->name('verify');

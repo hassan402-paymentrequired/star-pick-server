@@ -10,6 +10,6 @@ class PeerController extends Controller
 
     public function index()
     {
-        return Inertia::render('frontend/index');
+        return Inertia::render('peers/index');
     }
 }

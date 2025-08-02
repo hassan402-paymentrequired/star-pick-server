@@ -3,7 +3,7 @@
 @import 'tw-animate-css';
 
 /* Custom Variant for Dark Mode */
-@custom-variant dark (&:is(.dark *)); 
+@custom-variant dark (&:is(.dark *));
 
 /* Content Sources for Tailwind */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -61,72 +61,93 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Light Theme */
-/* Light Theme */
+/* Dark Theme with Green Primary */
 :root{
     /* Base colors */
-    --background: 0 0% 7%; /* #121212 converted to HSL */
-    --foreground: 0 0% 100%; /* white */
+    --clr-dark-a0: #000000;
+    --clr-light-a0: #ffffff;
 
-    /* Cards and Surfaces */
-    --card: 30 8% 11%; /* surface-tonal-a0 #1f1a19 */
-    --card-foreground: 0 0% 100%;
+    /* Theme primary colors */
+    --clr-primary-a0: #97e861;
+    --clr-primary-a10: #a4eb74;
+    --clr-primary-a20: #b1ee86;
+    --clr-primary-a30: #bdf098;
+    --clr-primary-a40: #c9f3a9;
+    --clr-primary-a50: #d4f6ba;
 
-    /* Popover */
-    --popover: 30 8% 11%;
-    --popover-foreground: 0 0% 100%;
+    /* Theme surface colors */
+    --clr-surface-a0: #121212;
+    --clr-surface-a10: #282828;
+    --clr-surface-a20: #3f3f3f;
+    --clr-surface-a30: #575757;
+    --clr-surface-a40: #717171;
+    --clr-surface-a50: #8b8b8b;
 
-    /* Primary - Brown theme */
-    --primary: 25 37% 50%; /* #9e6954 */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 25 37% 60%; /* lighter primary */
+    /* Theme tonal surface colors */
+    --clr-surface-tonal-a0: #1f241a;
+    --clr-surface-tonal-a10: #34382f;
+    --clr-surface-tonal-a20: #4a4e45;
+    --clr-surface-tonal-a30: #61655d;
+    --clr-surface-tonal-a40: #7a7d76;
+    --clr-surface-tonal-a50: #939590;
 
-    /* Secondary - Light brown */
-    --secondary: 25 30% 70%; /* #d6baaf */
-    --secondary-foreground: 0 0% 7%;
+    /* Tailwind CSS variables for compatibility */
+    --background: 0 0% 7%; /* #121212 */
+    --foreground: 0 0% 100%; /* #ffffff */
+    --card: 0 0% 7%; /* #121212 */
+    --card-foreground: 0 0% 100%; /* #ffffff */
+    --popover: 0 0% 7%; /* #121212 */
+    --popover-foreground: 0 0% 100%; /* #ffffff */
+    --primary: 95 67% 65%; /* #97e861 */
+    --primary-foreground: 0 0% 7%; /* #121212 */
+    --primary-glow: 95 67% 75%; /* #a4eb74 */
+
+    /* Secondary - Surface tonal */
+    --secondary: 0 0% 16%; /* #282828 */
+    --secondary-foreground: 0 0% 100%; /* #ffffff */
 
     /* Success - Green */
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
+    --success: 95 67% 65%; /* #97e861 */
+    --success-foreground: 0 0% 7%; /* #121212 */
 
     /* Warning - Orange */
     --warning: 25 95% 53%;
     --warning-foreground: 0 0% 7%;
 
     /* Muted - Surface colors */
-    --muted: 0 0% 16%; /* #282828 surface-a10 */
-    --muted-foreground: 0 0% 55%; /* #8b8b8b surface-a50 */
+    --muted: 0 0% 16%; /* #282828 */
+    --muted-foreground: 0 0% 55%; /* #8b8b8b */
 
-    /* Accent - Medium brown */
-    --accent: 25 37% 45%; /* darker primary */
-    --accent-foreground: 0 0% 100%;
+    /* Accent - Primary */
+    --accent: 95 67% 65%; /* #97e861 */
+    --accent-foreground: 0 0% 7%; /* #121212 */
 
     /* Destructive - Red */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders and Inputs */
-    --border: 0 0% 25%; /* #3f3f3f surface-a20 */
+    --border: 0 0% 25%; /* #3f3f3f */
     --input: 0 0% 25%;
-    --ring: 25 37% 50%;
+    --ring: 95 67% 65%; /* #97e861 */
 
     --radius: 0.75rem;
 
     /* StarPick Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(25 30% 75%));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(30 8% 13%));
+    --gradient-primary: linear-gradient(135deg, var(--clr-primary-a0), var(--clr-primary-a20));
+    --gradient-secondary: linear-gradient(135deg, var(--clr-surface-a10), var(--clr-surface-a20));
+    --gradient-accent: linear-gradient(135deg, var(--clr-primary-a0), var(--clr-primary-a10));
+    --gradient-card: linear-gradient(145deg, var(--clr-surface-a0), var(--clr-surface-a10));
 
     /* StarPick Shadows */
-    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
-    --shadow-card: 0 8px 32px hsl(222 84% 4% / 0.4);
-    --shadow-floating: 0 16px 64px hsl(222 84% 4% / 0.6);
+    --shadow-glow: 0 0 30px var(--clr-primary-a0 / 0.3);
+    --shadow-card: 0 8px 32px var(--clr-dark-a0 / 0.4);
+    --shadow-floating: 0 16px 64px var(--clr-dark-a0 / 0.6);
 
     /* StarPick Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+}
 
 
 
