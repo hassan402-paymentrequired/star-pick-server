@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd } from "lucide-react";
+import { GalleryVerticalEnd, LoaderIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import FormError from "@/components/error";
+import { toast } from "sonner";
 
 interface LoginFormData {
     phone: string;
@@ -24,15 +25,22 @@ export function LoginForm({
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         post(route("login.store"), {
             onSuccess: () => {
-                setData("phone", "");
-                setData("password", "");
+                if (flash?.success) {
+                    toast.error(flash?.success);
+                }
             },
             onError: () => {
-                setData("phone", "");
-                setData("password", "");
+                toast.error(globalErrors?.phone || globalErrors?.password);
+            },
+            onFinish: () => {
+                if (flash?.error) {
+                    toast.error(flash?.error);
+                }
+                if (flash?.success) {
+                    toast.error(flash?.success);
+                }
             },
             preserveScroll: true,
         });
@@ -80,7 +88,9 @@ export function LoginForm({
                                     setData("phone", e.target.value)
                                 }
                             />
-                           {globalErrors.phone &&  <FormError message={globalErrors.phone}/>}
+                            {globalErrors.phone && (
+                                <FormError message={globalErrors.phone} />
+                            )}
                         </div>
                         <div className="grid gap-1">
                             <Label htmlFor="password">Password</Label>
@@ -94,9 +104,22 @@ export function LoginForm({
                                     setData("password", e.target.value)
                                 }
                             />
-                            {globalErrors.password &&  <FormError message={globalErrors.password}/>}
+                            {globalErrors.password && (
+                                <FormError message={globalErrors.password} />
+                            )}
+                            {flash?.error && (
+                                <FormError message={flash?.error} />
+                            )}
                         </div>
-                        <Button type="submit" className="w-full">
+
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={processing}
+                        >
+                            {processing && (
+                                <LoaderIcon className="animate-spin" />
+                            )}{" "}
                             Login
                         </Button>
                     </div>

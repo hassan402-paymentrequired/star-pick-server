@@ -100,18 +100,18 @@ export default function PeerShow({ peer }: PeerShowProps) {
                         <ArrowLeft className="w-4 h-4" />
                     </Button>
                     <div className="flex-1">
-                        <h1 className="text-xl font-bold text-gray-900">
+                        <h1 className="text-xl font-bold text-[var(--clr-light-a0)]">
                             {peer.name}
                         </h1>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-[var(--clr-surface-a50)]">
                             Peer Competition
                         </p>
                     </div>
                     <Badge
                         className={
                             peer.status === "open"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
+                                ? "bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]"
+                                : "bg-[var(--clr-surface-a20)] text-[var(--clr-surface-a50)]"
                         }
                     >
                         {peer.status === "open" ? "Active" : peer.status}
@@ -120,17 +120,17 @@ export default function PeerShow({ peer }: PeerShowProps) {
 
                 {/* Peer Stats */}
                 <div className="grid grid-cols-2 gap-3">
-                    <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-blue-200 rounded-full">
-                                    <DollarSign className="w-5 h-5 text-blue-700" />
+                                <div className="p-2 bg-[var(--clr-primary-a0)] rounded-full">
+                                    <DollarSign className="w-5 h-5 text-[var(--clr-light-a0)]" />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-blue-600 font-medium">
+                                    <p className="text-xs text-[var(--clr-primary-a0)] font-medium">
                                         Entry Fee
                                     </p>
-                                    <p className="text-lg font-bold text-blue-900">
+                                    <p className="text-lg font-bold text-[var(--clr-light-a0)]">
                                         ${peer.amount}
                                     </p>
                                 </div>
@@ -138,17 +138,17 @@ export default function PeerShow({ peer }: PeerShowProps) {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-green-200 rounded-full">
-                                    <Users className="w-5 h-5 text-green-700" />
+                                <div className="p-2 bg-[var(--clr-primary-a0)] rounded-full">
+                                    <Users className="w-5 h-5 text-[var(--clr-light-a0)]" />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-green-600 font-medium">
+                                    <p className="text-xs text-[var(--clr-primary-a0)] font-medium">
                                         Participants
                                     </p>
-                                    <p className="text-lg font-bold text-green-900">
+                                    <p className="text-lg font-bold text-[var(--clr-light-a0)]">
                                         {peer.users_count}/{peer.limit || "∞"}
                                     </p>
                                 </div>
@@ -158,14 +158,14 @@ export default function PeerShow({ peer }: PeerShowProps) {
                 </div>
 
                 {/* Prize Pool */}
-                <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                     <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-purple-600 font-medium">
+                                <p className="text-sm text-[var(--clr-primary-a0)] font-medium">
                                     Total Prize Pool
                                 </p>
-                                <p className="text-2xl font-bold text-purple-900">
+                                <p className="text-2xl font-bold text-[var(--clr-light-a0)]">
                                     $
                                     {(
                                         parseFloat(peer.amount) *
@@ -174,10 +174,10 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                 </p>
                             </div>
                             <div className="text-right">
-                                <p className="text-xs text-purple-600">
+                                <p className="text-xs text-[var(--clr-primary-a0)]">
                                     Sharing Ratio
                                 </p>
-                                <p className="text-lg font-bold text-purple-900">
+                                <p className="text-lg font-bold text-[var(--clr-light-a0)]">
                                     {peer.sharing_ratio}x
                                 </p>
                             </div>
@@ -187,7 +187,7 @@ export default function PeerShow({ peer }: PeerShowProps) {
 
                 {/* Current User Status */}
                 {currentUser && (
-                    <Card className="border-l-4 border-l-blue-500">
+                    <Card className="border-l-4 border-l-[var(--clr-primary-a0)] bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -195,26 +195,26 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                         <AvatarImage
                                             src={currentUser.user.avatar}
                                         />
-                                        <AvatarFallback className="bg-blue-100 text-blue-700">
+                                        <AvatarFallback className="bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]">
                                             {currentUser.user.username
                                                 .substring(0, 2)
                                                 .toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <p className="font-semibold text-gray-900">
+                                        <p className="font-semibold text-[var(--clr-light-a0)]">
                                             Your Performance
                                         </p>
-                                        <p className="text-sm text-gray-600">
+                                        <p className="text-sm text-[var(--clr-surface-a50)]">
                                             {currentUser.user.username}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xs text-gray-600">
+                                    <p className="text-xs text-[var(--clr-surface-a50)]">
                                         Total Points
                                     </p>
-                                    <p className="text-lg font-bold text-blue-600">
+                                    <p className="text-lg font-bold text-[var(--clr-primary-a0)]">
                                         {currentUser.total_points}
                                     </p>
                                 </div>
@@ -224,10 +224,10 @@ export default function PeerShow({ peer }: PeerShowProps) {
                 )}
 
                 {/* Leaderboard */}
-                <Card>
+                <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Trophy className="w-5 h-5 text-yellow-500" />
+                        <CardTitle className="flex items-center gap-2 text-[var(--clr-light-a0)]">
+                            <Trophy className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                             Leaderboard
                         </CardTitle>
                     </CardHeader>
@@ -236,9 +236,7 @@ export default function PeerShow({ peer }: PeerShowProps) {
                             {sortedUsers.map((user, index) => (
                                 <div
                                     key={user.id}
-                                    className={`flex items-center justify-between p-3 rounded-lg border ${getRankColor(
-                                        index
-                                    )}`}
+                                    className={`flex items-center justify-between p-3 rounded-lg border bg-[var(--clr-surface-a20)] border-[var(--clr-surface-a30)]`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-center justify-center w-8 h-8">
@@ -248,17 +246,17 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                             <AvatarImage
                                                 src={user.user.avatar}
                                             />
-                                            <AvatarFallback className="text-xs">
+                                            <AvatarFallback className="text-xs bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]">
                                                 {user.user.username
                                                     .substring(0, 2)
                                                     .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <p className="font-medium text-gray-900">
+                                            <p className="font-medium text-[var(--clr-light-a0)]">
                                                 {user.user.username}
                                             </p>
-                                            <p className="text-xs text-gray-600">
+                                            <p className="text-xs text-[var(--clr-surface-a50)]">
                                                 {user.is_winner
                                                     ? "Winner"
                                                     : "Participant"}
@@ -266,10 +264,10 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-lg font-bold text-gray-900">
+                                        <p className="text-lg font-bold text-[var(--clr-light-a0)]">
                                             {user.total_points}
                                         </p>
-                                        <p className="text-xs text-gray-600">
+                                        <p className="text-xs text-[var(--clr-surface-a50)]">
                                             points
                                         </p>
                                     </div>
@@ -282,26 +280,26 @@ export default function PeerShow({ peer }: PeerShowProps) {
                 {/* Actions */}
                 {peer.status === "open" && !currentUser && (
                     <div className="space-y-3">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        <Button className="w-full bg-[var(--clr-primary-a0)] hover:bg-[var(--clr-primary-a10)] text-[var(--clr-light-a0)]">
                             <Target className="w-4 h-4 mr-2" />
                             Join This Peer
                         </Button>
-                        <p className="text-xs text-gray-600 text-center">
+                        <p className="text-xs text-[var(--clr-surface-a50)] text-center">
                             Join this peer competition and start earning points!
                         </p>
                     </div>
                 )}
 
                 {peer.status === "open" && currentUser && (
-                    <Card className="bg-blue-50 border-blue-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <TrendingUp className="w-5 h-5 text-blue-600" />
+                                <TrendingUp className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                                 <div>
-                                    <p className="font-medium text-blue-900">
+                                    <p className="font-medium text-[var(--clr-light-a0)]">
                                         You're in this peer!
                                     </p>
-                                    <p className="text-sm text-blue-700">
+                                    <p className="text-sm text-[var(--clr-surface-a50)]">
                                         Keep betting to earn more points
                                     </p>
                                 </div>
@@ -311,15 +309,15 @@ export default function PeerShow({ peer }: PeerShowProps) {
                 )}
 
                 {peer.status === "finished" && (
-                    <Card className="bg-green-50 border-green-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <Trophy className="w-5 h-5 text-green-600" />
+                                <Trophy className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                                 <div>
-                                    <p className="font-medium text-green-900">
+                                    <p className="font-medium text-[var(--clr-light-a0)]">
                                         Competition Finished!
                                     </p>
-                                    <p className="text-sm text-green-700">
+                                    <p className="text-sm text-[var(--clr-surface-a50)]">
                                         {peer.winner_user_id
                                             ? "Check the leaderboard for results"
                                             : "Results will be announced soon"}

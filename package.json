@@ -23,8 +23,11 @@
     "dependencies": {
         "@inertiajs/react": "^2.0.17",
         "@radix-ui/react-avatar": "^1.1.10",
+        "@radix-ui/react-collapsible": "^1.1.11",
+        "@radix-ui/react-dialog": "^1.1.14",
         "@radix-ui/react-label": "^2.1.7",
         "@radix-ui/react-slot": "^1.2.3",
+        "@radix-ui/react-tabs": "^1.1.12",
         "@types/react": "^19.0.3",
         "@types/react-dom": "^19.0.2",
         "@vitejs/plugin-react": "^4.3.4",
@@ -40,6 +43,7 @@
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
         "sonner": "^2.0.6",
+        "swiper": "^11.2.10",
         "tailwind-merge": "^3.3.1"
     }
 }

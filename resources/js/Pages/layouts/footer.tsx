@@ -1,5 +1,5 @@
-import { usePage } from "@inertiajs/react";
-import { Flame, UserCircle } from "lucide-react";
+import { Link, usePage } from "@inertiajs/react";
+import { AlertOctagon, Flame, Plus, UserCircle } from "lucide-react";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -9,30 +9,26 @@ const Footer = () => {
     } = usePage<{ auth: { user: any } }>().props;
 
     return (
-        <div className="w-full border-b-[var(--clr-surface-a20)] bg-[var(--clr-surface-a10)] z-50 h-12 flex items-center px-2 justify-between">
-            <div className="flex items-center gap-1">
-                <Avatar className=" rounded">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback className="uppercase rounded">
-                        {user.username.substring(0, 2)}
-                    </AvatarFallback>
-                </Avatar>
-                <span className="text-sm text-[var(--clr-light-a0)]">
-                    <strong>Hi,</strong> {user.username}
-                </span>
-            </div>
-
+        <div className="w-full rounded-bl rounded-br opacity-70 bg-primary fixed top-0 left-1/2 -translate-x-1/2 max-w-md z-50 h-12 flex items-center px-2 justify-between">
             <div className="">
-                <Flame size={40} color="var(--clr-primary-a0)" />
+                <Flame size={40} color="#fff" />
             </div>
 
-            <div className="flex items-center gap-0.5 rounded-full bg-[var(--clr-primary-a0)] px-2 py-1">
-                <span className="text-xs text-[var(--clr-surface-a0)]">
-                    balance:
-                </span>
-                <span className="text-sm font-bold text-[var(--clr-surface-a0)]">
-                    {user.wallet.balance}
-                </span>
+            <div className="flex items-center gap-2">
+                <div className="flex  items-center gap-0.5 rounded bg-[var(--clr-primary-a0)] px-2 py-1">
+                    <span className="text-sm text-[var(--clr-surface-a0)]">
+                        Bal:
+                    </span>
+                    <span className="text-sm text-[var(--clr-surface-a0)]">
+                        {user.wallet.balance}
+                    </span>
+                </div>
+                <Link
+                    href={"/wallet"}
+                    className="text-sm text-[var(--clr-surface-a0)] bg-[var(--clr-primary-a0)] rounded-full p-1"
+                >
+                    <Plus size={20} color="var(--clr-surface-a0)" />
+                </Link>
             </div>
         </div>
     );

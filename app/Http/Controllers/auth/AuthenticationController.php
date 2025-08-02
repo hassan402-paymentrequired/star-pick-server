@@ -30,7 +30,7 @@ class AuthenticationController extends Controller
             'password' => 'required|min:8'
         ]);
 
-        $user = User::find($request->phone)->first();
+         $user = User::where('phone', $request->phone)->first();
 
         if (!$user) {
             return back()->with('error', 'Invalid credentials');
@@ -41,7 +41,7 @@ class AuthenticationController extends Controller
         }
 
         Auth::login($user);
-        return to_route('home');
+        return to_route('home')->with('success', 'Logged in successfull');
     }
 
 

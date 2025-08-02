@@ -1,0 +1,495 @@
+import { useState } from "react";
+import { Star, Check, Users, DollarSign, Clock, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { FloatingBetSlip } from "../components/floating-bet";
+import MainLayout from "../layouts/main-layout";
+
+interface Player {
+    player_avatar: string;
+    player_position: string;
+    player_match_id: number;
+    player_id: number;
+    player_team: string;
+    player_name: string;
+    against_team_name: string;
+    date: string;
+    time: string;
+}
+
+interface PlayerGroup {
+    star: number;
+    players: Player[];
+}
+
+interface SelectedPlayer extends Player {
+    type: "main" | "sub";
+}
+
+interface Peer {
+    id: number;
+    name: string;
+    stake: number;
+    users_count: number;
+    limit: number;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export default function JoinPeer({
+    peer,
+    players,
+}: {
+    peer: Peer;
+    players: PlayerGroup[];
+}) {
+    const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>(
+        []
+    );
+    const [activeTab, setActiveTab] = useState("5");
+
+    const getTierColor = (tier: number) => {
+        switch (tier) {
+            case 5:
+                return "text-secondary";
+            case 4:
+                return "text-accent";
+            case 3:
+                return "text-primary";
+            case 2:
+                return "text-success";
+            default:
+                return "text-muted-foreground";
+        }
+    };
+
+    const renderStars = (tier: number) => {
+        return Array.from({ length: 5 }, (_, i) => (
+            <Star
+                key={i}
+                className={`h-4 w-4 ${
+                    i < tier ? getTierColor(tier) : "text-muted-foreground"
+                } ${i < tier ? "fill-current" : ""}`}
+            />
+        ));
+    };
+
+    const handlePlayerSelect = (player: Player, type: "main" | "sub") => {
+        const isSelected = selectedPlayers.some(
+            (p) => p.player_match_id === player.player_match_id
+        );
+        const tierCount = selectedPlayers.filter(
+            (p) => p.player_id === player.player_id && p.type === type
+        ).length;
+        const typeCount = selectedPlayers.filter((p) => p.type === type).length;
+
+        if (isSelected) {
+            setSelectedPlayers((prev) =>
+                prev.filter((p) => p.player_match_id !== player.player_match_id)
+            );
+        } else if (tierCount < 1 && typeCount < 5) {
+            setSelectedPlayers((prev) => [...prev, { ...player, type }]);
+        }
+    };
+
+    const isPlayerSelected = (playerMatchId: number) => {
+        return selectedPlayers.some((p) => p.player_match_id === playerMatchId);
+    };
+
+    const getTierProgress = (tier: number, type: "main" | "sub") => {
+        const count = selectedPlayers.filter((p) => {
+            const playerGroup = players.find((group) => group.star === tier);
+            return (
+                playerGroup &&
+                playerGroup.players.some(
+                    (player) => player.player_id === p.player_id
+                ) &&
+                p.type === type
+            );
+        }).length;
+        return { count, max: 1 };
+    };
+
+    const handleSubmitTeam = () => {
+        if (selectedPlayers.length === 10) {
+            // Simulate team submission
+            alert("Team submitted successfully!");
+        }
+    };
+
+    // Get players for a specific star rating
+    const getPlayersByStar = (star: number) => {
+        const group = players.find((p) => p.star === star);
+        return group ? group.players : [];
+    };
+
+    return (
+        <MainLayout>
+            <main>
+                {/* Peer Info */}
+                <div className="px-2 py-3 bg-[var(--clr-surface-a10)] border-border/10">
+                    <div className="flex items-center justify-between ">
+                        <h2 className="text-[var(--clr-surface-a50)]  font-bold">
+                            {peer.name}
+                        </h2>
+                        <Badge className="text-gray-400">Joining</Badge>
+                    </div>
+                    <div className="flex items-center gap-3 mt-2">
+                        <div className="flex items-center text-muted tracking-wider text-xs">
+                            ₦<span className="">{Number(peer.amount).toFixed()}</span>
+                        </div>
+                        <div className="flex items-center text-muted gap-1 text-xs">
+                            <Users className="h-4 w-4" />
+                            <span>
+                                {peer.users_count || 0}/{peer.limit || '-'}
+                            </span>
+                        </div>
+                        <div className="flex items-center text-muted gap-1 text-xs ">
+                            <Clock className="h-4 w-4" />
+                            <span>Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Team Selection Progress */}
+                <div className="px-4 py-4 border-b border-border/40 bg-card/10">
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-headline text-[var(--clr-light-a0)]">
+                            Select Your Team
+                        </h3>
+                        <Badge
+                            variant="outline"
+                            className="text-[var(--clr-primary-a0)] border-[var(--clr-primary-a0)]"
+                        >
+                            {selectedPlayers.length}/10 players
+                        </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <h4 className="text-body font-semibold text-[var(--clr-light-a0)]">
+                                Main Squad
+                            </h4>
+                            <div className="flex gap-1">
+                                {[5, 4, 3, 2, 1].map((tier) => {
+                                    const { count } = getTierProgress(
+                                        tier,
+                                        "main"
+                                    );
+                                    return (
+                                        <div
+                                            key={tier}
+                                            className="flex items-center gap-1"
+                                        >
+                                            <Star
+                                                className={`h-3 w-3 ${
+                                                    count > 0
+                                                        ? getTierColor(tier)
+                                                        : "text-[var(--clr-surface-a50)]"
+                                                } ${
+                                                    count > 0
+                                                        ? "fill-current"
+                                                        : ""
+                                                }`}
+                                            />
+                                            {count > 0 && (
+                                                <Check className="h-3 w-3 text-[var(--clr-success-a0)]" />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h4 className="text-body font-semibold text-[var(--clr-light-a0)]">
+                                Substitutes
+                            </h4>
+                            <div className="flex gap-1">
+                                {[5, 4, 3, 2, 1].map((tier) => {
+                                    const { count } = getTierProgress(
+                                        tier,
+                                        "sub"
+                                    );
+                                    return (
+                                        <div
+                                            key={tier}
+                                            className="flex items-center gap-1"
+                                        >
+                                            <Star
+                                                className={`h-3 w-3 ${
+                                                    count > 0
+                                                        ? getTierColor(tier)
+                                                        : "text-[var(--clr-surface-a50)]"
+                                                } ${
+                                                    count > 0
+                                                        ? "fill-current"
+                                                        : ""
+                                                }`}
+                                            />
+                                            {count > 0 && (
+                                                <Check className="h-3 w-3 text-[var(--clr-success-a0)]" />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Player Selection */}
+                <div className="px-4 py-6">
+                    <Tabs value={activeTab} onValueChange={setActiveTab}>
+                        <TabsList className="grid w-full grid-cols-5 mb-6 bg-transparent">
+                            {[5, 4, 3, 2, 1].map((tier) => {
+                                const isActive = activeTab === tier.toString();
+                                return (
+                                    <TabsTrigger
+                                        key={tier}
+                                        value={tier.toString()}
+                                        className="text-muted data-[state=active]:border-b-muted data-[state=active]:border-b-3 data-[state=active]:text-muted-white data-[state=active]:rounded-none data-[state=active]:bg-transparent"
+                                    >
+                                        <div className="flex items-center gap-1">
+                                            <Star
+                                                className={`h-3 w-3 ${getTierColor(
+                                                    tier
+                                                )} fill-current`}
+                                            />
+                                            <span className="font-bold">
+                                                {tier}
+                                            </span>
+                                        </div>
+                                        {isActive && (
+                                            <span className="mt-1 w-6 h-1 rounded bg-[var(--clr-light-a0)] block" />
+                                        )}
+                                    </TabsTrigger>
+                                );
+                            })}
+                        </TabsList>
+
+                        {[5, 4, 3, 2, 1].map((tier) => (
+                            <TabsContent
+                                key={tier}
+                                value={tier.toString()}
+                                className="space-y-4"
+                            >
+                                <div className="text-center mb-4">
+                                    <h3 className="text-headline text-[var(--clr-light-a0)] mb-2">
+                                        {tier}-Star Players
+                                    </h3>
+                                    <p className="text-caption text-[var(--clr-surface-a50)]">
+                                        Select 1 for main squad and 1 for
+                                        substitutes
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-3">
+                                    {getPlayersByStar(tier).map((player) => {
+                                        const isSelected = isPlayerSelected(
+                                            player.player_match_id
+                                        );
+                                        const selectedPlayer =
+                                            selectedPlayers.find(
+                                                (p) =>
+                                                    p.player_match_id ===
+                                                    player.player_match_id
+                                            );
+                                        const mainCount = getTierProgress(
+                                            tier,
+                                            "main"
+                                        ).count;
+                                        const subCount = getTierProgress(
+                                            tier,
+                                            "sub"
+                                        ).count;
+
+                                        return (
+                                            <Card
+                                                key={player.player_match_id}
+                                                className={cn(
+                                                    "bg-border rounded p-0 transition-all",
+                                                    isSelected &&
+                                                        "ring-2 ring-primary shadow-glow"
+                                                )}
+                                            >
+                                                <CardContent className="p-4">
+                                                    {/* Player vs Team Layout */}
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        {/* Player Side */}
+                                                        <div className="flex items-center gap-3 flex-1">
+                                                            {/* Player Avatar or Icon */}
+                                                            <div className="flex flex-col items-center justify-center">
+                                                                <div className="w-12 h-12 rounded-full bg-foreground flex items-center justify-center text-xl font-bold text-muted-white shadow">
+                                                                    {player.player_name
+                                                                        .split(
+                                                                            " "
+                                                                        )
+                                                                        .map(
+                                                                            (
+                                                                                n
+                                                                            ) =>
+                                                                                n[0]
+                                                                        )
+                                                                        .join(
+                                                                            ""
+                                                                        )
+                                                                        .toUpperCase()}
+                                                                </div>
+                                                            </div>
+                                                            {/* Player Info */}
+                                                            <div>
+                                                                <div className="font-bold text-[var(--clr-light-a0)] text-base">
+                                                                    {
+                                                                        player.player_name
+                                                                    }
+                                                                </div>
+                                                                <div className="text-xs text-[var(--clr-surface-a50)]">
+                                                                    {
+                                                                        player.player_position
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* VS Divider */}
+                                                        <div className="flex flex-col items-center mx-4">
+                                                            <span className="bg-[var(--clr-surface-a20)] text-[var(--clr-primary-a0)] font-bold px-2 py-1 rounded-full text-xs shadow">
+                                                                VS
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Team Side */}
+                                                        <div className="flex flex-col items-end min-w-[90px]">
+                                                            <div className="flex items-center gap-2">
+                                                                {/* Team Logo Placeholder */}
+                                                                <div className="w-8 h-8 rounded-full bg-[var(--clr-secondary-a10)] flex items-center justify-center text-sm font-bold text-[var(--clr-secondary-a0)] shadow">
+                                                                    {player.player_team
+                                                                        .split(
+                                                                            " "
+                                                                        )
+                                                                        .map(
+                                                                            (
+                                                                                n
+                                                                            ) =>
+                                                                                n[0]
+                                                                        )
+                                                                        .join(
+                                                                            ""
+                                                                        )
+                                                                        .toUpperCase()}
+                                                                </div>
+                                                                <span className="font-semibold text-[var(--clr-secondary-a0)] text-sm">
+                                                                    {
+                                                                        player.player_team
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Action Buttons */}
+                                                    <div className="flex gap-2 mt-2">
+                                                        <Button
+                                                            size="sm"
+                                                            variant={
+                                                                selectedPlayer?.type ===
+                                                                "main"
+                                                                    ? "default"
+                                                                    : "outline"
+                                                            }
+                                                            disabled={
+                                                                mainCount >=
+                                                                    1 &&
+                                                                selectedPlayer?.type !==
+                                                                    "main"
+                                                            }
+                                                            onClick={() =>
+                                                                handlePlayerSelect(
+                                                                    player,
+                                                                    "main"
+                                                                )
+                                                            }
+                                                            className={`flex-1 h-8 ${
+                                                                selectedPlayer?.type ===
+                                                                "main"
+                                                                    ? "bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]"
+                                                                    : "text-[var(--clr-primary-a0)]"
+                                                            }`}
+                                                        >
+                                                            {selectedPlayer?.type ===
+                                                            "main"
+                                                                ? "Main ✓"
+                                                                : "Main Squad"}
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant={
+                                                                selectedPlayer?.type ===
+                                                                "sub"
+                                                                    ? "secondary"
+                                                                    : "outline"
+                                                            }
+                                                            disabled={
+                                                                subCount >= 1 &&
+                                                                selectedPlayer?.type !==
+                                                                    "sub"
+                                                            }
+                                                            onClick={() =>
+                                                                handlePlayerSelect(
+                                                                    player,
+                                                                    "sub"
+                                                                )
+                                                            }
+                                                            className={`flex-1 h-8 ${
+                                                                selectedPlayer?.type ===
+                                                                "sub"
+                                                                    ? "bg-[var(--clr-secondary-a0)] text-[var(--clr-light-a0)]"
+                                                                    : "text-[var(--clr-secondary-a0)]"
+                                                            }`}
+                                                        >
+                                                            {selectedPlayer?.type ===
+                                                            "sub"
+                                                                ? "Sub ✓"
+                                                                : "Substitute"}
+                                                        </Button>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
+                                </div>
+                            </TabsContent>
+                        ))}
+                    </Tabs>
+                </div>
+
+                {/* Submit Button */}
+                {selectedPlayers.length === 10 && (
+                    <div className="fixed bottom-24 left-4 right-4 z-40">
+                        <Button
+                            onClick={handleSubmitTeam}
+                            className="w-full h-14 gradient-secondary text-secondary-foreground font-bold shadow-floating"
+                        >
+                            Submit Team & Join Peer
+                        </Button>
+                    </div>
+                )}
+            </main>
+
+            <FloatingBetSlip
+                selectedPlayers={selectedPlayers}
+                onRemovePlayer={(playerId) => {
+                    setSelectedPlayers((prev) =>
+                        prev.filter((p) => p.player_match_id !== playerId)
+                    );
+                }}
+                players={players}
+            />
+        </MainLayout>
+    );
+}

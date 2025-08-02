@@ -56,10 +56,10 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                         <ArrowLeft className="w-4 h-4" />
                     </Button>
                     <div>
-                        <h1 className="text-xl font-bold text-gray-900">
+                        <h1 className="text-xl font-bold text-[var(--clr-light-a0)]">
                             Create Peer
                         </h1>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-[var(--clr-surface-a50)]">
                             Start a new betting competition
                         </p>
                     </div>
@@ -67,16 +67,21 @@ export default function CreatePeer({ user }: CreatePeerProps) {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Basic Info */}
-                    <Card>
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Target className="w-5 h-5 text-blue-600" />
+                            <CardTitle className="flex items-center gap-2 text-[var(--clr-light-a0)]">
+                                <Target className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                                 Basic Information
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <Label htmlFor="name">Peer Name</Label>
+                                <Label
+                                    htmlFor="name"
+                                    className="text-[var(--clr-light-a0)]"
+                                >
+                                    Peer Name
+                                </Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -97,7 +102,12 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                             </div>
 
                             <div>
-                                <Label htmlFor="amount">Entry Fee ($)</Label>
+                                <Label
+                                    htmlFor="amount"
+                                    className="text-[var(--clr-light-a0)]"
+                                >
+                                    Entry Fee ($)
+                                </Label>
                                 <Input
                                     id="amount"
                                     type="number"
@@ -119,7 +129,12 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                             </div>
 
                             <div>
-                                <Label htmlFor="limit">Player Limit</Label>
+                                <Label
+                                    htmlFor="limit"
+                                    className="text-[var(--clr-light-a0)]"
+                                >
+                                    Player Limit
+                                </Label>
                                 <Input
                                     id="limit"
                                     type="number"
@@ -142,16 +157,19 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                     </Card>
 
                     {/* Settings */}
-                    <Card>
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Info className="w-5 h-5 text-blue-600" />
+                            <CardTitle className="flex items-center gap-2 text-[var(--clr-light-a0)]">
+                                <Info className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                                 Settings
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <Label htmlFor="sharing_ratio">
+                                <Label
+                                    htmlFor="sharing_ratio"
+                                    className="text-[var(--clr-light-a0)]"
+                                >
                                     Sharing Ratio
                                 </Label>
                                 <Input
@@ -169,7 +187,7 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                                             : ""
                                     }
                                 />
-                                <p className="text-xs text-gray-600 mt-1">
+                                <p className="text-xs text-[var(--clr-surface-a50)] mt-1">
                                     How much of the prize pool the winner gets
                                     (1.0 = 100%)
                                 </p>
@@ -192,72 +210,72 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                                 />
                                 <Label
                                     htmlFor="private"
-                                    className="flex items-center gap-2"
+                                    className="flex items-center gap-2 text-[var(--clr-light-a0)]"
                                 >
                                     <Lock className="w-4 h-4" />
                                     Private Peer
                                 </Label>
                             </div>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-[var(--clr-surface-a50)]">
                                 Private peers are only visible to invited users
                             </p>
                         </CardContent>
                     </Card>
 
                     {/* Preview */}
-                    <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-primary-a0)]">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-blue-900">
+                            <CardTitle className="flex items-center gap-2 text-[var(--clr-primary-a0)]">
                                 <Globe className="w-5 h-5" />
                                 Peer Preview
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-blue-700">
+                                <span className="text-sm text-[var(--clr-primary-a0)]">
                                     Name:
                                 </span>
-                                <span className="font-medium text-blue-900">
+                                <span className="font-medium text-[var(--clr-light-a0)]">
                                     {data.name || "Your Peer Name"}
                                 </span>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-blue-700">
+                                <span className="text-sm text-[var(--clr-primary-a0)]">
                                     Entry Fee:
                                 </span>
-                                <span className="font-medium text-blue-900">
+                                <span className="font-medium text-[var(--clr-light-a0)]">
                                     ${data.amount || "0.00"}
                                 </span>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-blue-700">
+                                <span className="text-sm text-[var(--clr-primary-a0)]">
                                     Player Limit:
                                 </span>
-                                <span className="font-medium text-blue-900">
+                                <span className="font-medium text-[var(--clr-light-a0)]">
                                     {data.limit || "Unlimited"}
                                 </span>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-blue-700">
+                                <span className="text-sm text-[var(--clr-primary-a0)]">
                                     Sharing Ratio:
                                 </span>
-                                <span className="font-medium text-blue-900">
+                                <span className="font-medium text-[var(--clr-light-a0)]">
                                     {data.sharing_ratio || "1"}x
                                 </span>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-blue-700">
+                                <span className="text-sm text-[var(--clr-primary-a0)]">
                                     Privacy:
                                 </span>
                                 <Badge
                                     className={
                                         data.private
                                             ? "bg-red-100 text-red-800"
-                                            : "bg-green-100 text-green-800"
+                                            : "bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]"
                                     }
                                 >
                                     {data.private ? "Private" : "Public"}
@@ -265,12 +283,12 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                             </div>
 
                             {data.amount && data.limit && (
-                                <div className="pt-3 border-t border-blue-200">
+                                <div className="pt-3 border-t border-[var(--clr-primary-a0)]">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm font-medium text-blue-700">
+                                        <span className="text-sm font-medium text-[var(--clr-primary-a0)]">
                                             Total Prize Pool:
                                         </span>
-                                        <span className="text-lg font-bold text-blue-900">
+                                        <span className="text-lg font-bold text-[var(--clr-light-a0)]">
                                             ${calculatePrizePool()}
                                         </span>
                                     </div>
@@ -280,25 +298,25 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                     </Card>
 
                     {/* Wallet Info */}
-                    <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                    <Card className="bg-[var(--clr-surface-a10)] border-[var(--clr-surface-a20)]">
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <DollarSign className="w-5 h-5 text-green-600" />
+                                    <DollarSign className="w-5 h-5 text-[var(--clr-primary-a0)]" />
                                     <div>
-                                        <p className="text-sm text-green-600 font-medium">
+                                        <p className="text-sm text-[var(--clr-primary-a0)] font-medium">
                                             Your Balance
                                         </p>
-                                        <p className="text-lg font-bold text-green-900">
+                                        <p className="text-lg font-bold text-[var(--clr-light-a0)]">
                                             ${user.wallet.balance}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xs text-green-600">
+                                    <p className="text-xs text-[var(--clr-primary-a0)]">
                                         Required
                                     </p>
-                                    <p className="text-sm font-medium text-green-900">
+                                    <p className="text-sm font-medium text-[var(--clr-light-a0)]">
                                         ${data.amount || "0.00"}
                                     </p>
                                 </div>
@@ -310,13 +328,13 @@ export default function CreatePeer({ user }: CreatePeerProps) {
                     <div className="space-y-3">
                         <Button
                             type="submit"
-                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            className="w-full bg-[var(--clr-primary-a0)] hover:bg-[var(--clr-primary-a10)] text-[var(--clr-light-a0)]"
                             disabled={processing || !data.name || !data.amount}
                         >
                             {processing ? "Creating..." : "Create Peer"}
                         </Button>
 
-                        <p className="text-xs text-gray-600 text-center">
+                        <p className="text-xs text-[var(--clr-surface-a50)] text-center">
                             You'll be charged ${data.amount || "0.00"} from your
                             wallet when you create this peer
                         </p>
