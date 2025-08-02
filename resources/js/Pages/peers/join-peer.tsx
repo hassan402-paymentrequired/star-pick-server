@@ -32,7 +32,7 @@ interface SelectedPlayer extends Player {
 interface Peer {
     id: number;
     name: string;
-    stake: number;
+    amount: number;
     users_count: number;
     limit: number;
     status: string;
@@ -133,7 +133,7 @@ export default function JoinPeer({
                 {/* Peer Info */}
                 <div className="px-2 py-3 bg-[var(--clr-surface-a10)] border-border/10">
                     <div className="flex items-center justify-between ">
-                        <h2 className="text-[var(--clr-surface-a50)]  font-bold">
+                        <h2 className="text-[var(--clr-surface-a50)] tracking-wider  font-bold">
                             {peer.name}
                         </h2>
                         <Badge className="text-gray-400">Joining</Badge>
@@ -312,7 +312,7 @@ export default function JoinPeer({
                                             <Card
                                                 key={player.player_match_id}
                                                 className={cn(
-                                                    "bg-border rounded p-0 transition-all",
+                                                    "bg-card/5 rounded p-0 transition-all",
                                                     isSelected &&
                                                         "ring-2 ring-primary shadow-glow"
                                                 )}
@@ -324,41 +324,28 @@ export default function JoinPeer({
                                                         <div className="flex items-center gap-3 flex-1">
                                                             {/* Player Avatar or Icon */}
                                                             <div className="flex flex-col items-center justify-center">
-                                                                <div className="w-12 h-12 rounded-full bg-foreground flex items-center justify-center text-xl font-bold text-muted-white shadow">
-                                                                    {player.player_name
-                                                                        .split(
-                                                                            " "
-                                                                        )
-                                                                        .map(
-                                                                            (
-                                                                                n
-                                                                            ) =>
-                                                                                n[0]
-                                                                        )
-                                                                        .join(
-                                                                            ""
-                                                                        )
-                                                                        .toUpperCase()}
+                                                                <div className="w-12 uppercase h-12 rounded bg-foreground flex items-center justify-center text-xl font-bold text-muted-white shadow">
+                                                                    {player.player_name.substring(0,2)}
                                                                 </div>
                                                             </div>
                                                             {/* Player Info */}
                                                             <div>
-                                                                <div className="font-bold text-[var(--clr-light-a0)] text-base">
+                                                                <div className="font-bold text-muted-white text-base">
                                                                     {
                                                                         player.player_name
                                                                     }
                                                                 </div>
-                                                                <div className="text-xs text-[var(--clr-surface-a50)]">
+                                                                <div className="text-xs text-muted">
                                                                     {
                                                                         player.player_position
-                                                                    }
+                                                                    } - {player.player_team}
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         {/* VS Divider */}
                                                         <div className="flex flex-col items-center mx-4">
-                                                            <span className="bg-[var(--clr-surface-a20)] text-[var(--clr-primary-a0)] font-bold px-2 py-1 rounded-full text-xs shadow">
+                                                            <span className="bg-muted text-[var(--clr-primary-a0)] font-bold px-2 py-1 rounded-full text-xs shadow">
                                                                 VS
                                                             </span>
                                                         </div>
@@ -367,25 +354,12 @@ export default function JoinPeer({
                                                         <div className="flex flex-col items-end min-w-[90px]">
                                                             <div className="flex items-center gap-2">
                                                                 {/* Team Logo Placeholder */}
-                                                                <div className="w-8 h-8 rounded-full bg-[var(--clr-secondary-a10)] flex items-center justify-center text-sm font-bold text-[var(--clr-secondary-a0)] shadow">
-                                                                    {player.player_team
-                                                                        .split(
-                                                                            " "
-                                                                        )
-                                                                        .map(
-                                                                            (
-                                                                                n
-                                                                            ) =>
-                                                                                n[0]
-                                                                        )
-                                                                        .join(
-                                                                            ""
-                                                                        )
-                                                                        .toUpperCase()}
+                                                                <div className="w-8 h-8 uppercase rounded-full bg-background flex items-center justify-center text-sm font-bold text-muted shadow">
+                                                                    {player.against_team_name.substring(0,2)}
                                                                 </div>
-                                                                <span className="font-semibold text-[var(--clr-secondary-a0)] text-sm">
+                                                                <span className="font-semibold text-muted-white text-sm">
                                                                     {
-                                                                        player.player_team
+                                                                        player.against_team_name
                                                                     }
                                                                 </span>
                                                             </div>
@@ -417,8 +391,8 @@ export default function JoinPeer({
                                                             className={`flex-1 h-8 ${
                                                                 selectedPlayer?.type ===
                                                                 "main"
-                                                                    ? "bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]"
-                                                                    : "text-[var(--clr-primary-a0)]"
+                                                                    ? "bg-[var(--clr-primary-a0)] text-muted"
+                                                                    : "text-muted-white"
                                                             }`}
                                                         >
                                                             {selectedPlayer?.type ===
@@ -448,8 +422,8 @@ export default function JoinPeer({
                                                             className={`flex-1 h-8 ${
                                                                 selectedPlayer?.type ===
                                                                 "sub"
-                                                                    ? "bg-[var(--clr-secondary-a0)] text-[var(--clr-light-a0)]"
-                                                                    : "text-[var(--clr-secondary-a0)]"
+                                                                    ? "bg-[var(--clr-secondary-a0)] text-muted"
+                                                                    : "text-muted-white"
                                                             }`}
                                                         >
                                                             {selectedPlayer?.type ===
