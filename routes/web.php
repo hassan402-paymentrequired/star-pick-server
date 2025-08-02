@@ -13,6 +13,9 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::middleware('auth:web')->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/', [PeerController::class, 'index'])->name('home');
 });
+
+Route::get('/verify-otp', [AuthenticationController::class, 'otpIndex'])->name('verify');
+Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp'])->name('verify.store');

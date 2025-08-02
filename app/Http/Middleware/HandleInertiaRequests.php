@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'auth' => [
-                'user' => fn() => $request->user(),
+                'user' => fn() => $request->user()->load('wallet'),
             ],
             'flash' => [
                 'success' => fn() => $request->session()->get('success'),

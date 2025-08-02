@@ -73,6 +73,32 @@ class AuthenticationController extends Controller
         Auth::login($user);
 
 
-        return to_route('home')->with('success', 'Registration successful');
+        return to_route('verify')->with('success', 'Registration successful');
+    }
+
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|digits:6|exists:users,otp',
+        ]);
+
+        $user = User::where('otp', $request->otp)->first();
+
+        if (!$user || $user->otp_expires_at > now()->addMinute())
+            return back()->with('error', 'Invalid verification code or expired verification code');
+
+
+        $user->otp = null;
+        $user->otp_expires_at = null;
+        $user->email_verified_at = now();
+        $user->save();
+
+        return to_route('home')->with('success', 'Phone number verified successfully');
+    }
+
+    public function otpIndex()
+    {
+        return Inertia::render('auth/verify-otp');
     }
 }
