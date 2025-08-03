@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Peer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BetRequest;
 use App\Models\Peer;
 use App\Utils\Service\V1\Peer\PeerService;
 use App\Utils\Service\V1\Player\PlayerService;
@@ -13,10 +14,10 @@ use Inertia\Inertia;
 class PeerController extends Controller
 {
 
-     protected PlayerService $playerService;
-     protected PeerService $peerService;
+    protected PlayerService $playerService;
+    protected PeerService $peerService;
 
-    public function __construct(PlayerService $playerService,PeerService $peerService)
+    public function __construct(PlayerService $playerService, PeerService $peerService)
     {
         $this->playerService = $playerService;
         $this->peerService = $peerService;
@@ -48,12 +49,12 @@ class PeerController extends Controller
         ]);
     }
 
-    public function storeJoinPeer(Request $request, Peer $peer)
+    public function storeJoinPeer(BetRequest $request, Peer $peer)
     {
-        $this->peerService->playBet($request, $peer);
+        $this->peerService->playBet($request, $peer, 'web');
         return to_route('peers.show', [
             'peer' => $peer
-        ]);
+        ])->with('success', 'Peer joined successfully');
     }
 
     public function contents()
@@ -67,11 +68,11 @@ class PeerController extends Controller
             ->withCount('users')
             ->get();
 
-
+        // dd($ongoingPeers);
 
         // History: Peers the user joined that have ended
         $historyPeers = $user->peers()
-            ->where('status', 'open')
+            ->where('status', 'finished')
             ->with('created_by')
             ->withCount('users')
             // ->orderBy('end_time', 'desc')
@@ -87,6 +88,13 @@ class PeerController extends Controller
     {
         return Inertia::render('peers/global/index', [
             //
+        ]);
+    }
+
+    public function show(Peer $peer)
+    {
+        return Inertia::render('peers/show', [
+            'peer' => $peer
         ]);
     }
 }

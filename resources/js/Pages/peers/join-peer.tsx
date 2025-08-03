@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { FloatingBetSlip } from "../components/floating-bet";
 import MainLayout from "../layouts/main-layout";
-import { useForm } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 
 interface Player {
     player_avatar: string;
@@ -116,14 +117,75 @@ export default function JoinPeer({
         return { count, max: 1 };
     };
 
-    const handleSubmitTeam = () => {
-        console.log(selectedPlayers);
+    const handleSubmitTeam = async () => {
+        if (selectedPlayers.length !== 10) {
+            toast.error("Please select exactly 10 players (5 main + 5 substitutes)");
+            return;
+        }
+
+        const peers = [5, 4, 3, 2, 1].map((star) => {
+            const mainPlayer = selectedPlayers.find(
+                (p) =>
+                    getPlayerStarRating(p.player_id) === star &&
+                    p.type === "main"
+            );
+            const subPlayer = selectedPlayers.find(
+                (p) =>
+                    getPlayerStarRating(p.player_id) === star &&
+                    p.type === "sub"
+            );
+
+            if (!mainPlayer || !subPlayer) {
+                throw new Error(`Missing players for ${star}-star tier`);
+            }
+
+            return {
+                star,
+                main: mainPlayer.player_id,
+                sub: subPlayer.player_id,
+                main_player_match_id: mainPlayer.player_match_id,
+                sub_player_match_id: subPlayer.player_match_id,
+            };
+        });
+
+        const formData = {
+            peer_id: peer.id,
+            peers: peers,
+        };
+
+        try {
+            // Use Inertia router to submit the form
+            router.post(`/peers/join/${peer.id}`, formData, {
+                onSuccess: () => {
+                    // Redirect to peer show page on success
+                    router.visit(route('peers.show', {peer: peer.id}));
+                },
+                onError: (errors) => {
+                    console.error("Validation errors:", errors);
+                    alert(`Error: ${Object.values(errors).join(", ")}`);
+                },
+            });
+        } catch (error) {
+            console.error("Error submitting team:", error);
+            alert("Failed to submit team. Please try again.");
+        }
     };
 
     // Get players for a specific star rating
     const getPlayersByStar = (star: number) => {
         const group = players.find((p) => p.star === star);
         return group ? group.players : [];
+    };
+
+    // Get star rating for a player
+    const getPlayerStarRating = (playerId: number) => {
+        for (const group of players) {
+            const player = group.players.find((p) => p.player_id === playerId);
+            if (player) {
+                return group.star;
+            }
+        }
+        return 1;
     };
 
     return (
