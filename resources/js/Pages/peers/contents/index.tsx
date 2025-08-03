@@ -3,6 +3,7 @@ import { Head, Link } from "@inertiajs/react";
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import Ongoing from "./on-going";
 
 interface Props {
     history: any[];
@@ -27,9 +28,8 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                             className="text-muted data-[state=active]:border-b-muted data-[state=active]:border-b-3 data-[state=active]:text-muted-white data-[state=active]:rounded-none data-[state=active]:bg-transparent"
                             value="upcoming"
                         >
-                           Finished
+                            Finished
                         </TabsTrigger>
-
                     </TabsList>
 
                     <TabsContent value="live">
@@ -56,6 +56,9 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                                 </div>
                             </div>
                         )}
+
+                        {ongoing.length &&
+                            ongoing.map((p) => <Ongoing peer={p} key={p.id} />)}
                     </TabsContent>
                     <TabsContent value="upcoming">
                         {!history.length && (
@@ -66,7 +69,6 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                                     </span>
                                     <div className="text-center text-muted mb-3">
                                         You have't join and peer yet .
-                                        
                                     </div>
                                     <Link
                                         href={route("peers.index")}
@@ -81,7 +83,6 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                             </div>
                         )}
                     </TabsContent>
-
                 </Tabs>
             </div>
         </MainLayout>

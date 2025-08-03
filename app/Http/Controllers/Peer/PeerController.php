@@ -93,6 +93,7 @@ class PeerController extends Controller
 
     public function show(Peer $peer)
     {
+        $peer->load(['users']);
         return Inertia::render('peers/show', [
             'peer' => $peer
         ]);

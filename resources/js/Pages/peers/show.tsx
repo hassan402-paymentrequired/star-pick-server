@@ -1,5 +1,5 @@
 import React from "react";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import MainLayout from "@/Pages/layouts/main-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -54,10 +54,13 @@ interface PeerShowProps extends PageProps {
 }
 
 export default function PeerShow({ peer }: PeerShowProps) {
+    const {
+        auth: { user },
+    } = usePage<{ auth: { user: any } }>().props;
     const sortedUsers = [...peer.users].sort(
         (a, b) => b.total_points - a.total_points
     );
-    const currentUser = peer.users.find((u) => u.user.id === 1); // Replace with actual user ID
+    const currentUser = peer.users.find((u) => u.id === user.id); 
 
     const getRankIcon = (index: number) => {
         switch (index) {
@@ -193,10 +196,10 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                 <div className="flex items-center gap-3">
                                     <Avatar className="w-10 h-10">
                                         <AvatarImage
-                                            src={currentUser.user.avatar}
+                                            src={currentUser.avatar}
                                         />
                                         <AvatarFallback className="bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]">
-                                            {currentUser.user.username
+                                            {currentUser.username
                                                 .substring(0, 2)
                                                 .toUpperCase()}
                                         </AvatarFallback>
@@ -206,7 +209,7 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                             Your Performance
                                         </p>
                                         <p className="text-sm text-[var(--clr-surface-a50)]">
-                                            {currentUser.user.username}
+                                            {currentUser.username}
                                         </p>
                                     </div>
                                 </div>
@@ -244,17 +247,17 @@ export default function PeerShow({ peer }: PeerShowProps) {
                                         </div>
                                         <Avatar className="w-8 h-8">
                                             <AvatarImage
-                                                src={user.user.avatar}
+                                                src={user.avatar}
                                             />
                                             <AvatarFallback className="text-xs bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]">
-                                                {user.user.username
+                                                {user.username
                                                     .substring(0, 2)
                                                     .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <p className="font-medium text-[var(--clr-light-a0)]">
-                                                {user.user.username}
+                                                {user.username}
                                             </p>
                                             <p className="text-xs text-[var(--clr-surface-a50)]">
                                                 {user.is_winner
