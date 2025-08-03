@@ -25,6 +25,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::post('/', [PeerController::class, 'store'])->name('peers.store');
         Route::get('/{peer}', [PeerController::class, 'show'])->name('peers.show');
         Route::get('/join/{peer}', [PeerController::class, 'joinPeer'])->name('peers.join');
+        Route::post('/join/{peer}', [PeerController::class, 'storeJoinPeer'])->name('peers.join.store');
     });
     Route::prefix('wallet')->group(function () {
         Route::get('/', [WalletController::class, 'index'])->name('wallet.index');

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Minus, Plus, Users, Trophy, Target } from "lucide-react";
+import { Star, Minus, Users, Trophy, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -45,36 +45,6 @@ export const FloatingBetSlip = ({
     const mainPlayers = selectedPlayers.filter((p) => p.type === "main");
     const subPlayers = selectedPlayers.filter((p) => p.type === "sub");
 
-    const getTierColor = (tier: number) => {
-        switch (tier) {
-            case 5:
-                return "text-yellow-400";
-            case 4:
-                return "text-purple-400";
-            case 3:
-                return "text-blue-400";
-            case 2:
-                return "text-green-400";
-            default:
-                return "text-gray-400";
-        }
-    };
-
-    const getTierBgColor = (tier: number) => {
-        switch (tier) {
-            case 5:
-                return "bg-yellow-400/10 border-yellow-400/20";
-            case 4:
-                return "bg-purple-400/10 border-purple-400/20";
-            case 3:
-                return "bg-blue-400/10 border-blue-400/20";
-            case 2:
-                return "bg-green-400/10 border-green-400/20";
-            default:
-                return "bg-gray-400/10 border-gray-400/20";
-        }
-    };
-
     const getPlayerStarRating = (playerId: number) => {
         for (const group of players) {
             const player = group.players.find((p) => p.player_id === playerId);
@@ -92,8 +62,7 @@ export const FloatingBetSlip = ({
                 key={i}
                 className={cn(
                     "h-3 w-3 transition-all duration-200",
-                    i < tier ? getTierColor(tier) : "text-gray-400",
-                    i < tier ? "fill-current" : ""
+                    i < tier ? "text-yellow-500 fill-current" : "text-muted"
                 )}
             />
         ));
@@ -123,7 +92,7 @@ export const FloatingBetSlip = ({
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <Button
+                 <Button
                     className="fixed bottom-20 left-1/2 transform -translate-x-1/2 h-16 w-16 rounded-full bg-gradient-to-r from-primary to-secondary shadow-2xl hover:shadow-3xl transition-all duration-300 border-2 border-white/20 z-50 group"
                     size="sm"
                 >
@@ -139,23 +108,15 @@ export const FloatingBetSlip = ({
                 </Button>
             </SheetTrigger>
 
-            <SheetContent
-                side="bottom"
-                className="h-[85vh] p-5  border-t border-primary"
-            >
-                <SheetHeader className="pb-6 border-b border-border/20">
-                    <SheetTitle className="text-display flex items-center gap-3">
-                        <div className="relative">
-                            <Trophy className="h-8 w-8 text-neutral-400 fill-current" />
-                            <div className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                                {totalSelected}
-                            </div>
-                        </div>
+            <SheetContent side="bottom" className="h-[85vh] ">
+                <SheetHeader className="pb-6">
+                    <SheetTitle className="flex items-center gap-3">
+                        <Trophy className="h-6 w-6 text-muted-white" />
                         <div>
-                            <div className="text-2xl font-bold text-muted-white">
-                                Your Star Team
+                            <div className="text-xl font-semibold text-muted">
+                                Your Team
                             </div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="text-sm text-gray-500">
                                 {mainPlayers.length} Main • {subPlayers.length}{" "}
                                 Subs
                             </div>
@@ -163,14 +124,11 @@ export const FloatingBetSlip = ({
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className="space-y-4 overflow-y-auto h-full pb-20">
+                <div className="space-y-4 overflow-y-auto h-full px-5 pb-20">
                     {groupedPlayers.map((group) => (
                         <Card
                             key={group.star}
-                            className={cn(
-                                "border-2 transition-all duration-300 hover:shadow-lg",
-                                getTierBgColor(group.star)
-                            )}
+                            className="border border-border bg-card/5 rounded shadow-sm hover:shadow-md transition-shadow duration-200"
                         >
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
@@ -182,31 +140,26 @@ export const FloatingBetSlip = ({
                                                     <Star
                                                         key={i}
                                                         className={cn(
-                                                            "h-4 w-4 transition-all duration-200",
+                                                            "h-4 w-4",
                                                             i < group.star
-                                                                ? getTierColor(
-                                                                      group.star
-                                                                  )
-                                                                : "text-gray-400",
-                                                            i < group.star
-                                                                ? "fill-current"
-                                                                : ""
+                                                                ? "text-yellow-500 fill-current"
+                                                                : "text-gray-300"
                                                         )}
                                                     />
                                                 )
                                             )}
                                         </div>
-                                        <span className="font-bold text-lg">
+                                        <span className="font-medium text-gray-900">
                                             {group.star}-Star Tier
                                         </span>
                                     </div>
                                     <Badge
                                         variant="outline"
                                         className={cn(
-                                            "border-2",
+                                            "text-xs",
                                             group.mainPlayer && group.subPlayer
-                                                ? "bg-green-500/10 text-green-600 border-green-500/30"
-                                                : "bg-orange-500/10 text-orange-600 border-orange-500/30"
+                                                ? "bg-green-50 text-green-700 border-green-200"
+                                                : "bg-orange-50 text-orange-700 border-orange-200"
                                         )}
                                     >
                                         {group.mainPlayer && group.subPlayer
@@ -220,16 +173,16 @@ export const FloatingBetSlip = ({
                                 {/* Main Player */}
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Target className="h-4 w-4 text-primary" />
-                                        <span className="font-semibold text-sm text-primary">
+                                        <Target className="h-4 w-4 text-gray-600" />
+                                        <span className="font-medium text-sm text-gray-700">
                                             Main Squad
                                         </span>
                                     </div>
                                     {group.mainPlayer ? (
-                                        <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 transition-all duration-200 hover:bg-primary/10">
+                                        <div className="bg-card/5 border border-border rounded-lg p-3 transition-colors duration-200">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3 flex-1">
-                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                                    <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-gray-700 font-semibold text-sm">
                                                         {group.mainPlayer.player_name
                                                             .split(" ")
                                                             .map((n) => n[0])
@@ -237,13 +190,13 @@ export const FloatingBetSlip = ({
                                                             .toUpperCase()}
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className="font-semibold text-foreground">
+                                                        <div className="font-medium text-gray-900">
                                                             {
                                                                 group.mainPlayer
                                                                     .player_name
                                                             }
                                                         </div>
-                                                        <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                                        <div className="text-xs text-muted flex items-center gap-2">
                                                             <span>
                                                                 {
                                                                     group
@@ -271,15 +224,15 @@ export const FloatingBetSlip = ({
                                                                 .player_match_id
                                                         )
                                                     }
-                                                    className="h-8 w-8 p-0 hover:bg-red-500/20 hover:text-red-500 transition-colors duration-200"
+                                                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
                                                 >
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-3 text-center">
-                                            <span className="text-sm text-muted-foreground">
+                                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center">
+                                            <span className="text-sm text-gray-500">
                                                 No main player selected
                                             </span>
                                         </div>
@@ -289,30 +242,29 @@ export const FloatingBetSlip = ({
                                 {/* Sub Player */}
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Users className="h-4 w-4 text-secondary" />
-                                        <span className="font-semibold text-sm text-secondary">
+                                        <Users className="h-4 w-4 text-gray-600" />
+                                        <span className="font-medium text-sm text-gray-700">
                                             Substitute
                                         </span>
                                     </div>
                                     {group.subPlayer ? (
-                                        <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-3 transition-all duration-200 hover:bg-secondary/10">
+                                        <div className="bg-card/5 border border-border rounded p-3 transition-colors duration-200">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3 flex-1">
-                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                                                        {group.subPlayer.player_name
-                                                            .split(" ")
-                                                            .map((n) => n[0])
-                                                            .join("")
-                                                            .toUpperCase()}
+                                                    <div className="w-10 h-10 uppercase rounded-full bg-card/10 flex items-center justify-center text-gray-700 font-semibold text-sm">
+                                                        {group.subPlayer.player_name.substring(
+                                                            0,
+                                                            2
+                                                        )}
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className="font-semibold text-foreground">
+                                                        <div className="font-medium text-gray-900">
                                                             {
                                                                 group.subPlayer
                                                                     .player_name
                                                             }
                                                         </div>
-                                                        <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                                        <div className="text-xs text-muted flex items-center gap-2">
                                                             <span>
                                                                 {
                                                                     group
@@ -340,15 +292,15 @@ export const FloatingBetSlip = ({
                                                                 .player_match_id
                                                         )
                                                     }
-                                                    className="h-8 w-8 p-0 hover:bg-red-500/20 hover:text-red-500 transition-colors duration-200"
+                                                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
                                                 >
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-3 text-center">
-                                            <span className="text-sm text-muted-foreground">
+                                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center">
+                                            <span className="text-sm text-gray-500">
                                                 No substitute selected
                                             </span>
                                         </div>
@@ -360,25 +312,25 @@ export const FloatingBetSlip = ({
 
                     {/* Team Summary */}
                     {totalSelected > 0 && (
-                        <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-2 border-primary/20">
+                        <Card className="bg-gray-50 border border-gray-200">
                             <CardContent className="p-4">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <div className="font-bold text-lg text-foreground">
+                                        <div className="font-semibold text-gray-900">
                                             Team Summary
                                         </div>
-                                        <div className="text-sm text-muted-foreground">
+                                        <div className="text-sm text-gray-500">
                                             {totalSelected}/10 players selected
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-2xl font-bold text-primary">
+                                        <div className="text-xl font-bold text-gray-900">
                                             {Math.round(
                                                 (totalSelected / 10) * 100
                                             )}
                                             %
                                         </div>
-                                        <div className="text-xs text-muted-foreground">
+                                        <div className="text-xs text-gray-500">
                                             Complete
                                         </div>
                                     </div>
@@ -387,7 +339,7 @@ export const FloatingBetSlip = ({
                                 {/* Progress Bar */}
                                 <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
                                     <div
-                                        className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
+                                        className="bg-gray-700 h-2 rounded-full transition-all duration-500"
                                         style={{
                                             width: `${
                                                 (totalSelected / 10) * 100

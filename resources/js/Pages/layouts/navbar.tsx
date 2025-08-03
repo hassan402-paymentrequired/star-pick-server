@@ -31,7 +31,7 @@ const Nabar = () => {
                 <Link href={route("peers.global")} className="flex flex-col items-center">
                     <GalleryVerticalEnd size={18} color="#8f8f8f" />
                     <span className="text-sm text-[var(--clr-surface-a50)]">
-                       Daily Contest
+                       Tournament
                     </span>
                 </Link>
                 <Link href={route("wallet.index")} className="flex flex-col items-center">

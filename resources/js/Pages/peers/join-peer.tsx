@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { FloatingBetSlip } from "../components/floating-bet";
 import MainLayout from "../layouts/main-layout";
+import { useForm } from "@inertiajs/react";
 
 interface Player {
     player_avatar: string;
@@ -51,6 +52,7 @@ export default function JoinPeer({
         []
     );
     const [activeTab, setActiveTab] = useState("5");
+    // const {} = useForm({})
 
     const getTierColor = (tier: number) => {
         switch (tier) {
@@ -115,10 +117,7 @@ export default function JoinPeer({
     };
 
     const handleSubmitTeam = () => {
-        if (selectedPlayers.length === 10) {
-            // Simulate team submission
-            alert("Team submitted successfully!");
-        }
+        console.log(selectedPlayers);
     };
 
     // Get players for a specific star rating
@@ -140,12 +139,15 @@ export default function JoinPeer({
                     </div>
                     <div className="flex items-center gap-3 mt-2">
                         <div className="flex items-center text-muted tracking-wider text-xs">
-                            ₦<span className="">{Number(peer.amount).toFixed()}</span>
+                            ₦
+                            <span className="">
+                                {Number(peer.amount).toFixed()}
+                            </span>
                         </div>
                         <div className="flex items-center text-muted gap-1 text-xs">
                             <Users className="h-4 w-4" />
                             <span>
-                                {peer.users_count || 0}/{peer.limit || '-'}
+                                {peer.users_count || 0}/{peer.limit || "-"}
                             </span>
                         </div>
                         <div className="flex items-center text-muted gap-1 text-xs ">
@@ -325,7 +327,10 @@ export default function JoinPeer({
                                                             {/* Player Avatar or Icon */}
                                                             <div className="flex flex-col items-center justify-center">
                                                                 <div className="w-12 uppercase h-12 rounded bg-foreground flex items-center justify-center text-xl font-bold text-muted-white shadow">
-                                                                    {player.player_name.substring(0,2)}
+                                                                    {player.player_name.substring(
+                                                                        0,
+                                                                        2
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                             {/* Player Info */}
@@ -338,7 +343,11 @@ export default function JoinPeer({
                                                                 <div className="text-xs text-muted">
                                                                     {
                                                                         player.player_position
-                                                                    } - {player.player_team}
+                                                                    }{" "}
+                                                                    -{" "}
+                                                                    {
+                                                                        player.player_team
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,7 +364,10 @@ export default function JoinPeer({
                                                             <div className="flex items-center gap-2">
                                                                 {/* Team Logo Placeholder */}
                                                                 <div className="w-8 h-8 uppercase rounded-full bg-background flex items-center justify-center text-sm font-bold text-muted shadow">
-                                                                    {player.against_team_name.substring(0,2)}
+                                                                    {player.against_team_name.substring(
+                                                                        0,
+                                                                        2
+                                                                    )}
                                                                 </div>
                                                                 <span className="font-semibold text-muted-white text-sm">
                                                                     {
@@ -447,7 +459,7 @@ export default function JoinPeer({
                     <div className="fixed bottom-24 left-4 right-4 z-40">
                         <Button
                             onClick={handleSubmitTeam}
-                            className="w-full h-14 gradient-secondary text-secondary-foreground font-bold shadow-floating"
+                            className="w-full text-muted font-bold shadow-floating"
                         >
                             Submit Team & Join Peer
                         </Button>

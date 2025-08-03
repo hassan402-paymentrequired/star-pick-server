@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Peer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Peer;
+use App\Utils\Service\V1\Peer\PeerService;
 use App\Utils\Service\V1\Player\PlayerService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -12,10 +14,12 @@ class PeerController extends Controller
 {
 
      protected PlayerService $playerService;
+     protected PeerService $peerService;
 
-    public function __construct(PlayerService $playerService)
+    public function __construct(PlayerService $playerService,PeerService $peerService)
     {
         $this->playerService = $playerService;
+        $this->peerService = $peerService;
     }
 
 
@@ -41,6 +45,14 @@ class PeerController extends Controller
         return Inertia::render('peers/join-peer', [
             'peer' => $peer,
             'players' => $players
+        ]);
+    }
+
+    public function storeJoinPeer(Request $request, Peer $peer)
+    {
+        $this->peerService->playBet($request, $peer);
+        return to_route('peers.show', [
+            'peer' => $peer
         ]);
     }
 
