@@ -17,7 +17,7 @@ export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
-    const { errors: globalErrors, flash } = usePage().props;
+    const { errors: globalErrors, flash } = usePage<{flash: {error: string, success: string}}>().props;
     const { post, processing, errors, data, setData } = useForm({
         phone: "",
         password: "",

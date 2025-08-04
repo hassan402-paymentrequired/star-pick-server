@@ -194,21 +194,27 @@ export default function PeersIndex({ peers, recent }: PeersProps) {
 
                                             {/* Prize Pool */}
                                             <div className="p-2 mb-3 iteme-center w-full justify-center">
-                                                {peer?.users_count > 0 ? (
-                                                    Array.from({
-                                                        length: peer.users_count,
-                                                    }).map((_, idx) => (
-                                                        <Avatar key={idx}>
-                                                            <AvatarFallback>
-                                                                {idx + 1}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                    ))
-                                                ) : (
-                                                    <span className="text-xs text-center text-muted">
-                                                        No one has joined yet
-                                                    </span>
-                                                )}
+                                                <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                                                    {peer?.users_count > 0 ? (
+                                                        Array.from({
+                                                            length: peer.users_count,
+                                                        }).map((_, idx) => (
+                                                            <Avatar
+                                                                key={idx}
+                                                                className="rounded"
+                                                            >
+                                                                <AvatarFallback className="rounded size-7">
+                                                                    {idx + 1}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                        ))
+                                                    ) : (
+                                                        <span className="text-xs text-center text-muted">
+                                                            No one has joined
+                                                            yet
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
 
                                             {/* Action Button */}
@@ -291,10 +297,12 @@ export default function PeersIndex({ peers, recent }: PeersProps) {
                                         <div className="px-4  py-3 border-t border-border grid grid-cols-2 gap-4">
                                             <div className="flex items-center gap-2">
                                                 <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
-                                                    <Users size={18}/>
+                                                    <Users size={18} />
                                                 </div>
                                                 <div className="flex flex-col items-start">
-                                                    <small className="text-muted">Entries</small>
+                                                    <small className="text-muted">
+                                                        Entries
+                                                    </small>
                                                     <span className="text-muted-white">
                                                         {peer.users_count}
                                                     </span>
@@ -302,12 +310,17 @@ export default function PeersIndex({ peers, recent }: PeersProps) {
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
-                                                    <HandCoins size={18}/>
+                                                    <HandCoins size={18} />
                                                 </div>
                                                 <div className="flex flex-col items-start">
-                                                    <small className="text-muted">Fees</small>
+                                                    <small className="text-muted">
+                                                        Fees
+                                                    </small>
                                                     <span className="text-muted-white">
-                                                        ₦{Number(peer.amount).toFixed()}
+                                                        ₦
+                                                        {Number(
+                                                            peer.amount
+                                                        ).toFixed()}
                                                     </span>
                                                 </div>
                                             </div>
