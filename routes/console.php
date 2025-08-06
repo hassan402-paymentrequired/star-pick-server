@@ -9,6 +9,8 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+// Artisan::schedule('create:tournament', '0 0 * * *');
+
 Artisan::command('fetch:next-week-fixtures {league} {season}', function ($league, $season) {
     $from = Carbon::now()->next(Carbon::SUNDAY)->toDateString();
     $to = Carbon::parse($from)->addDays(6)->toDateString();

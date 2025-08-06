@@ -53,10 +53,11 @@ interface Peer {
 interface PeersProps extends PageProps {
     peers: Peer[];
     recent: Peer[];
+    tournament: any;
 }
 
-export default function PeersIndex({ peers, recent }: PeersProps) {
-    console.log(peers);
+export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
+    // console.log(tournament);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -108,16 +109,16 @@ export default function PeersIndex({ peers, recent }: PeersProps) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-semibold text-muted-white">
-                                    Today's Global Challenge
+                                    {tournament.name}
                                 </h3>
                                 <p className="text-muted">
-                                    Join 10,000+ users in todays battle{" "}
+                                    Join other users in todays tournament{" "}
                                     <Sword size={16} />
                                 </p>
                             </div>
                             <div className="text-right">
                                 <div className=" text-muted-white font-bold">
-                                    ₦50K
+                                    ₦{tournament.amount}
                                 </div>
                                 <div className="text-muted-white">
                                     Prize Pool
@@ -127,15 +128,19 @@ export default function PeersIndex({ peers, recent }: PeersProps) {
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                         <div className="grid grid-cols-2 gap-3">
-                            <Button className="w-full tracking-wider font-bold ">
-                                Join Global Challenge
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="w-full tracking-wider font-bold "
-                            >
-                                Create Fun
-                            </Button>
+                            <Link href={route("peers.global")}>
+                                <Button className="w-full tracking-wider font-bold ">
+                                    Join {tournament.name}
+                                </Button>
+                            </Link>
+                            <Link href={route("peers.create")}>
+                                <Button
+                                    variant="outline"
+                                    className="w-full tracking-wider font-bold "
+                                >
+                                    Create Peer
+                                </Button>
+                            </Link>
                         </div>
                     </CardContent>
                 </Card>

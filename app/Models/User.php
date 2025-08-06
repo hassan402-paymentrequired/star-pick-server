@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -94,5 +95,11 @@ class User extends Authenticatable implements JWTSubject
     public function match(): HasMany
     {
         return $this->hasMany(PlayerMatch::class);
+    }
+
+
+    public function daily_contests()
+    {
+        return $this->belongsToMany(DailyContest::class, 'daily_contest_users')->withTimestamps();
     }
 }

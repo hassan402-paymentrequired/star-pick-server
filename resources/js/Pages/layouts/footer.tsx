@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
-import { AlertOctagon, Flame, Plus, UserCircle } from "lucide-react";
+import { AlertOctagon, Flame, GalleryVerticalEnd, Plus, UserCircle } from "lucide-react";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -11,7 +11,7 @@ const Footer = () => {
     return (
         <div className="w-full rounded-bl rounded-br opacity-70 bg-primary fixed top-0 left-1/2 -translate-x-1/2 max-w-md z-50 h-12 flex items-center px-2 justify-between">
             <div className="">
-                <Flame size={40} color="#fff" />
+                <GalleryVerticalEnd size={40} color="#fff" />
             </div>
 
             <div className="flex items-center gap-2">

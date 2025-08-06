@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\Peer\PeerController;
+use App\Http\Controllers\Tournament\TournamentController;
 use App\Http\Controllers\Wallet\WalletController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,7 +21,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::prefix('peers')->group(function () {
         Route::get('/', [PeerController::class, 'index'])->name('peers.index');
         Route::get('/contents', [PeerController::class, 'contents'])->name('peers.contents');
-        Route::get('/chanllenged', [PeerController::class, 'globalPeer'])->name('peers.global');
+        Route::get('/tournament', [TournamentController::class, 'index'])->name('peers.global');
         Route::get('/create', [PeerController::class, 'create'])->name('peers.create');
         Route::post('/', [PeerController::class, 'store'])->name('peers.store');
         Route::get('/{peer}', [PeerController::class, 'show'])->name('peers.show');

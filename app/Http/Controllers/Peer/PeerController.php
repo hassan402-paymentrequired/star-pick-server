@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Peer;
 
+use App\Enum\PeerShareRatioEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BetRequest;
+use App\Http\Requests\StorePeerRequest;
 use App\Models\Peer;
 use App\Utils\Service\V1\Peer\PeerService;
 use App\Utils\Service\V1\Player\PlayerService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -27,6 +30,8 @@ class PeerController extends Controller
     public function index()
     {
         $user = auth('web')->user();
+        $today = now()->toDateString();
+        $tournament = \App\Models\DailyContest::whereDate('created_at', $today)->first();
 
         $recent = Peer::with('created_by')
             ->whereDoesntHave('users', function ($query) use ($user) {
@@ -37,15 +42,48 @@ class PeerController extends Controller
             ->take(4)
             ->get();
 
-        // dd($recent);
+
 
         $peers = Peer::with('created_by')->whereDoesntHave('users', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->withCount('users')->latest()->paginate(10);
         return Inertia::render('peers/index', [
+
+            'tournament' => $tournament,
             'recent' => $recent,
             'peers' => $peers,
         ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('peers/create', [
+            'user' => auth('web')->user()->load('wallet')
+        ]);
+    }
+
+    public function store(StorePeerRequest $request)
+    {
+        $peer = Peer::where('user_id', Auth::guard('web')->id())->latest()->first();
+        if ($peer) {
+            if ($peer->users()->count() === 0) {
+                return back()->with('error', 'You already have an active peer with no users');
+            }
+        }
+
+        $peer = Peer::create([
+            'name' => $request->name,
+            'amount' => $request->amount,
+            'private' => $request->private,
+            'limit' => $request->limit,
+            'user_id' => Auth::guard('api')->id(),
+            'sharing_ratio' => $request->ratio ??= PeerShareRatioEnum::DIVIDE->value
+        ]);
+
+        $peer->addUser(Auth::id());
+        return to_route('peers.show', [
+            'peer' => $peer->id
+        ])->with('success', 'Peer created successfully');
     }
 
 

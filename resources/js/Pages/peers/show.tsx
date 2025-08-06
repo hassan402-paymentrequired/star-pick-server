@@ -204,13 +204,13 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
                                                         <>
                                                         <tr key={squad.id + idx + "-star"}>
                                                             <td colSpan={12} className=" text-sm text-muted px-3 py-1">
-                                                                Star {idx + 1} ⚽
+                                                                Star {idx + 1} ⭐
                                                             </td>
                                                         </tr>
 
                                                             <tr key={squad.id + "-main"}>
                                                                 <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.did_play ? "⚽" : "🪑"}
+                                                                    {squad.main_player?.statistics?.did_play ? "⚽" : "🪑"}
                                                                 </td>
                                                                 <td className="px-3 py-2 text-sm text-muted">
                                                                     {squad.main_player?.name}
@@ -263,7 +263,7 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
                                                             </tr>
                                                             <tr key={squad.id + "-sub"}>
                                                                 <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.did_play ? "⚽" : "🪑"}
+                                                                    {squad.sub_player?.statistics?.did_play ? "⚽" : "🪑"}
                                                                 </td>
                                                                 <td className="px-3 py-2 text-sm text-muted">
                                                                     {squad.sub_player?.name}
@@ -319,7 +319,7 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
                                                 ) : (
                                                     <tr>
                                                         <td
-                                                            colSpan={9}
+                                                            colSpan={12}
                                                             className="px-3 py-4 text-center text-gray-400"
                                                         >
                                                             No squad data
