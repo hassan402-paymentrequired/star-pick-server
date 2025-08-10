@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Star, Check, Users, DollarSign, Clock, Trophy } from "lucide-react";
+import { Star, Check, Users, DollarSign, Clock, Trophy, Loader, LoaderIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { FloatingBetSlip } from "../components/floating-bet";
-import MainLayout from "../layouts/main-layout";
+
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import MainLayout from "@/Pages/layouts/main-layout";
+import { FloatingBetSlip } from "@/Pages/components/floating-bet";
 
 interface Player {
     player_avatar: string;
@@ -33,7 +34,7 @@ interface SelectedPlayer extends Player {
     type: "main" | "sub";
 }
 
-interface Peer {
+interface Tournament {
     id: number;
     name: string;
     amount: number;
@@ -45,16 +46,18 @@ interface Peer {
 }
 
 export default function JoinPeer({
-    peer,
+    tournament,
     players,
 }: {
-    peer: Peer;
+    tournament: Tournament;
     players: PlayerGroup[];
 }) {
+    console.log(tournament);
     const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>(
         []
     );
     const [activeTab, setActiveTab] = useState("5");
+    const [processing, setProcessing] = useState(false);
     // const {} = useForm({})
 
     const getTierColor = (tier: number) => {
@@ -120,6 +123,7 @@ export default function JoinPeer({
     };
 
     const handleSubmitTeam = async () => {
+        setProcessing(true)
         if (selectedPlayers.length !== 10) {
             toast.error(
                 "Please select exactly 10 players (5 main + 5 substitutes)"
@@ -153,17 +157,12 @@ export default function JoinPeer({
         });
 
         const formData = {
-            peer_id: peer.id,
             peers: peers,
         };
 
         try {
             // Use Inertia router to submit the form
-            router.post(`/peers/join/${peer.id}`, formData, {
-                onSuccess: () => {
-                    // Redirect to peer show page on success
-                    router.visit(route("peers.show", { peer: peer.id }));
-                },
+            router.post(route("tournament.store"), formData, {
                 onError: (errors) => {
                     console.error("Validation errors:", errors);
                     alert(`Error: ${Object.values(errors).join(", ")}`);
@@ -172,6 +171,8 @@ export default function JoinPeer({
         } catch (error) {
             console.error("Error submitting team:", error);
             alert("Failed to submit team. Please try again.");
+        } finally {
+            setProcessing(false)
         }
     };
 
@@ -199,7 +200,7 @@ export default function JoinPeer({
                 <div className=" py-3 bg-[var(--clr-surface-a10)] border-border/10">
                     <div className="flex items-center justify-between ">
                         <h2 className="text-[var(--clr-surface-a50)] tracking-wider  font-bold">
-                            {peer.name}
+                            {tournament?.name}
                         </h2>
                         <Badge className="text-foreground">Joining</Badge>
                     </div>
@@ -207,14 +208,12 @@ export default function JoinPeer({
                         <div className="flex items-center text-muted tracking-wider text-xs">
                             ₦
                             <span className="">
-                                {Number(peer.amount).toFixed()}
+                                {Number(tournament.amount).toFixed()}
                             </span>
                         </div>
                         <div className="flex items-center text-muted gap-1 text-xs">
                             <Users className="h-4 w-4" />
-                            <span>
-                                {peer.users_count || 0}/{peer.limit || "-"}
-                            </span>
+                            <span>{tournament.users_count || 0}</span>
                         </div>
                         <div className="flex items-center text-muted gap-1 text-xs ">
                             <Clock className="h-4 w-4" />
@@ -543,8 +542,12 @@ export default function JoinPeer({
                     <div className="fixed bottom-24 left-4 right-4 z-40">
                         <Button
                             onClick={handleSubmitTeam}
+                            disabled={processing}
                             className="w-full text-muted font-bold shadow-floating"
                         >
+                           {processing && (
+                                <LoaderIcon className="animate-spin" />
+                            )}
                             Submit Team & Join Peer
                         </Button>
                     </div>

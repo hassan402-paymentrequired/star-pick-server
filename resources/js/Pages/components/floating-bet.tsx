@@ -109,7 +109,7 @@ export const FloatingBetSlip = ({
             </SheetTrigger>
 
             <SheetContent side="bottom" className="h-[85vh] ">
-                <SheetHeader className="pb-6">
+                <SheetHeader className=" pb-1 bg-background">
                     <SheetTitle className="flex items-center gap-3">
                         <Trophy className="h-6 w-6 text-muted-white" />
                         <div>
@@ -124,13 +124,13 @@ export const FloatingBetSlip = ({
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className="space-y-4 overflow-y-auto h-full px-5 pb-20">
+                <div className="space-y-4 bg-foreground pt-4 overflow-y-auto h-full px-5 pb-10">
                     {groupedPlayers.map((group) => (
                         <Card
                             key={group.star}
-                            className="border border-border bg-card/5 rounded shadow-sm hover:shadow-md transition-shadow duration-200"
+                            className="px-4 py-3 shadow border-border bg-card/30 rounded ring ring-background hover:shadow-md transition-shadow duration-200"
                         >
-                            <CardHeader className="pb-3">
+                            <CardHeader className="pb-3 p-0">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <div className="flex">
@@ -169,7 +169,7 @@ export const FloatingBetSlip = ({
                                 </div>
                             </CardHeader>
 
-                            <CardContent className="space-y-3">
+                            <CardContent className="space-y-3 p-0">
                                 {/* Main Player */}
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export const FloatingBetSlip = ({
                                         </span>
                                     </div>
                                     {group.mainPlayer ? (
-                                        <div className="bg-card/5 border border-border rounded-lg p-3 transition-colors duration-200">
+                                        <div className="bg-card/5 border-2 border-border rounded-sm p-3 transition-colors duration-200">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3 flex-1">
                                                     <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-gray-700 font-semibold text-sm">
@@ -232,7 +232,7 @@ export const FloatingBetSlip = ({
                                         </div>
                                     ) : (
                                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center">
-                                            <span className="text-sm text-gray-500">
+                                            <span className="text-sm text-gray-700">
                                                 No main player selected
                                             </span>
                                         </div>
@@ -248,10 +248,10 @@ export const FloatingBetSlip = ({
                                         </span>
                                     </div>
                                     {group.subPlayer ? (
-                                        <div className="bg-card/5 border border-border rounded p-3 transition-colors duration-200">
+                                        <div className="bg-card/50 border-2 border-border rounded-sm p-3 transition-colors duration-200">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3 flex-1">
-                                                    <div className="w-10 h-10 uppercase rounded-full bg-card/10 flex items-center justify-center text-gray-700 font-semibold text-sm">
+                                                    <div className="w-10 h-10 uppercase rounded-full bg-background flex items-center  justify-center text-gray-700 font-semibold text-sm">
                                                         {group.subPlayer.player_name.substring(
                                                             0,
                                                             2

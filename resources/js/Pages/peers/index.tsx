@@ -18,6 +18,8 @@ import {
     Sword,
     CupSoda,
     HandCoins,
+    ArrowDownLeftSquareIcon,
+    ArrowDownRightSquareIcon,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -89,9 +91,9 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
         <MainLayout>
             <Head title="Peers" />
 
-            <div className="mt-2 space-y-4 ">
+            <div className="mt-2 space-y-4 p-3">
                 {/* Global Challenge Card */}
-                <Card className="relative rounded bg-background  p-0 py-2 overflow-hidden">
+                <Card className="relative rounded   p-0 py-2 overflow-hidden">
                     {/* Background Image */}
                     <div
                         className="absolute inset-0 z-0"
@@ -100,7 +102,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                 "url('/assets/images/global-challenge-bg.jpg')",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
-                            opacity: 0.3,
+                            // opacity: 0.7,
                             pointerEvents: "none",
                         }}
                         aria-hidden="true"
@@ -108,19 +110,19 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                     <CardHeader className="relative z-10 pb-0">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="text-2xl font-semibold text-muted-white">
-                                    {tournament.name}
+                                <h3 className="text-3xl capitalize font-semibold text-white">
+                                    {tournament?.name}
                                 </h3>
-                                <p className="text-muted">
+                                <p className="text-foreground">
                                     Join other users in todays tournament{" "}
                                     <Sword size={16} />
                                 </p>
                             </div>
                             <div className="text-right">
-                                <div className=" text-muted-white font-bold">
+                                <div className=" text-foreground font-bold">
                                     ₦{tournament.amount}
                                 </div>
-                                <div className="text-muted-white">
+                                <div className="text-foreground">
                                     Prize Pool
                                 </div>
                             </div>
@@ -128,15 +130,15 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                         <div className="grid grid-cols-2 gap-3">
-                            <Link href={route("peers.global")}>
-                                <Button className="w-full tracking-wider font-bold ">
+                            <Link href={route("tournament.index")}>
+                                <Button className="w-full text-foreground tracking-wider font-bold ">
                                     Join {tournament.name}
                                 </Button>
                             </Link>
                             <Link href={route("peers.create")}>
                                 <Button
                                     variant="outline"
-                                    className="w-full tracking-wider font-bold "
+                                    className="w-full tracking-wider text-foreground font-bold"
                                 >
                                     Create Peer
                                 </Button>
@@ -155,7 +157,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
 
                     <div className="mb-10">
                         <Swiper
-                            spaceBetween={12}
+                            spaceBetween={10}
                             slidesPerView={1.2}
                             className="w-full"
                             autoplay={{
@@ -166,93 +168,105 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                             pagination={{
                                 clickable: true,
                             }}
+                            navigation
+                            speed={1000}
                         >
                             {recent?.map((peer) => (
                                 <SwiperSlide key={peer.id}>
-                                    <Card className="bg-background w-full rounded p-0 border-input hover:border-[var(--clr-primary-a0)] transition-all duration-300 cursor-pointer group">
-                                        <CardContent className="p-3">
-                                            {/* Header */}
-                                            <div className="flex items-start justify-between mb-3">
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <h4 className="font-semibold text-muted-white text-sm truncate">
-                                                            {peer.name}
-                                                        </h4>
+                                    <div className="p-1 relative z-0 backdrop-blur-[1px] bg-white/10  border rounded-sm">
+                                        <Card className="w-full z-50 bg-default/10 rounded p-0 border-input transition-all duration-300 cursor-pointer group">
+                                            <CardContent className="p-3">
+                                                {/* Header */}
+                                                <div className="flex items-start justify-between mb-3">
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <h4 className="font-semibold text-muted-white text-sm truncate">
+                                                                {peer.name}
+                                                            </h4>
+                                                        </div>
+                                                        <p className="text-xs text-muted">
+                                                            by{" "}
+                                                            {
+                                                                peer.created_by
+                                                                    .username
+                                                            }
+                                                        </p>
                                                     </div>
-                                                    <p className="text-xs text-muted">
-                                                        by{" "}
-                                                        {
-                                                            peer.created_by
-                                                                .username
-                                                        }
-                                                    </p>
-                                                </div>
-                                                <Badge
-                                                    className={`text-xs px-2 py-1 rounded bg-background tracking-wider`}
-                                                >
-                                                    ₦
-                                                    {Number(
-                                                        peer.amount
-                                                    ).toFixed()}
-                                                </Badge>
-                                            </div>
-
-                                            {/* Prize Pool */}
-                                            <div className="p-2 mb-3 iteme-center w-full justify-center">
-                                                <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
-                                                    {peer?.users_count > 0 ? (
-                                                        Array.from({
-                                                            length: peer.users_count,
-                                                        }).map((_, idx) => (
-                                                            <Avatar
-                                                                key={idx}
-                                                                className="rounded"
-                                                            >
-                                                                <AvatarFallback className="rounded size-7">
-                                                                    {idx + 1}
-                                                                </AvatarFallback>
-                                                            </Avatar>
-                                                        ))
-                                                    ) : (
-                                                        <span className="text-xs text-center text-muted">
-                                                            No one has joined
-                                                            yet
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* Action Button */}
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <Link
-                                                    href={route("peers.show", {
-                                                        peer: peer.id,
-                                                    })}
-                                                >
-                                                    <Button
-                                                        className="w-full hover:bg-[var(--clr-primary-a10)] text-[var(--clr-light-a0)] text-sm font-medium"
-                                                        size="sm"
+                                                    <Badge
+                                                        className={`text-xs px-2 py-1 text-default rounded bg-background tracking-wider`}
                                                     >
-                                                        <Target className="w-3 h-3 mr-1" />
-                                                        View Peer
-                                                    </Button>
-                                                </Link>
-                                                <Link
-                                                    href={route("peers.join", {
-                                                        peer: peer.id,
-                                                    })}
-                                                >
-                                                    <Button
-                                                        className="w-full hover:bg-[var(--clr-primary-a10)] text-[var(--clr-light-a0)] text-sm font-medium"
-                                                        size="sm"
+                                                        ₦
+                                                        {Number(
+                                                            peer.amount
+                                                        ).toFixed()}
+                                                    </Badge>
+                                                </div>
+
+                                                {/* Prize Pool */}
+                                                <div className="p-2 mb-3 iteme-center w-full justify-center">
+                                                    <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                                                        {peer?.users_count >
+                                                        0 ? (
+                                                            Array.from({
+                                                                length: peer.users_count,
+                                                            }).map((_, idx) => (
+                                                                <Avatar
+                                                                    key={idx}
+                                                                    className="rounded"
+                                                                >
+                                                                    <AvatarFallback className="rounded size-7">
+                                                                        {idx +
+                                                                            1}
+                                                                    </AvatarFallback>
+                                                                </Avatar>
+                                                            ))
+                                                        ) : (
+                                                            <span className="text-xs text-center text-muted">
+                                                                No one has
+                                                                joined yet
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* Action Button */}
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <Link
+                                                        href={route(
+                                                            "peers.show",
+                                                            {
+                                                                peer: peer.id,
+                                                            }
+                                                        )}
                                                     >
-                                                        <Target className="w-3 h-3 mr-1" />
-                                                        Join Peer
-                                                    </Button>
-                                                </Link>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                                        <Button
+                                                            className="w-full hover:bg-blue-600 text-foreground text-sm font-medium"
+                                                            size="sm"
+                                                        >
+                                                            <Target className="w-3 h-3 mr-1" />
+                                                            View Peer
+                                                        </Button>
+                                                    </Link>
+                                                    <Link
+                                                        href={route(
+                                                            "peers.join",
+                                                            {
+                                                                peer: peer.id,
+                                                            }
+                                                        )}
+                                                    >
+                                                        <Button
+                                                            className="w-full hover:bg-blue-600 text-foreground text-sm font-medium"
+                                                            size="sm"
+                                                        >
+                                                            Join Peer
+                                                            <ArrowDownRightSquareIcon className="w-3 h-3 mr-1 transition duration-100 group-hover:-rotate-45" />
+                                                        </Button>
+                                                    </Link>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -268,12 +282,12 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
 
                     <div className="flex flex-col mt-2">
                         {(peers.data || []).map((peer) => (
-                            <Card className="mb-3 p-0 bg-background border border-[var(--clr-surface-a20)] shadow-sm rounded">
+                            <Card className="mb-3 p-0 group bg-background/10 border ring ring-background rounded">
                                 <Collapsible>
                                     <CollapsibleTrigger className="w-full flex items-center justify-between p-2 cursor-pointer hover:bg-[var(--clr-surface-a10)] transition rounded">
                                         <div className="flex items-center gap-2">
                                             <Avatar className="w-8 h-8 rounded-full bg-[var(--clr-surface-a20)] flex items-center justify-center">
-                                                <AvatarFallback className="rounded">
+                                                <AvatarFallback className="rounded ring-2 shadow ring-foreground">
                                                     {peer.name
                                                         .split(" ")
                                                         .map((n) => n[0])
@@ -301,7 +315,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                     <CollapsibleContent>
                                         <div className="px-4  py-3 border-t border-border grid grid-cols-2 gap-4">
                                             <div className="flex items-center gap-2">
-                                                <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
+                                                <div className="size-10 rounded-full ring ring-background shadow bg-foreground flex items-center justify-center">
                                                     <Users size={18} />
                                                 </div>
                                                 <div className="flex flex-col items-start">
@@ -314,12 +328,12 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
+                                                <div className="size-10 rounded-full ring ring-background shadow flex items-center justify-center">
                                                     <HandCoins size={18} />
                                                 </div>
                                                 <div className="flex flex-col items-start">
                                                     <small className="text-muted">
-                                                        Fees
+                                                        Entry Fee
                                                     </small>
                                                     <span className="text-muted-white">
                                                         ₦
@@ -356,11 +370,11 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                 className="w-full"
                                             >
                                                 <Button
-                                                    className="w-full text-sm font-medium"
+                                                    className="w-full text-foreground text-sm font-medium"
                                                     size="sm"
                                                 >
-                                                    <Sword className="w-3 h-3 mr-1" />
                                                     Join Peer
+                                                    <ArrowDownRightSquareIcon className="w-3 h-3 mr-1 group-hover:-rotate-45 transition duration-100" />
                                                 </Button>
                                             </Link>
                                         </div>

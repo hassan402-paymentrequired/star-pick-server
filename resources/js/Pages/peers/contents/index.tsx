@@ -15,7 +15,7 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
     return (
         <MainLayout>
             <Head title="Peers - contests" />
-            <div className="flex w-full">
+            <div className="flex w-full p-3">
                 <Tabs defaultValue="live" className="w-full">
                     <TabsList className="w-full bg-transparent">
                         <TabsTrigger
@@ -46,9 +46,9 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                                     </div>
                                     <Link
                                         href={route("peers.index")}
-                                        className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-primary  transition"
+                                        className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-foreground  transition"
                                     >
-                                        <Button>
+                                        <Button className="text-foreground">
                                             <span>Find some peers</span>
                                             <span className="text-lg">🕵️‍♀️</span>
                                         </Button>
@@ -57,7 +57,7 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                             </div>
                         )}
 
-                        {ongoing.length &&
+                        {ongoing.length > 0 &&
                             ongoing.map((p) => <Ongoing peer={p} key={p.id} />)}
                     </TabsContent>
                     <TabsContent value="upcoming">

@@ -102,4 +102,43 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(DailyContest::class, 'daily_contest_users')->withTimestamps();
     }
+
+    
+
+
+    public function virtualAccount()
+    {
+        return $this->hasOne(VirtualAccount::class);
+    }
+
+
+    public function activeVirtualAccount()
+    {
+        return $this->hasOne(VirtualAccount::class)->where('status', 'active');
+    }
+
+
+    public function hasVirtualAccount(): bool
+    {
+        return $this->virtualAccount()->exists();
+    }
+
+
+    public function hasActiveVirtualAccount(): bool
+    {
+        return $this->activeVirtualAccount()->exists();
+    }
+
+
+    public function getVirtualAccountDetails(): ?array
+    {
+        $virtualAccount = $this->virtualAccount;
+        return $virtualAccount ? $virtualAccount->accountDetails : null;
+    }
+
+
+    function AlreadyJoinedTodayTournament()
+    {
+        return $this->daily_contests()->whereDate('daily_contests.created_at', now()->toDateString())->exists();
+    }
 }

@@ -85,7 +85,7 @@ class AuthenticationController extends Controller
 
         $user = User::where('otp', $request->otp)->first();
 
-        if (!$user || $user->otp_expires_at > now()->addMinute())
+        if (!$user || $user->otp_expires_at > now()->addDay())
             return back()->with('error', 'Invalid verification code or expired verification code');
 
 

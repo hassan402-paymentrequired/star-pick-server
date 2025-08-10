@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Head, usePage } from "@inertiajs/react";
 import MainLayout from "@/Pages/layouts/main-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import {
     ArrowLeft,
     ChevronDown,
     ChevronUp,
+    Type,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import {
@@ -68,11 +69,26 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
     const sortedUsers = [...users].sort(
         (a, b) => b.total_points - a.total_points
     );
-    const currentUser = users.find((u) => u.id === user.id);
+
+    const getMatch = async () => {
+        await fetch(
+            "https://www.sofascore.com/api/v1/event/12436883/player/975079/statistics")
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((e) => console.log(e));
+    };
+
+    useEffect(() => {
+       const id =  setInterval(() => {
+            getMatch();
+        }, 1000);
+
+        return () => {
+            clearInterval(id);
+        };
+    }, []);
 
     // Collapse state for each user row
-    const [openSquad, setOpenSquad] = useState<number | null>(null);
-
     const getRankIcon = (index: number) => {
         switch (index) {
             case 0:
@@ -90,18 +106,16 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
         }
     };
 
-    console.log(users);
-
     return (
         <MainLayout>
             <Head title={`Peer: ${peer.name}`} />
 
-            <div className="space-y-4">
+            <div className="space-y-4 p-3">
                 {/* Header */}
                 <div className="flex items-center gap-3">
-                    <Button variant="ghost" size="sm" className="p-2">
+                    {/* <Button variant="ghost" size="sm" className="p-2">
                         <ArrowLeft className="w-4 h-4" />
-                    </Button>
+                    </Button> */}
                     <div className="flex-1">
                         <h1 className="text-xl font-bold text-[var(--clr-light-a0)]">
                             {peer.name}
@@ -125,214 +139,377 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
 
                 {users.length &&
                     users.map((user) => (
-                        <Card className="mb-3 p-0 bg-background border border-[var(--clr-surface-a20)] shadow-sm rounded">
-                            <Collapsible>
-                                <CollapsibleTrigger className="w-full flex items-center justify-between p-2 cursor-pointer hover:bg-[var(--clr-surface-a10)] transition rounded">
-                                    <div className="flex items-center gap-2">
-                                        <Avatar className="w-8 h-8 rounded-full bg-[var(--clr-surface-a20)] flex items-center justify-center">
-                                            <AvatarFallback className="rounded">
-                                                {user.username.substring(0, 2)}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="items-start flex flex-col">
-                                            <div className="font-semibold text-muted-white text-base">
-                                                {user.username}
-                                            </div>
-                                            <div className="text-xs text-muted-white">
-                                                by @{peer.created_by.username}
+                        <div
+                            key={user.id}
+                            className="p-2 rounded-sm bg-background/20 backdrop-blur-lg"
+                        >
+                            <Card className="p-0 border bg-foreground shadow rounded">
+                                <Collapsible>
+                                    <CollapsibleTrigger className="w-full flex items-center justify-between p-2 cursor-pointer hover:bg-[var(--clr-surface-a10)] transition rounded">
+                                        <div className="flex items-center gap-2">
+                                            <Avatar className="w-8 h-8 rounded-full bg-[var(--clr-surface-a20)] flex items-center justify-center">
+                                                <AvatarFallback className="rounded uppercase bg-background ring-2 ring-foreground shadow">
+                                                    {user.username.substring(
+                                                        0,
+                                                        2
+                                                    )}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="items-start flex flex-col">
+                                                <div className="font-semibold text-muted-white text-base">
+                                                    {user.username}
+                                                </div>
+                                                <div className="text-xs text-muted-white">
+                                                    by @
+                                                    {peer.created_by.username}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <span className="font-medium text-muted">
-                                        {new Date(
-                                            peer.created_at
-                                        ).toLocaleDateString()}
-                                    </span>
-                                </CollapsibleTrigger>
-                                <CollapsibleContent>
-                                    <div className="overflow-x-auto">
-                                        <table className="min-w-full divide-y divide-border bg-transparent text-muted rounded shadow">
-                                            <thead className="bg-[var(--clr-surface-a10)]">
-                                                <tr>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        #
-                                                    </th>
+                                        <span className="font-medium text-muted">
+                                            {new Date(
+                                                peer.created_at
+                                            ).toLocaleDateString()}
+                                        </span>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full divide-y divide-border bg-transparent text-muted rounded shadow">
+                                                <thead className="bg-[var(--clr-surface-a10)]">
+                                                    <tr>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            #
+                                                        </th>
 
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Player
-                                                    </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Player
+                                                        </th>
 
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        type
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Position
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Goals
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Shot On
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        GK Save
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Assists
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Tackle
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Shots
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Yellow Card
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        Red Card
-                                                    </th>
-                                                    <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
-                                                        TP %
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className=" divide-y divide-border bg-transparent">
-                                                {user.squads &&
-                                                user.squads.length > 0 ? (
-                                                    user.squads.map((squad, idx) => (
-                                                        <>
-                                                        <tr key={squad.id + idx + "-star"}>
-                                                            <td colSpan={12} className=" text-sm text-muted px-3 py-1">
-                                                                Star {idx + 1} ⭐
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            type
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Position
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Goals
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Shot On
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            GK Save
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Assists
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Tackle
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Shots
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Yellow Card
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            Red Card
+                                                        </th>
+                                                        <th className="px-3 py-2 text-left text-xs font-medium text-muted-white uppercase tracking-wider">
+                                                            TP %
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className=" divide-y divide-border bg-transparent">
+                                                    {user.squads &&
+                                                    user.squads.length > 0 ? (
+                                                        user.squads.map(
+                                                            (squad, idx) => (
+                                                                <>
+                                                                    <tr
+                                                                        key={
+                                                                            squad.id +
+                                                                            idx +
+                                                                            "-star"
+                                                                        }
+                                                                    >
+                                                                        <td
+                                                                            colSpan={
+                                                                                12
+                                                                            }
+                                                                            className=" text-sm text-muted px-3 py-1"
+                                                                        >
+                                                                            Star{" "}
+                                                                            {idx +
+                                                                                1}{" "}
+                                                                            ⭐
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr
+                                                                        key={
+                                                                            squad.id +
+                                                                            "-main"
+                                                                        }
+                                                                    >
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.did_play
+                                                                                ? "⚽"
+                                                                                : "🪑"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {
+                                                                                squad
+                                                                                    .main_player
+                                                                                    ?.name
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            Main
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {
+                                                                                squad
+                                                                                    .main_player
+                                                                                    ?.position
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.goals ??
+                                                                                0}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.shots_on ??
+                                                                                0}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.goals_saves ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.assists ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.tackles_total ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.shots ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.cards_yellow ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.cards_red ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {/* Card between the stars */}
+                                                                            {squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.cards_yellow ||
+                                                                            squad
+                                                                                .main_player
+                                                                                ?.statistics
+                                                                                ?.cards_red ? (
+                                                                                <>
+                                                                                    {squad
+                                                                                        .main_player
+                                                                                        ?.statistics
+                                                                                        ?.cards_yellow >
+                                                                                        0 && (
+                                                                                        <span className="inline-block mr-1 text-yellow-500">
+                                                                                            🟨
+                                                                                        </span>
+                                                                                    )}
+                                                                                    {squad
+                                                                                        .main_player
+                                                                                        ?.statistics
+                                                                                        ?.cards_red >
+                                                                                        0 && (
+                                                                                        <span className="inline-block text-red-500">
+                                                                                            🟥
+                                                                                        </span>
+                                                                                    )}
+                                                                                </>
+                                                                            ) : (
+                                                                                0
+                                                                            )}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr
+                                                                        key={
+                                                                            squad.id +
+                                                                            "-sub"
+                                                                        }
+                                                                    >
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.did_play
+                                                                                ? "⚽"
+                                                                                : "🪑"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {
+                                                                                squad
+                                                                                    .sub_player
+                                                                                    ?.name
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            Sub
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {
+                                                                                squad
+                                                                                    .sub_player
+                                                                                    ?.position
+                                                                            }
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.goals ??
+                                                                                0}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.shots_on ??
+                                                                                0}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.goals_saves ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm text-muted">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.assists ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.tackles_total ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.shots ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.cards_yellow ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.cards_red ??
+                                                                                "0"}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-sm ">
+                                                                            {/* Card between the stars */}
+                                                                            {squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.cards_yellow ||
+                                                                            squad
+                                                                                .sub_player
+                                                                                ?.statistics
+                                                                                ?.cards_red ? (
+                                                                                <>
+                                                                                    {squad
+                                                                                        .sub_player
+                                                                                        ?.statistics
+                                                                                        ?.cards_yellow >
+                                                                                        0 && (
+                                                                                        <span className="inline-block mr-1 text-yellow-500">
+                                                                                            🟨
+                                                                                        </span>
+                                                                                    )}
+                                                                                    {squad
+                                                                                        .sub_player
+                                                                                        ?.statistics
+                                                                                        ?.cards_red >
+                                                                                        0 && (
+                                                                                        <span className="inline-block text-red-500">
+                                                                                            🟥
+                                                                                        </span>
+                                                                                    )}
+                                                                                </>
+                                                                            ) : (
+                                                                                0
+                                                                            )}
+                                                                        </td>
+                                                                    </tr>
+                                                                </>
+                                                            )
+                                                        )
+                                                    ) : (
+                                                        <tr>
+                                                            <td
+                                                                colSpan={12}
+                                                                className="px-3 py-4 text-center text-gray-400"
+                                                            >
+                                                                No squad data
+                                                                available.
                                                             </td>
                                                         </tr>
-
-                                                            <tr key={squad.id + "-main"}>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.statistics?.did_play ? "⚽" : "🪑"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.name}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    Main
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.position}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.statistics?.goals ?? 0}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.statistics?.shots_on ?? 0}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.statistics?.goals_saves ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.main_player?.statistics?.assists ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.main_player?.statistics?.tackles_total ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.main_player?.statistics?.shots ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.main_player?.statistics?.cards_yellow ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.main_player?.statistics?.cards_red ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {/* Card between the stars */}
-                                                                    {squad.main_player?.statistics?.cards_yellow || squad.main_player?.statistics?.cards_red
-                                                                        ? (
-                                                                            <>
-                                                                                {squad.main_player?.statistics?.cards_yellow > 0 && (
-                                                                                    <span className="inline-block mr-1 text-yellow-500">🟨</span>
-                                                                                )}
-                                                                                {squad.main_player?.statistics?.cards_red > 0 && (
-                                                                                    <span className="inline-block text-red-500">🟥</span>
-                                                                                )}
-                                                                            </>
-                                                                        )
-                                                                        : 0}
-                                                                </td>
-                                                            </tr>
-                                                            <tr key={squad.id + "-sub"}>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.statistics?.did_play ? "⚽" : "🪑"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.name}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    Sub
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.position}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.statistics?.goals ?? 0}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.statistics?.shots_on ?? 0}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.statistics?.goals_saves ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm text-muted">
-                                                                    {squad.sub_player?.statistics?.assists ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.sub_player?.statistics?.tackles_total ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.sub_player?.statistics?.shots ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.sub_player?.statistics?.cards_yellow ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {squad.sub_player?.statistics?.cards_red ?? "0"}
-                                                                </td>
-                                                                <td className="px-3 py-2 text-sm ">
-                                                                    {/* Card between the stars */}
-                                                                    {squad.sub_player?.statistics?.cards_yellow || squad.sub_player?.statistics?.cards_red
-                                                                        ? (
-                                                                            <>
-                                                                                {squad.sub_player?.statistics?.cards_yellow > 0 && (
-                                                                                    <span className="inline-block mr-1 text-yellow-500">🟨</span>
-                                                                                )}
-                                                                                {squad.sub_player?.statistics?.cards_red > 0 && (
-                                                                                    <span className="inline-block text-red-500">🟥</span>
-                                                                                )}
-                                                                            </>
-                                                                        )
-                                                                        : 0}
-                                                                </td>
-                                                            </tr>
-                                                        </>
-                                                    ))
-                                                ) : (
-                                                    <tr>
-                                                        <td
-                                                            colSpan={12}
-                                                            className="px-3 py-4 text-center text-gray-400"
-                                                        >
-                                                            No squad data
-                                                            available.
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        </Card>
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            </Card>
+                        </div>
                     ))}
             </div>
         </MainLayout>

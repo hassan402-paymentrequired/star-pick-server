@@ -84,6 +84,7 @@ class PlayerService
                     return [
                         'player_avatar' => $match->player->image,
                         'player_position' => $match->player->position,
+                        'player_external_id' => $match->player->external_id,
                         'player_match_id' => $match->id,
                         'player_id' => $match->player_id,
                         'player_team' => $match->player->team->name,

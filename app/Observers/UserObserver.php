@@ -16,7 +16,9 @@ class UserObserver
         $user->wallet()->create([
             'balance' => 0.00,
         ]);
-        Mail::to($user->email)->queue(new WelcomeMail());
+        $otp = rand(100000, 999999);
+        $user->update(['otp' => $otp, 'otp_expires_at' => now()->addDay()]);
+        Mail::to($user->email)->queue(new WelcomeMail($otp));
     }
 
     /**

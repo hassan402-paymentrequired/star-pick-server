@@ -8,12 +8,12 @@ import React from "react";
 
 const Ongoing = ({ peer }) => {
     return (
-        <Card className="mb-3 p-0 bg-background border border-[var(--clr-surface-a20)] shadow-sm rounded">
+        <Card className="mb-3 p-0 bg-background/10 shadow border rounded">
             <Collapsible open={true}>
                 <CollapsibleTrigger className="w-full flex items-center justify-between p-2 cursor-pointer hover:bg-[var(--clr-surface-a10)] transition rounded">
                     <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8 rounded-full bg-[var(--clr-surface-a20)] flex items-center justify-center">
-                            <AvatarFallback className="rounded uppercase">
+                            <AvatarFallback className="uppercase rounded-full ring ring-background shadow flex items-center justify-center">
                                 {peer.name.substring(0,2)}
                             </AvatarFallback>
                         </Avatar>
@@ -33,7 +33,7 @@ const Ongoing = ({ peer }) => {
                 <CollapsibleContent>
                     <div className="px-4  py-3 border-t border-border grid grid-cols-2 gap-4">
                         <div className="flex items-center gap-2">
-                            <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
+                            <div className="size-10 rounded-full ring ring-background shadow flex items-center justify-center">
                                 <Users size={18} />
                             </div>
                             <div className="flex flex-col items-start">
@@ -44,7 +44,7 @@ const Ongoing = ({ peer }) => {
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="size-10 rounded-full bg-muted-foreground flex items-center justify-center">
+                            <div className="size-10 rounded-full ring ring-background shadow flex items-center justify-center">
                                 <HandCoins size={18} />
                             </div>
                             <div className="flex flex-col items-start">
@@ -66,7 +66,6 @@ const Ongoing = ({ peer }) => {
                             <Button
                                 className="w-full  text-sm font-medium"
                                 size="sm"
-                                variant="outline"
                             >
                                 <Target className="w-3 h-3 mr-1" />
                                 View Peer
