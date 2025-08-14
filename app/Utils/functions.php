@@ -28,3 +28,12 @@ function AuthUser(string $guard = 'api'): User|Admin
 {
     return Auth::guard($guard)->user();
 }
+
+
+function generateOtp($length = 6)
+{
+    $numbers = range(0, 9);
+    shuffle($numbers);
+
+    return implode(array_slice($numbers, 0, $length));
+}

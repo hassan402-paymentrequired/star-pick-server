@@ -43,56 +43,10 @@ class PaystackService
         ]);
     }
 
-    /**
-     * Initialize a payment transaction
-     *
-     * @param User $user
-     * @param float $amount
-     * @param string $email
-     * @param string $reference
-     * @param string $callbackUrl
-     * @return array
-     * @throws ClientErrorException
-     */
-    public function initializePayment(User $user, float $amount, string $email, string $reference, string $callbackUrl): array
-    {
-        try {
-            $response = $this->httpClient->post('/transaction/initialize', [
-                'json' => [
-                    'amount' => $amount * 100, 
-                    'email' => $email,
-                    'reference' => $reference,
-                    'callback_url' => $callbackUrl,
-                    'currency' => config('paystack.currency', 'NGN'),
-                    'metadata' => [
-                        'user_id' => $user->id,
-                        'user_name' => $user->name,
-                        'transaction_type' => TransactionTypeEnum::WALLET_TOPUP->value,
-                    ]
-                ]
-            ]);
+  
 
-            $data = json_decode($response->getBody()->getContents(), true);
 
-            if (!$data['status'] || !isset($data['data']['authorization_url'])) {
-                throw new ClientErrorException('Failed to initialize payment: ' . ($data['message'] ?? 'Unknown error'), 400);
-            }
-
-            return [
-                'authorization_url' => $data['data']['authorization_url'],
-                'access_code' => $data['data']['access_code'],
-                'reference' => $data['data']['reference'],
-            ];
-
-        } catch (\Throwable $th) {
-            Log::error('PaystackService: Payment initialization failed', [
-                'error' => $th->getMessage(),
-                'user_id' => $user->id,
-                'amount' => $amount,
-            ]);
-            throw new ClientErrorException('Failed to initialize payment: ' . $th->getMessage(), 500);
-        }
-    }
+  
 
     /**
      * Verify a payment transaction

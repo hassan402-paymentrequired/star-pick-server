@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_ref', 50)->unique();
+            $table->enum('action_type', ['debit', 'credit']);
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('description')->nullable();
+            $table->decimal('amount', 20, 2)->default(0);
+            $table->decimal('wallet_balance_before', 20, 2)->default(0);
+            $table->decimal('wallet_balance_after', 20, 2)->default(0);
+            $table->integer('status')->comment('1 - pending | 2 - successful | 3 - failed');
+            $table->text('meta_data')->nullable();
+            $table->timestamp('abandoned_at')->nullable();
+            $table->timestamp('last_checked')->nullable();
             $table->timestamps();
+            $table->index('user_id', 'wt_user_id_idx');
+          
         });
     }
 

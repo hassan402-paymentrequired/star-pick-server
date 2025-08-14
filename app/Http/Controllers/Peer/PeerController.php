@@ -11,6 +11,7 @@ use App\Utils\Service\V1\Peer\PeerService;
 use App\Utils\Service\V1\Player\PlayerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 

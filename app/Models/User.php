@@ -76,6 +76,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Peer::class);
     }
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
     public function bets(): HasMany
     {
@@ -103,7 +107,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(DailyContest::class, 'daily_contest_users')->withTimestamps();
     }
 
-    
+
 
 
     public function virtualAccount()

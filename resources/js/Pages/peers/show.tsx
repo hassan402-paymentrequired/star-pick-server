@@ -72,7 +72,14 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
 
     const getMatch = async () => {
         await fetch(
-            "https://www.sofascore.com/api/v1/event/12436883/player/975079/statistics")
+            "https://www.sofascore.com/api/v1/event/12436883/player/975079/statistics",
+            
+            {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                }
+            }
+            )
             .then((response) => response.json())
             .then((data) => console.log(data))
             .catch((e) => console.log(e));
@@ -81,7 +88,7 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
     useEffect(() => {
        const id =  setInterval(() => {
             getMatch();
-        }, 1000);
+        }, 10000);
 
         return () => {
             clearInterval(id);

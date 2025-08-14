@@ -97,7 +97,7 @@ const Global = ({ tournament, users }) => {
                                             className="text-sm text-start font-bold"
                                             colSpan={4}
                                         >
-                                            {user.username}
+                                            @{user.username}
                                         </td>
                                         <td></td>
                                         <td></td>

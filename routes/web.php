@@ -15,6 +15,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/sign-up', [AuthenticationController::class, 'storeRegister'])->name('register.store');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/verify-otp', [AuthenticationController::class, 'otpIndex'])->name('verify');
+    Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp'])->name('verify.store');
+});
 
 Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/', [PeerController::class, 'index'])->name('home');
@@ -38,12 +42,13 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::prefix('wallet')->group(function () {
         Route::get('/', [WalletController::class, 'index'])->name('wallet.index');
-        Route::get('/details', [WalletController::class, 'getWalletDetails']);
-        Route::post('/fund', [WalletController::class, 'initializeFunding']);
+        Route::get('/callback', [WalletController::class, 'paymentCallback'])->name('wallet.callback');
+        Route::post('/fund', [WalletController::class, 'initializeFunding'])->name('wallet.fund');
         Route::post('/verify-payment', [WalletController::class, 'verifyPayment']);
         Route::get('/transactions', [WalletController::class, 'getTransactionHistory']);
         Route::get('/transactions/{transactionId}', [WalletController::class, 'getTransactionDetails']);
     });
+
 
     // Virtual Account Management Routes
     Route::prefix('virtual-accounts')->group(function () {
@@ -69,13 +74,4 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 Route::prefix('webhooks')->group(function () {
     Route::post('/paystack/payment', [\App\Http\Controllers\Customers\WalletController::class, 'processWebhook']);
     Route::post('/paystack/virtual-account', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'processWebhook']);
-});
-
-
-
-
-
-Route::middleware('guest')->group(function () {
-    Route::get('/verify-otp', [AuthenticationController::class, 'otpIndex'])->name('verify');
-    Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp'])->name('verify.store');
 });

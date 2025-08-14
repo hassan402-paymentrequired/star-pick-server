@@ -3,61 +3,69 @@
 namespace App\Http\Controllers\Wallet;
 
 use App\Http\Controllers\Controller;
-use App\Utils\Services\v1\Wallet\WalletService;
+use App\Utils\Service\V1\Wallet\WalletService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class WalletController extends Controller
 {
 
+  protected WalletService $walletService;
 
-
-
-
-  // protected WalletService $walletService;
-
-  // public function __construct(WalletService $walletService)
-  // {
-  //   $this->walletService = $walletService;
-  // }
+  public function __construct(WalletService $walletService)
+  {
+    $this->walletService = $walletService;
+  }
 
   public function index()
   {
-    return Inertia::render('wallet/index');
+    $user = auth('web')->user();
+    $transactions = $user->transactions()->latest()->get();
+    return Inertia::render('wallet/index', [
+      'transactions' => $transactions,
+
+    ]);
   }
 
-  /**
-   * Get wallet details
-   */
-  // public function getWalletDetails(Request $request)
-  // {
-  //   try {
-  //     $walletDetails = $this->walletService->getWalletDetails();
 
-  //     return Inertia::render('wallet/index', [
-  //       'walletDetails' => $walletDetails
-  //     ]);
-  //   } catch (\Exception $e) {
-  //     return back();
-  //   }
-  // }
+  public function initializeFunding(Request $request)
+  {
+    try {
+      $authorizeUrl = $this->walletService->initializeWalletFunding(
+        $request->amount
+      );
+      return back()->with('success', $authorizeUrl);
+    } catch (\Exception $e) {
 
-  // /**
-  //  * Initialize wallet funding
-  //  */
-  // public function initializeFunding(InitializeWalletFundingRequest $request)
-  // {
-  //   try {
-  //     $paymentData = $this->walletService->initializeWalletFunding(
-  //       $request->validated('amount'),
-  //       $request->validated('email')
-  //     );
+      dd(
+        $e->getMessage()
+      );
+      return back()->with('error', $e->getMessage());
+    }
+  }
 
-  //     return back()->with('success', 'Wallet funding initialized successfully');
-  //   } catch (\Exception $e) {
-  //     return back()->with('error', $e->getMessage());
-  //   }
-  // }
+
+  public function paymentCallback(Request $request)
+  {
+    // return dd();
+    $result = $this->walletService->paymentCallback($request->get('reference'));
+
+    if (!$result) {
+      return to_route('wallet.index')->with('error', 'Payment already verified');
+    }
+
+    return to_route('wallet.index')->with('success', 'Payment successful, your wallet has been funded');
+  }
+
+
+
+
+
+
+
+
+
 
   // /**
   //  * Verify payment after redirect

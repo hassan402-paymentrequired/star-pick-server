@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\RegisterOtpNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -30,7 +31,7 @@ class AuthenticationController extends Controller
             'password' => 'required|min:8'
         ]);
 
-         $user = User::where('phone', $request->phone)->first();
+        $user = User::where('phone', $request->phone)->first();
 
         if (!$user) {
             return back()->with('error', 'Invalid credentials');
@@ -63,14 +64,21 @@ class AuthenticationController extends Controller
             'username' => 'required|string|min:3|max:20|alpha_dash|unique:users',
         ]);
 
+        // $otp = rand(100000, 999999);
+        $otp = generateOtp();
+
         $user = User::create([
             'phone' => $request->phone,
             'password' => $request->password,
             'username' => $request->username,
-            'email' => $request->username . time() . rand(1000, 9999) . '@gmail.com'
+            'email' => $request->username . time() . rand(1000, 9999) . '@gmail.com',
+            'otp' => $otp,
+            'otp_expires_at' => now()->minutes(10)
         ]);
 
-        Auth::login($user);
+        Auth::guard('web')->login($user);
+
+        // $user->notify(new RegisterOtpNotification($otp));
 
 
         return to_route('verify')->with('success', 'Registration successful');

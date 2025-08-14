@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd } from "lucide-react";
+import { GalleryVerticalEnd, Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,20 +22,19 @@ export function RegisterForm({
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
 
         post(route("register.store"), {
             onSuccess: () => {
-                toast.success("Registration successful. Please verify the code sent to your phone");
+                toast.success(
+                    "Registration successful. Please verify the code sent to your phone"
+                );
             },
             onError: () => {
-                toast.error("Opps!. An error occur")
+                toast.error("Opps!. An error occur");
             },
             preserveScroll: true,
         });
     };
-
-    
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -114,7 +113,9 @@ export function RegisterForm({
                             )}
                         </div>
                         <div className="grid gap-1">
-                            <Label htmlFor="password_confirmation">Confirm password</Label>
+                            <Label htmlFor="password_confirmation">
+                                Confirm password
+                            </Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -122,15 +123,25 @@ export function RegisterForm({
                                 required
                                 value={data.password_confirmation}
                                 onChange={(e) =>
-                                    setData("password_confirmation", e.target.value)
+                                    setData(
+                                        "password_confirmation",
+                                        e.target.value
+                                    )
                                 }
                             />
                             {globalErrors.password_confirmation && (
-                                <FormError message={globalErrors.password_confirmation} />
+                                <FormError
+                                    message={globalErrors.password_confirmation}
+                                />
                             )}
                         </div>
-                        <Button type="submit" className="w-full">
-                            Login
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={processing}
+                        >
+                            {processing && <Loader className="animate-spin" />}{" "}
+                            Sign up
                         </Button>
                     </div>
                     <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">

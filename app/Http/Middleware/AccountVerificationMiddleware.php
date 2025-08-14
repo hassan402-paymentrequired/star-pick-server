@@ -15,17 +15,11 @@ class AccountVerificationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth('web')->check()) {
-            return redirect()->route('login');
-        }
-
         $user = auth('web')->user();
-
-        if (!$user->email_verified_at) {
-            return redirect()->route('verify');
+        // dd($user);
+        if ($user->email_verified_at === null) {
+            return to_route('verify');
         }
-
-
         return $next($request);
     }
 }
