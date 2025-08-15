@@ -4,8 +4,9 @@ import { Head, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Deposit } from "./deposit";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
+import WithdrawModal from "./withdraw";
 
-const Wallet = ({ transactions }) => {
+const Wallet = ({ transactions, banks }) => {
     const {
         auth: { user },
     } = usePage().props;
@@ -34,9 +35,7 @@ const Wallet = ({ transactions }) => {
                 {/* Action Buttons */}
                 <div className="w-full max-w-md grid grid-cols-2 gap-4 mb-8">
                     <Deposit />
-                    <Button variant="outline" className="border-gray-400 text-white hover:bg-gray-700">
-                        Withdraw
-                    </Button>
+                    <WithdrawModal banks={banks}/>
                 </div>
 
                 {/* Recent Transactions */}

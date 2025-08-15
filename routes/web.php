@@ -47,31 +47,18 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::post('/verify-payment', [WalletController::class, 'verifyPayment']);
         Route::get('/transactions', [WalletController::class, 'getTransactionHistory']);
         Route::get('/transactions/{transactionId}', [WalletController::class, 'getTransactionDetails']);
+        Route::post('/bank-account-verify', [WalletController::class, 'verifyBankAccount'])->name('bank.account.verify');
+        Route::post('/withdraw-funds', [WalletController::class, 'initiateWithdrawal'])->name('fund.withdraw');
     });
 
-
-    // Virtual Account Management Routes
-    Route::prefix('virtual-accounts')->group(function () {
-        Route::get('/details', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'getVirtualAccountDetails']);
-        Route::post('/create', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'createVirtualAccount']);
-        Route::post('/deactivate', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'deactivateVirtualAccount']);
-        Route::get('/transactions', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'getVirtualAccountTransactions']);
-    });
 
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileControlle::class, 'index'])->name('profile.index');
     });
 
-
-    Route::prefix('withdrawals')->group(function () {
-        Route::post('/', [\App\Http\Controllers\Customers\WithdrawalController::class, 'initiateWithdrawal']);
-    });
 });
 
-
-// Webhook Routes (No authentication required)
 Route::prefix('webhooks')->group(function () {
     Route::post('/paystack/payment', [\App\Http\Controllers\Customers\WalletController::class, 'processWebhook']);
-    Route::post('/paystack/virtual-account', [\App\Http\Controllers\Customers\VirtualAccountController::class, 'processWebhook']);
 });

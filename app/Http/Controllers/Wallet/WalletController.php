@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Wallet;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\WithdrawRequest;
+use App\Models\Bank;
 use App\Utils\Service\V1\Wallet\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +26,7 @@ class WalletController extends Controller
     $transactions = $user->transactions()->latest()->get();
     return Inertia::render('wallet/index', [
       'transactions' => $transactions,
-
+      'banks' => Bank::all(),
     ]);
   }
 
@@ -62,112 +64,50 @@ class WalletController extends Controller
 
 
 
+  public function initiateWithdrawal(WithdrawRequest $request)
+  {
+    try {
+      $validatedData = $request->validated();
 
 
+      $manualBankDetails = [
+        'bank_code' => $validatedData['bank_code'],
+        'account_number' => $validatedData['account_number'],
+        'account_name' => $validatedData['account_name'],
+        'amount' => $validatedData['amount'],
+      ];
+      $withdrawalData = $this->walletService->initiateWithdrawal(
+        $manualBankDetails
+      );
+      if (!$withdrawalData) {
+        return back()->with('error', 'Unable to initiate withdrawal. Please check the bank details.');
+      }
+      return back()->with('success', 'Withdrawal initiated successfully. Please wait for confirmation.');
+    } catch (\Exception $e) {
+      return null;
+    }
+  }
 
 
+  function verifyBankAccount(Request $request)
+  {
+    try {
+      $request->validate([
+        'accountNumber' => 'required',
+        'bankCode' => 'required',
+      ]);
 
-  // /**
-  //  * Verify payment after redirect
-  //  */
-  // public function verifyPayment(VerifyPaymentRequest $request): JsonResponse
-  // {
-  //   try {
-  //     $result = $this->walletService->verifyPaymentAndCreditWallet(
-  //       $request->validated('reference')
-  //     );
+      $accountData = $this->walletService->verifyBankAccount($request->get('accountNumber'), $request->get('bankCode'));
 
-  //     return $this->respondWithCustomData(
-  //       message: $result['message'],
-  //       data: $result
-  //     );
-  //   } catch (\Exception $e) {
-  //     throw new ClientErrorException(
-  //       message: $e->getMessage(),
-  //       code: $e->getCode() ?: 400
-  //     );
-  //   }
-  // }
+      if (!$accountData) {
+        return back()->with('error', 'Unable to verify bank account. Please check the account number.');
+      }
 
-  // /**
-  //  * Get transaction history
-  //  */
-  // public function getTransactionHistory(Request $request): JsonResponse
-  // {
-  //   try {
-  //     $request->validate([
-  //       'per_page' => 'sometimes|integer|min:1|max:100',
-  //       'search' => 'sometimes|string|max:255',
-  //       'status' => 'sometimes|integer|in:1,2,3',
-  //       'action_type' => 'sometimes|string|in:credit,debit',
-  //       'min_amount' => 'sometimes|numeric|min:0',
-  //       'max_amount' => 'sometimes|numeric|min:0',
-  //       'start_date' => 'sometimes|date',
-  //       'end_date' => 'sometimes|date|after_or_equal:start_date',
-  //       'transaction_type_id' => 'sometimes|integer|exists:transaction_types,id',
-  //       'sort' => 'sometimes|string|in:created_at,updated_at,amount,status,action_type',
-  //       'direction' => 'sometimes|string|in:asc,desc',
-  //     ]);
-
-  //     $perPage = $request->get('per_page', 20);
-  //     $transactions = $this->walletService->getTransactionHistory($perPage, $request);
-
-  //     return $this->respondWithCustomData(
-  //       message: 'Transaction history fetched successfully',
-  //       data: $transactions
-  //     );
-  //   } catch (\Exception $e) {
-  //     throw new ClientErrorException(
-  //       message: $e->getMessage(),
-  //       code: $e->getCode() ?: 400
-  //     );
-  //   }
-  // }
-
-  // /**
-  //  * Get transaction details
-  //  */
-  // public function getTransactionDetails(Request $request, string $transactionId): JsonResponse
-  // {
-  //   try {
-  //     $transaction = $this->walletService->getTransactionDetails($transactionId);
-
-  //     return $this->respondWithCustomData(
-  //       message: 'Transaction details fetched successfully',
-  //       data: $transaction
-  //     );
-  //   } catch (\Exception $e) {
-  //     throw new ClientErrorException(
-  //       message: $e->getMessage(),
-  //       code: $e->getCode() ?: 400
-  //     );
-  //   }
-  // }
-
-  // /**
-  //  * Process payment webhook
-  //  */
-  // public function processWebhook(Request $request)
-  // {
-  //   try {
-  //     $payload = $request->all();
-  //     $signature = $request->header('X-Paystack-Signature');
-
-  //     if (!$signature) {
-  //      return back()->with('error', 'Invalid webhook signature');
-  //     }
-
-  //     $result = $this->walletService->processWebhook($payload, $signature);
-
-  //     return $this->respondWithCustomData(
-  //       message: $result['message'],
-  //       data: $result
-  //     );
-  //   } catch (\Exception $e) {
-  //     throw new ClientErrorException(
-  //       message: $e->getMessage(),
-  //       code: $e->getCode() ?: 400
-  //     );
-  //   }
-  // }
+      return back()->with('data', $accountData);
+    } catch (\Exception $e) {
+      // dd($e->getMessage());
+      Log::error('Bank account verification failed: ' . $e->getMessage());
+      return back()->with('error', 'Unable to verify bank account. Please check the account number.');
+    }
+  }
 }
