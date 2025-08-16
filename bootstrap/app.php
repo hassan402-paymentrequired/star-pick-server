@@ -5,17 +5,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,9 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'verified' => AccountVerificationMiddleware::class
         ]);
+
+       
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // $exceptions->renderable(function (\Throwable $e, $request) {
-        //     return app(\App\Exceptions\Handler::class)->render($request, $e);
-        // });
+       
     })->create();

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminLoginRequest;
 use App\Utils\Service\V1\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminAuthController extends Controller
 {
@@ -18,6 +19,10 @@ class AdminAuthController extends Controller
 
     public function login(AdminLoginRequest $request)
     {
+        Log::info('Middleware stack:', [
+        'method' => $request->method(),
+        'middlewares' => $request->route()->middleware()
+    ]);
         $token = $this->authService->adminLogin($request);
         if (!$token) {
             return $this->responseWithErrorMessage('Invalid credentials', ['email' => 'invalid credentials'], 400);

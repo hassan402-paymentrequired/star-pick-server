@@ -49,6 +49,9 @@ class FetchTeams extends Command
             }
 
             $body = $response->json();
+
+            // $this->info(json_encode($body));
+
             $teams = $body['response'] ?? [];
             $paging = $body['paging'] ?? ['current' => $page, 'total' => $page];
             $totalPages = $paging['total'] ?? 1;
