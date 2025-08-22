@@ -63,10 +63,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/deposit', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'increaseWalletBalance']);
         });
 
-        Route::prefix('general')->group(function(){
-            // Route::get();
-        });
-
+       
 
     });
 
