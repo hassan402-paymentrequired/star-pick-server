@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -75,6 +76,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Peer::class);
     }
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
     public function bets(): HasMany
     {
@@ -94,5 +99,50 @@ class User extends Authenticatable implements JWTSubject
     public function match(): HasMany
     {
         return $this->hasMany(PlayerMatch::class);
+    }
+
+
+    public function daily_contests()
+    {
+        return $this->belongsToMany(DailyContest::class, 'daily_contest_users')->withTimestamps();
+    }
+
+
+
+
+    public function virtualAccount()
+    {
+        return $this->hasOne(VirtualAccount::class);
+    }
+
+
+    public function activeVirtualAccount()
+    {
+        return $this->hasOne(VirtualAccount::class)->where('status', 'active');
+    }
+
+
+    public function hasVirtualAccount(): bool
+    {
+        return $this->virtualAccount()->exists();
+    }
+
+
+    public function hasActiveVirtualAccount(): bool
+    {
+        return $this->activeVirtualAccount()->exists();
+    }
+
+
+    public function getVirtualAccountDetails(): ?array
+    {
+        $virtualAccount = $this->virtualAccount;
+        return $virtualAccount ? $virtualAccount->accountDetails : null;
+    }
+
+
+    function AlreadyJoinedTodayTournament()
+    {
+        return $this->daily_contests()->whereDate('daily_contests.created_at', now()->toDateString())->exists();
     }
 }

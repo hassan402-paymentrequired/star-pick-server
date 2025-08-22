@@ -12,7 +12,7 @@ class TeamService
     public function teams(): Collection
     {
         return Cache::remember(CacheKey::TEAMS->value, now()->addDay(), function () {
-            return Team::withCount('players')->get();
+            return Team::where('status', 1)->withCount('players')->get();
         });
     }
 }

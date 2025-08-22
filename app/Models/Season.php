@@ -13,7 +13,7 @@ class Season extends Model
 
     public function league()
     {
-        return $this->belongsTo(Leagues::class, 'league_id');
+        return $this->belongsTo(League::class, 'league_id');
     }
 
     public function rounds()

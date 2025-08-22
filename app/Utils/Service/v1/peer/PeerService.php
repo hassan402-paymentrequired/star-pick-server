@@ -72,7 +72,7 @@ class PeerService
         $peer->delete();
     }
 
-    public function playBet(Request $request, Peer $peer): void
+    public function playBet(Request $request, Peer $peer, string $guard = 'api'): void
     {
         // Check if peer is open
         if ($peer->status !== 'open') {
@@ -85,14 +85,14 @@ class PeerService
         }
 
         // Check if user already joined
-        if ($peer->users()->where('user_id', Auth::id())->exists()) {
+        if ($peer->users()->where('user_id', Auth::guard($guard)->id())->exists()) {
             throw new ClientErrorException('You have already joined this peer.');
         }
 
         // Create peer_user record
         $peerUser = \App\Models\PeerUser::create([
             'peer_id' => $peer->id,
-            'user_id' => Auth::guard('api')->id(),
+            'user_id' => Auth::guard($guard)->id(),
             'total_points' => 0,
             'is_winner' => false
         ]);

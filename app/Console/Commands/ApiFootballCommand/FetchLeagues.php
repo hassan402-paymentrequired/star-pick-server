@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\ApiFootballCommand;
 
-use App\Models\Leagues;
+use App\Models\League;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -15,8 +15,6 @@ class FetchLeagues extends Command
     public function handle()
     {
         $country = $this->argument('country');
-        $this->info('Deleting all leagues...');
-
         $page = 1;
         $totalPages = 1;
         $insertBatch = [];
@@ -36,13 +34,16 @@ class FetchLeagues extends Command
             ]);
 
             $body = $response->json();
+
+            $this->info("Fetching page $response...");
+
             $totalPages = $body['paging']['total'] ?? 1;
             $leagues = $body['response'] ?? [];
             $count = count($leagues);
             $this->info("Total league $count...");
 
             foreach ($leagues as $item) {
-                Leagues::updateOrCreate(
+                $l =  League::updateOrCreate(
                     [
                         'external_id' => $item['league']['id'],
                     ],
@@ -56,6 +57,20 @@ class FetchLeagues extends Command
                         'updated_at'   => now(),
                     ]
                 );
+
+                foreach ($item['seasons'] as $season) {
+                    $l->seasons()->updateOrCreate(
+                        [
+                            'external_id'      => $season['year'] ?? now()->year,
+                        ],
+                        [
+                            'is_current' => $season['current'] ?? false,
+                            'start_date' => $season['start'] ?? null,
+                            'end_date'   => $season['end'] ?? null,
+                            'year'   => $season['year'] ?? null,
+                        ]
+                    );
+                }
             }
 
             $page++;
@@ -66,6 +81,6 @@ class FetchLeagues extends Command
 
     private function bulkInsert(array $batch)
     {
-        Leagues::insert($batch);
+        League::insert($batch);
     }
 }

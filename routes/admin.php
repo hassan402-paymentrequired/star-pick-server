@@ -40,15 +40,14 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::prefix('leagues')->group(function () {
         Route::get('/', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'index']);
-        Route::get('/season/{leagueId}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeason']);
-        Route::get('/season/{leagues}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeasonAndRound']);
+        Route::get('/seasons/{league}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeason']);
+        Route::get('/season-rounde/{league}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'getLeagueSeasonAndRound']);
         Route::post('/refetch', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'refetch']);
+        Route::get('/{league}', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'show']);
     });
 
      Route::prefix('seasons')->group(function () {
         Route::get('/', [\App\Http\Controllers\V1\Season\SeasonController::class, 'index']);
-        
-
         Route::post('/refetch', [\App\Http\Controllers\V1\Leagues\LeagueController::class, 'refetch']);
     });
 

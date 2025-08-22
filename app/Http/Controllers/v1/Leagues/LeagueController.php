@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\V1\Leagues;
 
 use App\Http\Controllers\Controller;
-use App\Models\Leagues;
+use App\Models\League;
 use App\Models\Season;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
 class LeagueController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $leagues = Leagues::all();
+        $leagues = League::with(['seasons' => function ($query) {
+            $query->where('is_current', true);
+        }])
+            ->when($request->status, function ($query) use ($request) {
+                return $query->where('status', $request->status);
+            })
+            ->orderBy('status')
+            ->get();
 
         return $this->respondWithCustomData(
             [
@@ -21,11 +28,20 @@ class LeagueController extends Controller
         );
     }
 
+    public function show(League $league)
+    {
+        return $this->respondWithCustomData(
+            [
+                'league' => $league->load('seasons')
+            ]
+        );
+    }
+
     public function refetch(Request $request)
     {
-        $name = $request->country_name ?? '';
-        $season = $request->season ?? 2023;
-        Artisan::call('fetch:leagues', ['country' => $name, 'season' => $season]);
+        $id = $request->country_id ?? '';
+
+        Artisan::call('fetch:leagues', ['country' => $id]);
 
         return $this->respondWithCustomData(
             [
@@ -34,10 +50,12 @@ class LeagueController extends Controller
         );
     }
 
-    public function getLeagueSeason(string $leagueId)
+    public function getLeagueSeason(League $league)
     {
-    
-        $season = Season::where('league_id', $leagueId)->where('is_current', true)->first();
+
+        $season = $league->seasons()
+            ->where('is_current', true)
+            ->first();
 
         return $this->respondWithCustomData(
             [
@@ -46,10 +64,10 @@ class LeagueController extends Controller
         );
     }
 
-    public function getLeagueSeasonAndRound(Leagues $leagues)
+    public function getLeagueSeasonAndRound(League $leagues)
     {
         $league = $leagues;
-       
+
         $seasons = Season::where('league_id', $league->id)
             ->with(['league'])
             ->get();

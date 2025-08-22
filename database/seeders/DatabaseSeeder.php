@@ -33,6 +33,10 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $this->call([PeerTableSeeder::class]);
+        $this->call([PeerTableSeeder::class, 
+            BankSeeder::class,
+            // UserBankAccountSeeder::class,
+            // TransactionSeeder::class,
+        ]);
     }
 }

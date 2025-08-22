@@ -4,6 +4,10 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+const ADMIN = 'admin';
+const API = 'api';
+const WEB = 'web';
+
 function getUserBalance()
 {
     return Auth::guard('api')->user()->wallet->balance;
@@ -23,4 +27,13 @@ function increaseWallet($amount)
 function AuthUser(string $guard = 'api'): User|Admin
 {
     return Auth::guard($guard)->user();
+}
+
+
+function generateOtp($length = 6)
+{
+    $numbers = range(0, 9);
+    shuffle($numbers);
+
+    return implode(array_slice($numbers, 0, $length));
 }

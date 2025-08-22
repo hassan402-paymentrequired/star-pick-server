@@ -1,11 +1,368 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap'); */
+
 @import 'tailwindcss';
 
+/* @plugin 'tailwindcss-animate'; */
+
+@source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:"Share Tech", sans-serif;
+    --font-mono:"Jost", monospace;
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted-white: var(--muted-text);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-default:  color-mix(in oklab, var(#fff) 60%, transparent)
 }
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+/* F6F5F2 */
+
+:root {
+    --background: oklch(92.8% 0.006 264.531);
+    --foreground: #FFFFFF;
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.623 0.214 259.815);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: #e04f4b;
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.205 0 0);
+    --muted-text: oklch(0.205 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.205 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.967 0.003 264.542);
+    --input:  oklch(92.8% 0.006 264.531);
+    --ring:  oklch(92.8% 0.006 264.531);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.87 0 0);
+}
+
+
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background font-sans text-muted-white;
+    }
+
+
+}
+
+
+@layer components {
+  .repository-link {
+    @apply relative px-3 py-2 flex items-center space-x-2 rounded hover:bg-secondary transition-colors;
+  }
+  .repository-link.active {
+    @apply bg-secondary font-medium;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium;
+  }
+  /* .status-badge.success {
+    @apply bg-git-green/20 text-git-green;
+  }
+  .status-badge.failed {
+    @apply bg-git-red/20 text-git-red;
+  }
+  .status-badge.pending {
+    @apply bg-git-yellow/20 text-git-yellow;
+  } */
+
+  .pr-comment {
+    @apply p-3 border rounded-md mb-3 ;
+  }
+
+  .code-line {
+    @apply py-1 pl-2 border-l-2 border-transparent hover:bg-secondary/50;
+  }
+  /* .code-line.added {
+    @apply bg-git-green/10 border-l-git-green;
+  }
+  .code-line.removed {
+    @apply bg-git-red/10 border-l-git-red;
+  } */
+}
+
+.parent-dash {
+  scrollbar-width: none;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.parent-dash::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+.parent-dash::-webkit-scrollbar-track {
+  background: '#ccc';
+}
+
+.parent-dash::-webkit-scrollbar-thumb {
+  background-color: '#aaa';
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-track);
+
+}
+
+
+ .card {
+    position: relative;
+    width: 315px;
+    height: 450px;
+    margin: 30px auto;
+    box-shadow: 0 0 100px rgba(0,0,0, .3);
+    border-radius: 10px;
+  }
+
+  .card-header {
+    position: relative;
+    height: 220px;
+    background-size: cover;
+    background-position: top;
+  }
+
+  .card-header:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgb(5,85,134), rgba(181,181,181, -0.20));
+    border-radius: 10px;
+  }
+
+  .image {
+    position: absolute;
+    margin-top: 100px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #222;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .card-header-bar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip: rect(0,0,0,0);
+    border: none;
+    overflow: hidden;
+  }
+
+  .btn-message {
+    display: inline-block;
+    width: 19.37px;
+    height: 16.99px;
+    margin-right: 10px;
+    margin-top: 10px;
+    float: right;
+  }
+
+  .btn-menu {
+    display: inline-block;
+    background: width: 19px;
+    height: 12.16px;
+    margin-left: 10px;
+    margin-top: 10px;
+    float: left;
+  }
+
+  .card-header-slanted-edge {
+    position: absolute;
+    bottom: -3px;
+    z-index: 1;
+    width: 100%;
+    right: 0;
+    left: 0;
+  }
+
+  .card-body {
+    text-align: center;
+    padding-left: 10px;
+  }
+
+  .name {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 auto;
+  }
+
+  .job-title {
+    font-size: 14px;
+    font-weight: 300;
+    margin-top: 15px;
+    color: #919191;
+  }
+
+  .bio {
+    font-size: 14px;
+    color: #7B7B7B;
+    font-weight: 300;
+    margin: 10px auto;
+    line-height: 20px;
+  }
+
+  .social-accounts img {
+    width: 15px;
+  }
+
+  .social-accounts a {
+    margin-left: 10px;
+  }
+
+  .social-accounts a:first-child {
+    margin-left: 0;
+  }
+
+  .card-footer {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 20px;
+  }
+
+  .stat {
+    box-sizing: border-box;
+    width: calc(100% / 3);
+    float: left;
+    text-align: center;
+  }
+
+  .stat:nth-child(2) {
+    border-left: 1px solid grey;
+  }
+
+  .stat:nth-child(3) {
+    border-left: 1px solid grey;
+  }
+
+  .stat .label {
+    display: block;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #95989A;
+  }
+
+  .stat .value {
+    display: block;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 5px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+     border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
