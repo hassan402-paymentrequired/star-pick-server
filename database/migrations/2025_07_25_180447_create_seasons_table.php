@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('seasons', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('external_id')->nullable();
             $table->foreignId('league_id')->constrained('leagues')->cascadeOnDelete();
             $table->string('year')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->boolean('is_current')->nullable()->default(false);
             $table->timestamps();
         });

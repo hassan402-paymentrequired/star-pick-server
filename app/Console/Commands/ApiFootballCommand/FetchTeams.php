@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands\ApiFootballCommand;
 
+use App\Models\League;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FetchTeams extends Command
 {
@@ -12,7 +14,7 @@ class FetchTeams extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:teams {league} {season}';
+    protected $signature = 'fetch:teams {league} ';
 
     /**
      * The console command description.
@@ -26,8 +28,14 @@ class FetchTeams extends Command
      */
     public function handle()
     {
+        $leagueSeason = League::with('seasons')
+            ->whereHas('seasons', function ($query) {
+                $query->where('is_current', true);
+            })
+            ->first();
+        Log::info('Fetching teams for league: ' . json_encode($leagueSeason->toArray()));
         $leagueId = $this->argument('league');
-        $season = $this->argument('season');
+        $season = '2023';
         $apiUrl = 'https://v3.football.api-sports.io/teams';
         $apiKey = env('SPORT_API_KEY');
         $page = 1;

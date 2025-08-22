@@ -96,7 +96,7 @@ export function LoginForm({
                             <Label htmlFor="password">Password</Label>
                             <Input
                                 id="password"
-                                type="pasword"
+                                type="password"
                                 placeholder="password..."
                                 required
                                 value={data.password}

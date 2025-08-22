@@ -55,76 +55,10 @@ class MatchController extends Controller
             'fixture_id' => 'required',
             'matches' => 'required|array',
             'matches.*.playerId' => 'required|exists:players,id',
-            'matches.*.againstTeam' => 'required|exists:teams,external_id',
-            'league_id' => 'required|exists:leagues,external_id',
-            'season_id' => 'required|exists:seasons,external_id',
-
-            'fixture.awayScore' => 'nullable|array',
-            'fixture.awayTeam.name' => 'required|string',
-            'fixture.awayTeam.slug' => 'required|string',
-            'fixture.awayTeam.shortName' => 'required|string',
-            'fixture.awayTeam.id' => 'required',
-            'fixture.awayTeam.sport' => 'required|array',
-            'fixture.changes.changeTimestamp' => 'required|integer',
-            'fixture.crowdsourcingDataDisplayEnabled' => 'required|boolean',
-            'fixture.customId' => 'required|string',
-            'fixture.detailId' => 'required|integer',
-            'fixture.feedLocked' => 'required|boolean',
-            'fixture.finalResultOnly' => 'required|boolean',
-            'fixture.hasGlobalHighlights' => 'required|boolean',
-            'fixture.homeScore' => 'nullable|array',
-            'fixture.homeTeam.name' => 'required|string',
-            'fixture.homeTeam.slug' => 'required|string',
-            'fixture.homeTeam.shortName' => 'required|string',
-            'fixture.homeTeam.id' => 'required',
-            'fixture.homeTeam.sport' => 'required|array',
-            'fixture.id' => 'required|integer',
-            'fixture.isEditor' => 'required|boolean',
-            'fixture.roundInfo.round' => 'required|integer',
-            'fixture.season.name' => 'required|string',
-            'fixture.season.year' => 'required|string',
-            'fixture.season.editor' => 'required|boolean',
-            'fixture.season.id' => 'required|integer',
-            'fixture.slug' => 'required|string',
-            'fixture.startTimestamp' => 'required|integer',
-            'fixture.status.code' => 'required|integer',
-            'fixture.status.description' => 'required|string',
-            'fixture.status.type' => 'required|string',
-            'fixture.time' => 'nullable|array',
-            'fixture.tournament.name' => 'required|string',
-            'fixture.tournament.slug' => 'required|string',
-            'fixture.tournament.category' => 'required|array',
-            'fixture.tournament.uniqueTournament' => 'required|array',
-            'fixture.tournament.priority' => 'required|integer',
-            'fixture.varInProgress.homeTeam' => 'required|boolean',
-            'fixture.varInProgress.awayTeam' => 'required|boolean',
+            'matches.*.againstTeam' => 'required|exists:teams,external_id'
         ]);
 
-        $fixture = Fixture::updateOrCreate(
-            [
-                'external_id' => $request->fixture['id'],
-            ],
-            [
-                'league_id' => $request->league_id,
-                'season' => $request->season_id,
-                'date' => $request->fixture['startTimestamp'] ? date('Y-m-d H:i:s', $request->fixture['startTimestamp'] / 1000) : now()->format('Y-m-d H:i:s'),
-                'timestamp' => $request->fixture->startTimestamp ?? now()->timestamp,
-                'venue_id' => $venue['id'] ?? null,
-                'venue_name' => $venue['name'] ?? null,
-                'venue_city' => $venue['city'] ?? null,
-                'home_team_id' => $request->fixture['homeTeam']['id'],
-                'home_team_name' => $request->fixture['homeTeam']['name'],
-                'home_team_logo' => $request->fixture['homeTeam']['name'],
-                'away_team_id' => $request->fixture['awayTeam']['id'],
-                'away_team_name' => $request->fixture['awayTeam']['name'],
-                'away_team_logo' => $request->fixture['awayTeam']['name'],
-                'status' => $request->fixture->status['description'] ?? null,
-                'goals_home' => $request->fixture['homeScore']['total'] ?? null,
-                'goals_away' => $request->fixture['awayScore']['total'] ?? null,
-                'raw_json' => json_encode($request->fixture),
-            ]
-        );
-
+        $fixture = Fixture::where('external_id', $request->fixture_id)->firstOrFail();
 
         // Check for duplicate players in the request
         $playerIds = collect($request->matches)->pluck('playerId');

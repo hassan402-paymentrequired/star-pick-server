@@ -25,8 +25,7 @@ class TeamController extends \App\Http\Controllers\Controller
     public function refetch(Request $request)
     {
         $league = $request->league;
-        $season = $request->season;
-        Artisan::call('fetch:teams', ['league' => $league, 'season' => $season]);
+        Artisan::call('fetch:teams', ['league' => $league]);
         return $this->respondWithCustomData(
             [
                 'message' => 'Teams refetched successfully'

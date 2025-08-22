@@ -3,7 +3,7 @@
 namespace App\Utils\Service\V1\Match;
 
 use App\Enum\CacheKey;
-use App\Models\Leagues;
+use App\Models\League;
 use App\Models\PlayerMatch;
 use App\Models\Team;
 use Illuminate\Support\Facades\Cache;
@@ -25,7 +25,7 @@ class MatchService
         );
 
         $team = Team::select('id', 'name')->get();
-        $leagues = Leagues::select('id', 'name')->limit(50)->get();
+        $leagues = League::select('id', 'name')->limit(50)->get();
         $groupedMatches = $matches->groupBy('league.name');
         return [$groupedMatches, $team, $leagues];
     }

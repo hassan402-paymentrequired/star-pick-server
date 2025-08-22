@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Star, Check, Users, DollarSign, Clock, Trophy, Loader, LoaderIcon } from "lucide-react";
+import {
+    Star,
+    Check,
+    Users,
+    DollarSign,
+    Clock,
+    Trophy,
+    Loader,
+    LoaderIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +31,7 @@ interface Player {
     against_team_name: string;
     date: string;
     time: string;
+    against_team_image: string;
     player_external_id: string;
 }
 
@@ -123,7 +133,7 @@ export default function JoinPeer({
     };
 
     const handleSubmitTeam = async () => {
-        setProcessing(true)
+        setProcessing(true);
         if (selectedPlayers.length !== 10) {
             toast.error(
                 "Please select exactly 10 players (5 main + 5 substitutes)"
@@ -172,7 +182,7 @@ export default function JoinPeer({
             console.error("Error submitting team:", error);
             alert("Failed to submit team. Please try again.");
         } finally {
-            setProcessing(false)
+            setProcessing(false);
         }
     };
 
@@ -195,7 +205,7 @@ export default function JoinPeer({
     console.log(players);
     return (
         <MainLayout>
-            <main>
+            <main className="p-5">
                 {/* Peer Info */}
                 <div className=" py-3 bg-[var(--clr-surface-a10)] border-border/10">
                     <div className="flex items-center justify-between ">
@@ -388,14 +398,16 @@ export default function JoinPeer({
                                             >
                                                 <CardContent className="p-4">
                                                     {/* Player vs Team Layout */}
-                                                    <div className="flex items-center mb-3">
+                                                    <div className="flex items-center mb-3 w-full justify-between">
                                                         {/* Player Side */}
-                                                        <div className="flex items-center gap-3 flex-1">
+                                                        <div className="flex items-center  ">
                                                             {/* Player Avatar or Icon */}
-                                                            <div className="flex flex-col items-center justify-center">
+                                                            <div className="flex gap-3 items-center justify-center">
                                                                 <Avatar className="rounded">
                                                                     <AvatarImage
-                                                                        src={`https://img.sofascore.com/api/v1/player/${player.player_external_id}/image`}
+                                                                        src={
+                                                                            player.player_avatar
+                                                                        }
                                                                         alt={
                                                                             player.player_name
                                                                         }
@@ -407,22 +419,21 @@ export default function JoinPeer({
                                                                         )}
                                                                     </AvatarFallback>
                                                                 </Avatar>
-                                                            </div>
-                                                            {/* Player Info */}
-                                                            <div>
-                                                                <div className="font-bold text-muted-white text-base">
-                                                                    {
-                                                                        player.player_name
-                                                                    }
-                                                                </div>
-                                                                <div className="text-xs text-muted">
-                                                                    {
-                                                                        player.player_position
-                                                                    }{" "}
-                                                                    -{" "}
-                                                                    {
-                                                                        player.player_team
-                                                                    }
+                                                                <div>
+                                                                    <div className="font-bold text-muted-white text-base">
+                                                                        {
+                                                                            player.player_name
+                                                                        }
+                                                                    </div>
+                                                                    <div className="text-xs text-muted">
+                                                                        {
+                                                                            player.player_position
+                                                                        }
+                                                                        -
+                                                                        {
+                                                                            player.player_team
+                                                                        }
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -440,7 +451,9 @@ export default function JoinPeer({
                                                                 {/* Team Logo Placeholder  */}
                                                                 <Avatar className="rounded">
                                                                     <AvatarImage
-                                                                        src={`https://img.sofascore.com/api/v1/team/65/image`}
+                                                                        src={
+                                                                            player.against_team_image
+                                                                        }
                                                                         alt={
                                                                             player.player_name
                                                                         }
@@ -545,7 +558,7 @@ export default function JoinPeer({
                             disabled={processing}
                             className="w-full text-muted font-bold shadow-floating"
                         >
-                           {processing && (
+                            {processing && (
                                 <LoaderIcon className="animate-spin" />
                             )}
                             Submit Team & Join Peer

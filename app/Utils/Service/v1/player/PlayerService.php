@@ -3,7 +3,7 @@
 namespace App\Utils\Service\V1\Player;
 
 use App\Enum\CacheKey;
-use App\Models\Leagues;
+use App\Models\League;
 use App\Models\Player;
 use App\Models\PlayerMatch;
 use App\Models\Team;
@@ -28,7 +28,7 @@ class PlayerService
       $players =  Player::when(
                 $request->query('team'),
                 fn($query, $teamId) => $query->whereHas('team', fn($q) => $q->where('id', $teamId))
-            )->with('team')->paginate(50);
+            )->with('team')->orderBy('status')->paginate(30);
 
         return $players;
     }
@@ -48,7 +48,7 @@ class PlayerService
         return Player::findOrFail($player_id);
     }
 
-    public function processMatch(Team $team, Request $request, Leagues $league): void
+    public function processMatch(Team $team, Request $request, League $league): void
     {
         foreach ($request->playerIds as $id) {
             PlayerMatch::create([
@@ -88,6 +88,7 @@ class PlayerService
                         'player_match_id' => $match->id,
                         'player_id' => $match->player_id,
                         'player_team' => $match->player->team->name,
+                        'against_team_image' => $match->player->team->logo,
                         'player_name' => $match->player->name,
                         'against_team_name' => $match->team->name,
                         'date' => $match->date,

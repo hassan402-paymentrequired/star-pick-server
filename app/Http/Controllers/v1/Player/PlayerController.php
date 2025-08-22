@@ -5,7 +5,7 @@ namespace App\Http\Controllers\V1\Player;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePlayerRequest;
 use App\Jobs\ImportPlayersAndTeams;
-use App\Models\Leagues;
+use App\Models\League;
 use App\Models\Player;
 use App\Models\Team;
 use App\Utils\Helper\HelperService;
@@ -73,7 +73,7 @@ class PlayerController extends Controller
         ], 200);
     }
 
-    public function createMatch(Request $request, Team $team, Leagues $league): JsonResponse
+    public function createMatch(Request $request, Team $team, League $league): JsonResponse
     {
 
         $request->validate([
@@ -110,8 +110,7 @@ class PlayerController extends Controller
     public function refetch(Request $request)
     {
         $league = $request->league;
-        $season = $request->season;
-        Artisan::call('fetch:players', ['league' => $league, 'season' => $season]);
+        Artisan::call('fetch:players', ['league' => $league]);
         return $this->respondWithCustomData([
             'message' => 'Players refetched successfully'
         ], 200);
@@ -136,7 +135,7 @@ class PlayerController extends Controller
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://v3.football.api-sports.io/leagues?season=2023',
+            CURLOPT_URL => 'https://v3.football.api-sports.io/league?season=2023',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

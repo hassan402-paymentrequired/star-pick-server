@@ -4,6 +4,7 @@ namespace App\Console\Commands\ApiFootballCommand;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FetchPlayers extends Command
 {
@@ -12,7 +13,7 @@ class FetchPlayers extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:players {league} {season}';
+    protected $signature = 'fetch:players {league}';
 
     /**
      * The console command description.
@@ -27,7 +28,7 @@ class FetchPlayers extends Command
     public function handle()
     {
         $leagueId = $this->argument('league');
-        $season = $this->argument('season');
+        $season = 2023;
         $apiUrl = 'https://v3.football.api-sports.io/players';
         $apiKey = env('SPORT_API_KEY');
         $page = 1;
@@ -49,6 +50,7 @@ class FetchPlayers extends Command
             }
 
             $body = $response->json();
+            Log::info('Fetch Players Response', $body);
             $players = $body['response'] ?? [];
             $paging = $body['paging'] ?? ['current' => $page, 'total' => $page];
             $currentPage = $paging['current'] ?? $page;
