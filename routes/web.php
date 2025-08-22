@@ -8,6 +8,7 @@ use App\Http\Controllers\Wallet\WalletController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
     Route::post('/login', [AuthenticationController::class, 'storeLogin'])->name('login.store');
@@ -60,5 +61,5 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 });
 
 Route::prefix('webhooks')->group(function () {
-    Route::post('/paystack/payment', [\App\Http\Controllers\Customers\WalletController::class, 'processWebhook']);
+    // Route::post('/paystack/payment', [\App\Http\Controllers\Customers\WalletController::class, 'processWebhook']);
 });

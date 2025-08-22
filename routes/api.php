@@ -57,10 +57,10 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::prefix('payment')->group(function () {
-            Route::post('/initialize', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'initialize'])->name('paystack.initialize');
-            Route::get('/callback', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'callback'])->name('paystack.callback');
-            Route::get('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'cancel'])->name('paystack.cancel');
-            Route::post('/deposit', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'increaseWalletBalance'])->name('paystack.cancel');
+            Route::post('/initialize', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'initialize']);
+            Route::get('/callback', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'callback']);
+            Route::get('/cancel', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'cancel']);
+            Route::post('/deposit', [\App\Http\Controllers\V1\Payment\PaymentController::class, 'increaseWalletBalance']);
         });
 
         Route::prefix('general')->group(function(){
