@@ -58,6 +58,7 @@ export function RegisterForm({
                             <Link
                                 href={route("login")}
                                 className="underline underline-offset-4"
+                                prefetch
                             >
                                 Sign in
                             </Link>

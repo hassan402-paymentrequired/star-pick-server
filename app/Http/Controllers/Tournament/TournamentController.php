@@ -71,7 +71,7 @@ class TournamentController extends Controller
                     'sub_player_match_id' => $squad->sub_player_match_id,
                     'main_player' => $mainPlayer,
                     'sub_player' => $subPlayer,
-                    
+
 
                 ];
             });
@@ -112,14 +112,21 @@ class TournamentController extends Controller
         $players = $this->playerService->groupedByStar();
         return Inertia::render('peers/global/create', [
             'tournament' => $tournament,
-            'players' => $players
+            'players' => $players,
+            'balance' => getUserBalance('web')
         ]);
     }
 
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $today = now()->toDateString();
+        $tournament = \App\Models\DailyContest::whereDate('created_at', $today)->first();
+        if (!hasEnoughBalance($tournament->amount, 'web')) {
+            return back()->with('error', 'Insufficient balance to join tournament. Please fund your wallet.');
+        }
+
+        $request->validate([
             'peers' => ['array', 'min:5', 'max:5'],
             'peers.*.main' => ['required', 'exists:players,id'],
             'peers.*.sub' => ['required', 'exists:players,id'],
@@ -127,12 +134,11 @@ class TournamentController extends Controller
             'peers.*.sub_player_match_id' => ['required', 'exists:player_matches,id'],
         ]);
 
-        $today = now()->toDateString();
-        $tournament = \App\Models\DailyContest::whereDate('created_at', $today)->first();
-
         if (!$this->tournamentService->create($request, $tournament, 'web')) {
             return to_route('tournament.index')->with('error', 'Tournament joining failed');
         }
+
+        decreaseWallet($tournament->amount, 'web');
         return to_route('tournament.index')->with('success', 'Tournament created successfully');
     }
 

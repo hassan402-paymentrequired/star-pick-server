@@ -47,6 +47,7 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                                     <Link
                                         href={route("peers.index")}
                                         className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-foreground  transition"
+                                        prefetch
                                     >
                                         <Button className="text-foreground">
                                             <span>Find some peers</span>
@@ -73,6 +74,7 @@ const Contents = ({ history, upcoming, ongoing }: Props) => {
                                     <Link
                                         href={route("peers.index")}
                                         className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-primary  transition"
+                                        prefetch
                                     >
                                         <Button>
                                             <span>Find some peers</span>

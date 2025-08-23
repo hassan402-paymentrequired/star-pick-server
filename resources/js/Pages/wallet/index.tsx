@@ -35,7 +35,7 @@ const Wallet = ({ transactions, banks }) => {
                 {/* Action Buttons */}
                 <div className="w-full max-w-md grid grid-cols-2 gap-4 mb-8">
                     <Deposit />
-                    <WithdrawModal banks={banks}/>
+                    <WithdrawModal />
                 </div>
 
                 {/* Recent Transactions */}

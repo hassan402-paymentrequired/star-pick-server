@@ -88,7 +88,7 @@ export default function CreatePeer({ user }: CreatePeerProps) {
         <MainLayout>
             <Head title="Create Peer" />
 
-            <div className="space-y-4">
+            <div className="space-y-4 p-5">
                 {/* Header */}
                 <div className="flex items-center gap-3">
                     <Button variant="ghost" size="sm" className="p-2">

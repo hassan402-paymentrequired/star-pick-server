@@ -206,10 +206,10 @@ class WalletService
         // Credit wallet in database transaction
         DB::transaction(function () use ($transaction, $paymentData) {
             $user = $transaction->user;
-            $newBalance = $user->balance + $transaction->amount;
+            $newBalance = (int)$user->balance + (int)$transaction->amount;
 
             // Update user wallet balance
-            $user->wallet()->update(['balance' => $newBalance]);
+            $user->wallet()->increment('balance', $transaction->amount);
 
             // Update transaction
             $transaction->update([

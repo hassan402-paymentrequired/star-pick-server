@@ -130,12 +130,12 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                         <div className="grid grid-cols-2 gap-3">
-                            <Link href={route("tournament.index")}>
+                            <Link href={route("tournament.index")} prefetch>
                                 <Button className="w-full text-foreground tracking-wider font-bold ">
                                     Join {tournament.name}
                                 </Button>
                             </Link>
-                            <Link href={route("peers.create")}>
+                            <Link href={route("peers.create")} prefetch>
                                 <Button
                                     variant="outline"
                                     className="w-full tracking-wider text-foreground font-bold"
@@ -238,6 +238,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                                 peer: peer.id,
                                                             }
                                                         )}
+                                                        prefetch
                                                     >
                                                         <Button
                                                             className="w-full hover:bg-blue-600 text-foreground text-sm font-medium"
@@ -254,6 +255,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                                 peer: peer.id,
                                                             }
                                                         )}
+                                                        prefetch
                                                     >
                                                         <Button
                                                             className="w-full hover:bg-blue-600 text-foreground text-sm font-medium"
@@ -281,19 +283,14 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                     </div>
 
                     <div className="flex flex-col mt-2">
-                        {(peers.data || []).map((peer) => (
-                            <Card className="mb-3 p-0 group bg-background/10 border ring ring-background rounded">
+                        {(peers.data || []).map((peer, i) => (
+                            <Card className="mb-3 p-0 group bg-background/10 border ring ring-background rounded" key={i}>
                                 <Collapsible>
                                     <CollapsibleTrigger className="w-full flex items-center justify-between p-2 cursor-pointer hover:bg-[var(--clr-surface-a10)] transition rounded">
                                         <div className="flex items-center gap-2">
                                             <Avatar className="w-8 h-8 rounded-full bg-[var(--clr-surface-a20)] flex items-center justify-center">
                                                 <AvatarFallback className="rounded ring-2 shadow ring-foreground">
-                                                    {peer.name
-                                                        .split(" ")
-                                                        .map((n) => n[0])
-                                                        .join("")
-                                                        .toUpperCase()
-                                                        .slice(0, 2)}
+                                                    {peer.name.substring(0,2).toUpperCase()}
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="items-start flex flex-col">
@@ -353,6 +350,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                     peer: peer.id,
                                                 })}
                                                 className="w-full"
+                                                prefetch
                                             >
                                                 <Button
                                                     className="w-full  text-sm font-medium"
@@ -368,6 +366,7 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                     peer: peer.id,
                                                 })}
                                                 className="w-full"
+                                                prefetch
                                             >
                                                 <Button
                                                     className="w-full text-foreground text-sm font-medium"

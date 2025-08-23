@@ -62,6 +62,7 @@ const Ongoing = ({ peer }) => {
                                 peer: peer.id,
                             })}
                             className="w-full"
+                            prefetch
                         >
                             <Button
                                 className="w-full  text-sm font-medium"

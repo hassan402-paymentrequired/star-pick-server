@@ -31,5 +31,6 @@ class TournamentService
                 'sub_player_match_id' => $value['sub_player_match_id'],
             ]);
         }
+        return true;
     }
 }

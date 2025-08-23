@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Minus, Users, Trophy, Target } from "lucide-react";
+import { Star, Minus, Users, Trophy, Target, LoaderIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -32,12 +32,16 @@ interface FloatingBetSlipProps {
     selectedPlayers: SelectedPlayer[];
     onRemovePlayer: (playerId: number) => void;
     players: Array<{ star: number; players: Player[] }>;
+    handleSubmitTeam: () => void;
+    processing: boolean;
 }
 
 export const FloatingBetSlip = ({
     selectedPlayers,
     onRemovePlayer,
     players,
+    handleSubmitTeam,
+    processing
 }: FloatingBetSlipProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -90,9 +94,9 @@ export const FloatingBetSlip = ({
     if (totalSelected === 0) return null;
 
     return (
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <Sheet open={isOpen} onOpenChange={setIsOpen} >
             <SheetTrigger asChild>
-                 <Button
+                <Button
                     className="fixed bottom-20 left-1/2 transform -translate-x-1/2 h-16 w-16 rounded-full bg-gradient-to-r from-primary to-secondary shadow-2xl hover:shadow-3xl transition-all duration-300 border-2 border-white/20 z-50 group"
                     size="sm"
                 >
@@ -102,19 +106,19 @@ export const FloatingBetSlip = ({
                         </div>
                         <Trophy className="h-6 w-6 fill-current text-white group-hover:scale-110 transition-transform duration-200" />
                         <span className="text-xs font-bold text-white mt-1">
-                            Team
+                            Squard
                         </span>
                     </div>
                 </Button>
             </SheetTrigger>
 
-            <SheetContent side="bottom" className="h-[85vh] ">
+            <SheetContent side="bottom" className="h-[85vh]">
                 <SheetHeader className=" pb-1 bg-background">
                     <SheetTitle className="flex items-center gap-3">
                         <Trophy className="h-6 w-6 text-muted-white" />
                         <div>
                             <div className="text-xl font-semibold text-muted">
-                                Your Team
+                                Your Squard
                             </div>
                             <div className="text-sm text-gray-500">
                                 {mainPlayers.length} Main • {subPlayers.length}{" "}
@@ -184,9 +188,7 @@ export const FloatingBetSlip = ({
                                                 <div className="flex items-center gap-3 flex-1">
                                                     <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-gray-700 font-semibold text-sm">
                                                         {group.mainPlayer.player_name
-                                                            .split(" ")
-                                                            .map((n) => n[0])
-                                                            .join("")
+                                                            .substring(0, 2)
                                                             .toUpperCase()}
                                                     </div>
                                                     <div className="flex-1">
@@ -350,6 +352,20 @@ export const FloatingBetSlip = ({
                             </CardContent>
                         </Card>
                     )}
+                            {selectedPlayers.length === 10 && (
+                               
+                                    <Button
+                                        onClick={handleSubmitTeam}
+                                        disabled={processing}
+                                        className="w-full text-white tracking-wider font-bold shadow-floating"
+                                    >
+                                        {processing && (
+                                            <LoaderIcon className="animate-spin" />
+                                        )}
+                                        Submit Team & Join Peer
+                                    </Button>
+                               
+                            )}
                 </div>
             </SheetContent>
         </Sheet>

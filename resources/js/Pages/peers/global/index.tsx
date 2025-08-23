@@ -19,8 +19,8 @@ const Global = ({ tournament, users }) => {
         <MainLayout>
             <Head title="Global contest" />
 
-            <div className="flex flex-col bg-stone-100 py-3">
-                <div className="flex items-center justify-between px-1">
+            <div className="flex flex-col bg-stone-100 h-screen">
+                <div className="flex items-center justify-between p-3">
                     <div className="flex flex-col items-start mt-3 mb-2">
                         <h2 className="text-base capitalize  font-bold text-muted-white">
                             {tournament.name}'s
@@ -48,6 +48,7 @@ const Global = ({ tournament, users }) => {
                             <Link
                                 href={route("tournament.create")}
                                 className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-primary transition"
+                                prefetch
                             >
                                 <Button className="text-foreground">
                                     <span>Join {tournament.name}</span>
@@ -58,9 +59,9 @@ const Global = ({ tournament, users }) => {
                     </div>
                 ) : (
                     <div className="w-full h-screen bg-white">
-                        <table className="w-full border-2">
+                        <table className="w-full ">
                             <thead className="">
-                                <tr className="border-2 ">
+                                <tr className="">
                                     <th
                                         className="text-xs px-2 py-2 text-start text-stone-500"
                                     >
@@ -84,10 +85,10 @@ const Global = ({ tournament, users }) => {
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody className="divider-y">
                                 
                                 {users.map((user, i) => (
-                                    <tr className="border-2 px-2 cursor-pointer" onClick={() => router.visit(route('tournament.user.show', {user: user.id}))}>
+                                    <tr key={i} className=" px-2 cursor-pointer" onClick={() => router.visit(route('tournament.user.show', {user: user.id}))}>
                                         <td
                                             className="text-sm py-2 px-2 text-start font-bold"
                                         >

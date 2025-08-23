@@ -8,20 +8,18 @@ const ADMIN = 'admin';
 const API = 'api';
 const WEB = 'web';
 
-function getUserBalance()
+function getUserBalance($guard = 'api')
 {
-    return Auth::guard('api')->user()->wallet->balance;
+    return Auth::guard($guard)->user()->wallet->balance;
 }
 
-function decreaseWallet($amount)
+function decreaseWallet($amount, $guard = 'api')
 {
-    AuthUser()->wallet->balance -= $amount;
-    AuthUser()->wallet->save();
+    AuthUser($guard)->wallet()->decrement('balance', $amount);
 }
-function increaseWallet($amount)
+function increaseWallet($amount, $guard = 'api')
 {
-   AuthUser()->wallet->balance += $amount;
-   AuthUser()->wallet->save();
+     AuthUser($guard)->wallet()->increment('balance', $amount);
 }
 
 function AuthUser(string $guard = 'api'): User|Admin
@@ -36,4 +34,9 @@ function generateOtp($length = 6)
     shuffle($numbers);
 
     return implode(array_slice($numbers, 0, $length));
+}
+
+function hasEnoughBalance($amount, $guard): bool
+{
+    return AuthUser($guard)->wallet->balance >= $amount;
 }

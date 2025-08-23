@@ -8,6 +8,7 @@ import {
     Trophy,
     Loader,
     LoaderIcon,
+    BatteryWarning,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MainLayout from "@/Pages/layouts/main-layout";
 import { FloatingBetSlip } from "@/Pages/components/floating-bet";
+import FormError from "@/components/error";
 
 interface Player {
     player_avatar: string;
@@ -58,17 +60,17 @@ interface Tournament {
 export default function JoinPeer({
     tournament,
     players,
+    balance,
 }: {
     tournament: Tournament;
     players: PlayerGroup[];
+    balance: string;
 }) {
-    console.log(tournament);
     const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>(
         []
     );
     const [activeTab, setActiveTab] = useState("5");
     const [processing, setProcessing] = useState(false);
-    // const {} = useForm({})
 
     const getTierColor = (tier: number) => {
         switch (tier) {
@@ -202,10 +204,18 @@ export default function JoinPeer({
         }
         return 1;
     };
-    console.log(players);
+
     return (
-        <MainLayout>
-            <main className="p-5">
+        <MainLayout
+            alert={
+                Number(balance) < Number(tournament.amount) && (
+                    <div className="mt-3 flex items-center gap-2">
+                       <BatteryWarning size={17} color="red" />  <FormError message="Insufficient balance to join tournament. Please fund your wallet." />
+                    </div>
+                )
+            }
+        >
+            <main className="p-5 relative">
                 {/* Peer Info */}
                 <div className=" py-3 bg-[var(--clr-surface-a10)] border-border/10">
                     <div className="flex items-center justify-between ">
@@ -551,22 +561,7 @@ export default function JoinPeer({
                 </div>
 
                 {/* Submit Button */}
-                {selectedPlayers.length === 10 && (
-                    <div className="fixed bottom-24 left-4 right-4 z-40">
-                        <Button
-                            onClick={handleSubmitTeam}
-                            disabled={processing}
-                            className="w-full text-muted font-bold shadow-floating"
-                        >
-                            {processing && (
-                                <LoaderIcon className="animate-spin" />
-                            )}
-                            Submit Team & Join Peer
-                        </Button>
-                    </div>
-                )}
-            </main>
-
+               
             <FloatingBetSlip
                 selectedPlayers={selectedPlayers}
                 onRemovePlayer={(playerId) => {
@@ -575,7 +570,11 @@ export default function JoinPeer({
                     );
                 }}
                 players={players}
+                processing={processing}
+                handleSubmitTeam={handleSubmitTeam}
             />
+            </main>
+
         </MainLayout>
     );
 }
