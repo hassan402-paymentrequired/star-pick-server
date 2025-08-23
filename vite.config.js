@@ -20,7 +20,18 @@ export default defineConfig({
     resolve: {
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
+             '@': '/resources/js'
         },
+    },
+    build: {
+        chunkSizeWarningLimit: 1600,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom']
+                }
+            }
+        }
     }
 
-});
+    });
