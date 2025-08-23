@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,16 +20,15 @@
         rel="stylesheet">
 
     @routes
-
-    {{-- Development hot-reload only (comment this out in production) --}}
-    {{-- @viteReactRefresh --}}
-
-    {{-- Always include the compiled assets --}}
-    @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+    @viteReactRefresh
+    @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
+        {{-- @vite(['resources/css/app.css', 'resources/js/app.tsx']) --}}
 
     @inertiaHead
 </head>
+
 <body>
     @inertia
 </body>
+
 </html>
