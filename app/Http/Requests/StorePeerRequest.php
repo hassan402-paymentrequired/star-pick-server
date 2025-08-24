@@ -22,11 +22,11 @@ class StorePeerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:225'],
+            'name' => ['required', 'string', 'max:225', 'unique:peers,name'],
             'amount' => ['required', 'numeric', 'min:100'],
             'private' => ['required', 'boolean'],
-            'limit' => ['required', 'numeric', 'min:1'],
-            'ratio' => ['required', 'numeric', 'in:1,2'],
+            'limit' => ['nullable', 'numeric', 'min:1'],
+            'sharing_ratio' => ['required', 'numeric', 'in:1,3'],
         ];
     }
 }

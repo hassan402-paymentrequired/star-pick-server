@@ -72,19 +72,24 @@ class PeerController extends Controller
             }
         }
 
+        $user = AuthUser('web');
+
         $peer = Peer::create([
             'name' => $request->name,
             'amount' => $request->amount,
             'private' => $request->private,
             'limit' => $request->limit,
-            'user_id' => Auth::guard('api')->id(),
-            'sharing_ratio' => $request->ratio ??= PeerShareRatioEnum::DIVIDE->value
+            'user_id' => $user->id,
+            'sharing_ratio' => $request->sharing_ratio === '1' ? PeerShareRatioEnum::ALL->value : PeerShareRatioEnum::DIVIDE->value,
         ]);
 
-        $peer->addUser(Auth::id());
-        return to_route('peers.show', [
+        // $peer->addUser(AuthUser('web')->id);
+
+        decreaseWallet($peer->amount, 'web');
+
+        return to_route('peers.join', [
             'peer' => $peer->id
-        ])->with('success', 'Peer created successfully');
+        ])->with('success', 'Peer created successfully. You can now select your squard');
     }
 
 
@@ -93,15 +98,29 @@ class PeerController extends Controller
         $players = $this->playerService->groupedByStar();
         // Log::info($players->toArray());
         // dd($players);
+        $peer = $peer->loadCount('users');
         return Inertia::render('peers/join-peer', [
             'peer' => $peer,
-            'players' => $players
+            'players' => $players,
+            'balance' => getUserBalance('web')
         ]);
     }
 
     public function storeJoinPeer(BetRequest $request, Peer $peer)
     {
-        $this->peerService->playBet($request, $peer, 'web');
+        if (!hasEnoughBalance($peer->amount, 'web')) {
+            return back()->with('error', 'Insufficient balance to join peer. Please fund your wallet.');
+        }
+        $result = $this->peerService->playBet($request, $peer, 'web');
+
+        if (!$result) {
+            return back()->with('error', 'You are already in the peer');
+        }
+
+        if ($peer->user_id !== AuthUser('web')->id) {
+            decreaseWallet($peer->amount, 'web');
+        }
+
         return to_route('peers.show', [
             'peer' => $peer
         ])->with('success', 'Peer joined successfully');

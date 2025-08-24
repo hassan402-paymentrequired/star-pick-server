@@ -37,7 +37,7 @@ export function RegisterForm({
     };
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className={cn("flex flex-col gap-6 w-full mx-3", className)} {...props}>
             <form onSubmit={submit}>
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col items-center gap-2">

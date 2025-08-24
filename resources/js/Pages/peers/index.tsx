@@ -180,13 +180,13 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                                                 <div className="flex items-start justify-between mb-3">
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <h4 className="font-semibold text-muted-white text-sm truncate">
+                                                            <h4 className="font-semibold capitalize text-muted-white text-sm truncate">
                                                                 {peer.name}
                                                             </h4>
                                                         </div>
                                                         <p className="text-xs text-muted">
                                                             by{" "}
-                                                            {
+                                                            @{
                                                                 peer.created_by
                                                                     .username
                                                             }

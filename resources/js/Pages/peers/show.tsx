@@ -119,12 +119,9 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
 
             <div className="space-y-4 p-3">
                 {/* Header */}
-                <div className="flex items-center gap-3">
-                    {/* <Button variant="ghost" size="sm" className="p-2">
-                        <ArrowLeft className="w-4 h-4" />
-                    </Button> */}
+                <div className="flex items-center gap-3 mt-2">
                     <div className="flex-1">
-                        <h1 className="text-xl font-bold text-[var(--clr-light-a0)]">
+                        <h1 className="text-xl capitalize font-bold text-[var(--clr-light-a0)]">
                             {peer.name}
                         </h1>
                         <p className="text-sm text-[var(--clr-surface-a50)]">

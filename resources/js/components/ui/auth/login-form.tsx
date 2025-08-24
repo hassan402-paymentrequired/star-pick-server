@@ -46,10 +46,9 @@ export function LoginForm({
         });
     };
 
-    console.log(globalErrors, flash);
 
     return (
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className={cn("flex flex-col gap-6 w-full px-3", className)} {...props}>
             <form onSubmit={submit}>
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col items-center gap-2">
@@ -105,6 +104,7 @@ export function LoginForm({
                                     setData("password", e.target.value)
                                 }
                             />
+                            <Link href={route('forgot.password')} className="text-xs text-blue-500 mt-1 hover:underline text-left ml-auto mb-2">forgot password?</Link>
                             {globalErrors.password && (
                                 <FormError message={globalErrors.password} />
                             )}

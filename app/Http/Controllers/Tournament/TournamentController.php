@@ -139,7 +139,7 @@ class TournamentController extends Controller
         }
 
         decreaseWallet($tournament->amount, 'web');
-        return to_route('tournament.index')->with('success', 'Tournament created successfully');
+        return to_route('tournament.index')->with('success', 'Tournament joined successfully');
     }
 
     public function show(User $user)

@@ -22,7 +22,7 @@ const MainLayout = ({ children, alert }: Props) => {
         if (error) {
             toast.error(error);
         }
-    }, [success, error]);
+    }, []);
 
     return (
         <div className="w-full sm:max-w-md bg-foreground relative mx-auto min-h-screen flex flex-col">

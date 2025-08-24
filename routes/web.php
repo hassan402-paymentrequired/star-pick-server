@@ -14,9 +14,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthenticationController::class, 'storeLogin'])->name('login.store');
     Route::get('/sign-up', [AuthenticationController::class, 'register'])->name('register');
     Route::post('/sign-up', [AuthenticationController::class, 'storeRegister'])->name('register.store');
+    Route::get('/forgot-password', [AuthenticationController::class, 'forgotPassword'])->name('forgot.password');
+    Route::post('/forgot-password', [AuthenticationController::class, 'forgotPasswordCheck'])->name('forgot.password.check');
+    Route::get('/forgot-password/otp', [AuthenticationController::class, 'forgotPasswordOtp'])->name('forgot.password.confirm');
+    Route::post('/forgot-password/otp/store', [AuthenticationController::class, 'forgotPasswordOtpCheck'])->name('forgot.password.store');
+    Route::get('/reset-password', [AuthenticationController::class, 'resetPassword'])->name('reset.password');
+    Route::post('/reset-password', [AuthenticationController::class, 'resetPasswordStore'])->name('reset.password.store');
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [AuthenticationController::class, 'logout'])->name('auth.logout');
     Route::get('/verify-otp', [AuthenticationController::class, 'otpIndex'])->name('verify');
     Route::post('/verify-otp', [AuthenticationController::class, 'verifyOtp'])->name('verify.store');
 });
@@ -56,6 +63,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileControlle::class, 'index'])->name('profile.index');
+        Route::patch('settings/profile', [ProfileControlle::class, 'update'])->name('profile.update');
     });
 
 });

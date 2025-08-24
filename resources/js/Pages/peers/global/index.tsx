@@ -19,7 +19,7 @@ const Global = ({ tournament, users }) => {
         <MainLayout>
             <Head title="Global contest" />
 
-            <div className="flex flex-col bg-stone-100 h-screen">
+            <div className="flex flex-col h-screen">
                 <div className="flex items-center justify-between p-3">
                     <div className="flex flex-col items-start mt-3 mb-2">
                         <h2 className="text-base capitalize  font-bold text-muted-white">
@@ -59,62 +59,29 @@ const Global = ({ tournament, users }) => {
                     </div>
                 ) : (
                     <div className="w-full h-screen bg-white">
-                        <table className="w-full ">
-                            <thead className="">
-                                <tr className="">
-                                    <th
-                                        className="text-xs px-2 py-2 text-start text-stone-500"
-                                    >
-                                        Pos
-                                    </th>
-                                    <th
-                                        className="text-xs text-start text-stone-500"
-                                        colSpan={4}
-                                    >
-                                        @User
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th
-                                        className="text-xs text-end px-2 text-stone-500"
-                                    >
-                                        Points
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="divider-y">
-                                
-                                {users.map((user, i) => (
-                                    <tr key={i} className=" px-2 cursor-pointer" onClick={() => router.visit(route('tournament.user.show', {user: user.id}))}>
-                                        <td
-                                            className="text-sm py-2 px-2 text-start font-bold"
-                                        >
-                                            {i + 1}
-                                        </td>
-                                        <td
-                                            className="text-sm text-start font-bold"
-                                            colSpan={4}
-                                        >
-                                            @{user.username}
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td
-                                            className="text-sm text-end pr-4 font-bold"
-                                            colSpan={4}
-                                        >
-                                            {user.total_point}
-                                        </td>
-                                    </tr>
-                                ))}
-                                
-                            </tbody>
-                        </table>
+                        <div className="grid grid-cols-4 bg-gray-100 h-8 px-3 items-center">
+                            <div className="capitalize  text-sm font-semibold col-span-1">No.</div>
+                            <div className="capitalize  text-sm font-semibold col-span-2">Username.</div>
+                            <div className="capitalize  text-sm font-semibold col-span-1">Point.</div>
+                        </div>
+                        <div className="divide-background divide-y">
+                            {users.map((user, i) => (
+                                <div
+                                    key={user.id}
+                                    className="grid grid-cols-4 items-center h-9 px-3"
+                                >
+                                    <span className="col-span-1">
+                                        {i + 1}
+                                    </span>
+                                    <h4 className="col-span-2">
+                                        @{user.username}
+                                    </h4>
+                                    <div className="col-span-1 text-left">
+                                        {user.total_point}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

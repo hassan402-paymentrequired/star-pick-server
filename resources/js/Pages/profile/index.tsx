@@ -5,71 +5,86 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePage } from "@inertiajs/react";
+import { usePage, useForm } from "@inertiajs/react";
+// import { Transition } from '@headlessui/react';
+import { FormEventHandler } from "react";
+import FormError from "@/components/error";
+import DeleteUser from "@/components/delete-user";
+
+type ProfileForm = {
+    username: string;
+    phone: string;
+};
 
 const Profile = () => {
     const {
         auth: { user },
-    } = usePage().props;
+    } = usePage<{auth: {user: ProfileForm}}>().props;
 
- 
-        if (!user) {
-            return (
-                <MainLayout>
-                    <div className="max-w-md mx-auto p-4 space-y-6">
-                        <h2 className="text-lg font-semibold">Loading</h2>
-                    </div>
-                </MainLayout>
-            );
-        }
+    const { data, setData, patch, errors, processing } =
+        useForm<Required<ProfileForm>>({
+            username: user.username,
+            phone: user.phone,
+        });
 
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        patch(route("profile.update"), {
+            preserveScroll: true,
+        });
+    };
 
     return (
         <MainLayout>
-            <div className="max-w-md mx-auto p-4 space-y-6">
-                {/* Profile Header */}
-                <div className="flex flex-col items-center gap-3">
-                    <Avatar className="w-24 h-24">
-                        <AvatarImage
-                            src="/images/user-avatar.jpg"
-                            alt="User Avatar"
-                        />
-                        <AvatarFallback>
-                            {user?.name?.substring(0, 2)}
-                        </AvatarFallback>
-                    </Avatar>
-                    <h2 className="text-lg font-semibold">{user?.username}</h2>
-                    <p className="text-sm text-muted-foreground">
-                        {user?.email}
-                    </p>
-                    <Button variant="secondary" size="sm">
-                        Change Photo
-                    </Button>
-                </div>
+            <div className="space-y-2 p-5">
+                <header>
+                    <h3 className="mb-0.5 text-xl font-medium">
+                        Profile information
+                    </h3>
+                </header>
 
-                {/* Profile Details */}
-                <Card>
-                    <CardContent className="p-4 space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input id="name" defaultValue={user?.name} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                defaultValue={user.email}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="phone">Phone Number</Label>
-                            <Input id="phone" defaultValue={user.phone} />
-                        </div>
-                        <Button className="w-full">Save Changes</Button>
-                    </CardContent>
-                </Card>
+                <form onSubmit={submit} >
+                    <div className="grid gap-1">
+                        <Label htmlFor="name">Name</Label>
+
+                        <Input
+                            id="name"
+                            className="mt-1 block w-full"
+                            value={data.username}
+                            onChange={(e) => setData("username", e.target.value)}
+                            required
+                            autoComplete="name"
+                            placeholder="Full name"
+                        />
+
+                        <FormError classNames="mt-2" message={errors.name} />
+                    </div>
+
+                    <div className="grid gap-1">
+                        <Label htmlFor="phone">Phone</Label>
+
+                        <Input
+                            id="phone"
+                            type="text"
+                            className="mt-1 block w-full"
+                            value={data.phone}
+                            onChange={(e) => setData("phone", e.target.value)}
+                            required
+                            autoComplete="phone"
+                            placeholder="Phone no."
+                        />
+
+                        <FormError classNames="mt-2" message={errors.phone} />
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <Button disabled={processing}>Save</Button>
+                    </div>
+                </form>
+            <DeleteUser />
             </div>
+
         </MainLayout>
     );
 };

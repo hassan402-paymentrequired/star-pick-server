@@ -72,27 +72,22 @@ class PeerService
         $peer->delete();
     }
 
-    public function playBet(Request $request, Peer $peer, string $guard = 'api'): void
+    public function playBet(Request $request, Peer $peer, string $guard = 'api'): bool
     {
-        // Check if peer is open
-        if ($peer->status !== 'open') {
-            throw new ClientErrorException('This peer is not open for joining.');
-        }
-
         // Check if peer is full
         if ($peer->users()->count() === $peer->limit) {
-            throw new ClientErrorException('You cannot join this peer, it has reached its limit');
+            return false;
         }
 
         // Check if user already joined
-        if ($peer->users()->where('user_id', Auth::guard($guard)->id())->exists()) {
-            throw new ClientErrorException('You have already joined this peer.');
+        if ($peer->users()->where('user_id', AuthUser($guard)->id)->exists()) {
+            return false;
         }
 
         // Create peer_user record
         $peerUser = \App\Models\PeerUser::create([
             'peer_id' => $peer->id,
-            'user_id' => Auth::guard($guard)->id(),
+            'user_id' => AuthUser($guard)->id,
             'total_points' => 0,
             'is_winner' => false
         ]);
@@ -108,6 +103,7 @@ class PeerService
                 'sub_player_match_id' => $value['sub_player_match_id'],
             ]);
         }
+        return true;
     }
 
 

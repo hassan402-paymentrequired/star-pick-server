@@ -57,8 +57,8 @@ class AuthService
         return Auth::guard('admin')->login($admin);
     }
 
-    public function logout(): void
+    public function logout($guard = 'api'): void
     {
-        Auth::logout();
+        Auth::guard($guard)->logout();
     }
 }

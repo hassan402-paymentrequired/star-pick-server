@@ -48,7 +48,7 @@ export function Deposit() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Deposit</Button>
+                <Button>Deposit</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Check, Users, DollarSign, Clock, Trophy } from "lucide-react";
+import { Star, Check, Users, DollarSign, Clock, Trophy, BatteryWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import MainLayout from "../layouts/main-layout";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import FormError from "@/components/error";
 
 interface Player {
     player_avatar: string;
@@ -47,15 +48,17 @@ interface Peer {
 export default function JoinPeer({
     peer,
     players,
+    balance
 }: {
     peer: Peer;
     players: PlayerGroup[];
+    balance
 }) {
     const [selectedPlayers, setSelectedPlayers] = useState<SelectedPlayer[]>(
         []
     );
     const [activeTab, setActiveTab] = useState("5");
-    // const {} = useForm({})
+   
 
     const getTierColor = (tier: number) => {
         switch (tier) {
@@ -72,16 +75,7 @@ export default function JoinPeer({
         }
     };
 
-    const renderStars = (tier: number) => {
-        return Array.from({ length: 5 }, (_, i) => (
-            <Star
-                key={i}
-                className={`h-4 w-4 ${
-                    i < tier ? getTierColor(tier) : "text-muted-foreground"
-                } ${i < tier ? "fill-current" : ""}`}
-            />
-        ));
-    };
+
 
     const handlePlayerSelect = (player: Player, type: "main" | "sub") => {
         const isSelected = selectedPlayers.some(
@@ -160,10 +154,6 @@ export default function JoinPeer({
         try {
             // Use Inertia router to submit the form
             router.post(`/peers/join/${peer.id}`, formData, {
-                onSuccess: () => {
-                    // Redirect to peer show page on success
-                    router.visit(route("peers.show", { peer: peer.id }));
-                },
                 onError: (errors) => {
                     console.error("Validation errors:", errors);
                     alert(`Error: ${Object.values(errors).join(", ")}`);
@@ -171,7 +161,7 @@ export default function JoinPeer({
             });
         } catch (error) {
             console.error("Error submitting team:", error);
-            alert("Failed to submit team. Please try again.");
+            toast.error("Failed to submit team. Please try again.");
         }
     };
 
@@ -191,9 +181,18 @@ export default function JoinPeer({
         }
         return 1;
     };
-    console.log(players);
+    // console.log(players);
     return (
-        <MainLayout>
+        <MainLayout
+            alert={
+                Number(balance) < Number(peer.amount) && (
+                    <div className="mt-3 flex items-center gap-2">
+                        <BatteryWarning size={17} color="red" />{" "}
+                        <FormError message="Insufficient balance to join tournament. Please fund your wallet." />
+                    </div>
+                )
+            }
+        >
             <main className="p-5">
                 {/* Peer Info */}
                 <div className=" py-3 bg-[var(--clr-surface-a10)] border-border/10">
@@ -389,7 +388,7 @@ export default function JoinPeer({
                                             >
                                                 <CardContent className="p-4">
                                                     {/* Player vs Team Layout */}
-                                                     <div className="flex items-center mb-3 w-full justify-between">
+                                                    <div className="flex items-center mb-3 w-full justify-between">
                                                         {/* Player Side */}
                                                         <div className="flex items-center  ">
                                                             {/* Player Avatar or Icon */}
@@ -540,18 +539,6 @@ export default function JoinPeer({
                         ))}
                     </Tabs>
                 </div>
-
-                {/* Submit Button */}
-                {selectedPlayers.length === 10 && (
-                    <div className="fixed bottom-24 left-4 right-4 z-40">
-                        <Button
-                            onClick={handleSubmitTeam}
-                            className="w-full text-muted font-bold shadow-floating"
-                        >
-                            Submit Team & Join Peer
-                        </Button>
-                    </div>
-                )}
             </main>
 
             <FloatingBetSlip
@@ -562,9 +549,10 @@ export default function JoinPeer({
                     );
                 }}
                 players={players}
+                handleSubmitTeam={handleSubmitTeam}
+                processing={false}
+                
             />
         </MainLayout>
     );
 }
-
-
