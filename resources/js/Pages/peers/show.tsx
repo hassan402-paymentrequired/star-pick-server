@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import MainLayout from "@/Pages/layouts/main-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import {
     ChevronDown,
     ChevronUp,
     Type,
+    ArrowDownRightSquareIcon,
+    Copy,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import {
@@ -24,6 +26,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { toast } from "sonner";
 
 interface PeerUser {
     id: number;
@@ -73,20 +76,20 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
     const getMatch = async () => {
         await fetch(
             "https://www.sofascore.com/api/v1/event/12436883/player/975079/statistics",
-            
+
             {
                 headers: {
                     "Access-Control-Allow-Origin": "*",
-                }
+                },
             }
-            )
+        )
             .then((response) => response.json())
             .then((data) => console.log(data))
             .catch((e) => console.log(e));
     };
 
     useEffect(() => {
-       const id =  setInterval(() => {
+        const id = setInterval(() => {
             getMatch();
         }, 10000);
 
@@ -113,8 +116,20 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
         }
     };
 
+    const handleCopy = async () => {
+        await navigator.clipboard.writeText(peer.peer_id);
+        toast.success("Peer code copied ✅")
+    }
+
     return (
-        <MainLayout>
+        <MainLayout successDiv={
+            <div className="w-full flex border-b py-1 items-center justify-between px-2">
+                <span>Peer Code: <strong>{peer?.peer_id}</strong> </span>
+                <div onClick={handleCopy} className="flex items-center gap-1 px-2 rounded border border-background">
+                    copy <Copy size={15} />
+                </div>
+            </div>
+        }>
             <Head title={`Peer: ${peer.name}`} />
 
             <div className="space-y-4 p-3">
@@ -129,11 +144,6 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
                         </p>
                     </div>
                     <Badge
-                        className={
-                            peer.status === "open"
-                                ? "bg-[var(--clr-primary-a0)] text-[var(--clr-light-a0)]"
-                                : "bg-[var(--clr-surface-a20)] text-[var(--clr-surface-a50)]"
-                        }
                     >
                         {peer.status === "open" ? "Active" : peer.status}
                     </Badge>
@@ -141,7 +151,7 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
 
                 {/* table */}
 
-                {users.length &&
+                {users.length > 0 &&
                     users.map((user) => (
                         <div
                             key={user.id}
@@ -515,6 +525,35 @@ export default function PeerShow({ peer, users }: PeerShowProps) {
                             </Card>
                         </div>
                     ))}
+
+                {users.length === 0 && (
+                    <div className="flex justify-center py-8">
+                        <div className=" p-6 flex flex-col items-center max-w-xs">
+                            <span className="text-4xl mb-2 animate-bounce">
+                                🤷‍♂️
+                            </span>
+                            <div className="text-center text-muted mb-3">
+                                No player have joined this peer yet
+                                <br />
+                                Be the first to join
+                            </div>
+                            <Link
+                                href={route("peers.join", {
+                                    peer: peer.id,
+                                })}
+                                prefetch
+                            >
+                                <Button
+                                    className="w-full hover:bg-blue-600 text-foreground text-sm font-medium"
+                                    size="sm"
+                                >
+                                    Join Peer
+                                    <ArrowDownRightSquareIcon className="w-3 h-3 mr-1 transition duration-100 group-hover:-rotate-45" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                )}
             </div>
         </MainLayout>
     );

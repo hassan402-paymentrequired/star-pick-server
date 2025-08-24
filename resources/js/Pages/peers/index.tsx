@@ -20,6 +20,7 @@ import {
     HandCoins,
     ArrowDownLeftSquareIcon,
     ArrowDownRightSquareIcon,
+    Search,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -33,6 +34,8 @@ import {
 import "swiper/css";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import SearchPeer from "@/components/ui/search-peer";
 
 interface Peer {
     id: number;
@@ -153,6 +156,8 @@ export default function PeersIndex({ peers, recent, tournament }: PeersProps) {
                         <h3 className="text-lg tracking-wider font-semibold text-[var(--clr-light-a0)]">
                             Recent Peers
                         </h3>
+
+                        <SearchPeer />
                     </div>
 
                     <div className="mb-10">

@@ -33,6 +33,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 
     Route::prefix('peers')->group(function () {
         Route::get('/', [PeerController::class, 'index'])->name('peers.index');
+        Route::get('/search/{search}', [PeerController::class, 'searchPeers'])->name('peers.search');
         Route::get('/contents', [PeerController::class, 'contents'])->name('peers.contents');
         Route::get('/create', [PeerController::class, 'create'])->name('peers.create');
         Route::post('/', [PeerController::class, 'store'])->name('peers.store');

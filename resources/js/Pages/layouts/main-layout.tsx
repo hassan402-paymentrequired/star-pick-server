@@ -7,9 +7,10 @@ import { toast } from "sonner";
 type Props = {
     children: React.ReactNode;
     alert?: React.ReactNode;
+    successDiv?: React.ReactNode;
 };
 
-const MainLayout = ({ children, alert }: Props) => {
+const MainLayout = ({ children, alert, successDiv }: Props) => {
     const {
         flash: { success, error },
     } = usePage<{ flash: { success: string; error: string } }>().props;
@@ -32,6 +33,11 @@ const MainLayout = ({ children, alert }: Props) => {
                 {alert && (
                     <div className="bg-red-100 w-full h-8 items-center  flex justify-center">
                         {alert}
+                    </div>
+                )}
+                {successDiv && (
+                    <div className="w-full mt-3 h-8 items-center  flex justify-center">
+                        {successDiv}
                     </div>
                 )}
                 {children}

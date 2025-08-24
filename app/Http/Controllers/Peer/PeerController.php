@@ -44,7 +44,6 @@ class PeerController extends Controller
             ->get();
 
 
-
         $peers = Peer::with('created_by')->whereDoesntHave('users', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->withCount('users')->latest()->paginate(10);
@@ -54,6 +53,22 @@ class PeerController extends Controller
             'recent' => $recent,
             'peers' => $peers,
         ]);
+    }
+
+    public function searchPeers(string $search)
+    {
+        $peers = [];
+        if ($search) {
+
+            $user = auth('web')->user();
+            $peers = Peer::with('created_by')->whereDoesntHave('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+                ->where('peer_id',  $search)
+                ->withCount('users')->get();
+        }
+
+        return response()->json(['peers' => $peers]);
     }
 
     public function create()
