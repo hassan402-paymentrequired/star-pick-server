@@ -36,14 +36,14 @@ export default defineConfig({
             }
         }
     },
-    // server: {
-    //     host: true,
-    //     port: 5173,
-    //     origin: 'http://83.147.36.29:5173',
-    //     cors: {
-    //         origin: 'http://83.147.36.29',
-    //         credentials: true,
-    //     },
-    // },
+    server: {
+        host: true,
+        port: 5173,
+        origin: 'http://83.147.36.29:5173',
+        cors: {
+            origin: 'http://83.147.36.29',
+            credentials: true,
+        },
+    },
 
 });
