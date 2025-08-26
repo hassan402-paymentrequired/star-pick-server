@@ -9,8 +9,7 @@ Route::post('/register', [\App\Http\Controllers\V1\Auth\RegisterUserController::
     ->name('auth.register');
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('/logout', [\App\Http\Controllers\V1\Auth\SessionController::class, 'logout'])
-        ->name('auth.logout');
+    Route::post('/logout', [\App\Http\Controllers\V1\Auth\SessionController::class, 'logout']);
     Route::post('/setup-username', [\App\Http\Controllers\V1\Auth\RegisterUserController::class, 'setupUsername'])
         ->name('auth.setup-username');
 

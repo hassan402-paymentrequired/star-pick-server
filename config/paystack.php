@@ -7,6 +7,4 @@ return [
     'public_key' => env('PAYSTACK_PUBLIC_KEY', null),
     'webhook_secret' => env('PAYSTACK_WEBHOOK_SECRET', null),
     'currency' => env('PAYSTACK_CURRENCY', 'NGN'),
-    'default_bank_code' => env('PAYSTACK_VIRTUAL_WALLET_DEFAULT_BANK_CODE', '035'),
-    'default_bank_name' => env('PAYSTACK_VIRTUAL_WALLET_DEFAULT_BANK_NAME', 'Wema Bank'),
 ]; 

@@ -43,6 +43,7 @@ class PeerController extends Controller
             ->take(4)
             ->get();
 
+        // dd($tournament);
 
         $peers = Peer::with('created_by')->whereDoesntHave('users', function ($query) use ($user) {
             $query->where('user_id', $user->id);

@@ -12,14 +12,14 @@ import { Link } from "@inertiajs/react";
 const Nabar = () => {
     return (
         <div className="w-full  z-[999] border-t backdrop-blur-lg">
-            <div className="h-16 border-t-2 z-[999] w-full bg-foreground  py-2 px-4 bottom-0 absolute grid grid-cols-5 items-center">
+            <div className="h-16 border-t-2 z-[999] w-full bg-foreground py-2 sm:px-4 bottom-0 absolute grid grid-cols-5 items-center">
                 <Link
                     prefetch
                     href={"/peers"}
                     className="flex flex-col items-center"
                 >
                     <Logs size={18} color="#8f8f8f" />
-                    <span className="text-sm text-[var(--clr-primary-a0)]">
+                    <span className="text-sm ">
                         Home
                     </span>
                 </Link>
@@ -29,7 +29,7 @@ const Nabar = () => {
                     prefetch
                 >
                     <Swords size={18} color="#8f8f8f" />
-                    <span className="text-sm text-[var(--clr-surface-a50)]">
+                    <span className="text-sm">
                         My Contests
                     </span>
                 </Link>

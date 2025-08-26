@@ -29,7 +29,6 @@ class PaystackService
                 'public_key' => $this->publicKey ? 'set' : 'missing',
                 'base_url' => $this->baseUrl,
             ]);
-            throw new ClientErrorException('Paystack API keys or base URL not configured', 500);
         }
 
         $this->httpClient = new \GuzzleHttp\Client([
