@@ -21,20 +21,7 @@ export default defineConfig({
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
             '@': '/resources/js',
-            // '@': '/resources/ts',
         },
-    },
-    build: {
-        chunkSizeWarningLimit: 1600,
-        rollupOptions: {
-            output: {
-                manualChunks(id) {
-                    if (id.includes('node_modules')) {
-                        return 'vendor';
-                    }
-                },
-            }
-        }
     },
     server: {
         host: true,
