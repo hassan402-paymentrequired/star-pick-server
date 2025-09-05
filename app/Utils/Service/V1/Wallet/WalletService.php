@@ -332,4 +332,81 @@ class WalletService
         ]);
         return  json_decode($response->getBody()->getContents(), true);
     }
+
+
+    public function processWebhook(Request $request)
+    {
+        $signature = $request->header('x-paystack-signature');
+
+        if (!$signature || $signature !== hash_hmac('sha512', $request->getContent(), $this->webhookSecret)) {
+            Log::warning('PaystackService: Invalid webhook signature', [
+                'received_signature' => $signature,
+            ]);
+            return false;
+        }
+
+        $payload = $request->all();
+
+        if (!isset($payload['event']) || !isset($payload['data'])) {
+            Log::warning('PaystackService: Invalid webhook payload', [
+                'payload' => $payload,
+            ]);
+            return false;
+        }
+
+        $event = $payload['event'];
+        $data = $payload['data'];
+
+        switch ($event) {
+            case 'transfer.success':
+                $this->handleTransferSuccess($data);
+                break;
+            case 'transfer.failed':
+                $this->handleTransferFailed($data);
+                break;
+            case 'transfer.reversed':
+                $this->handleTransferReverse($data);
+                break;
+            default:
+                Log::info('PaystackService: Unhandled webhook event', [
+                    'event' => $event,
+                    'data' => $data,
+                ]);
+                break;
+        }
+
+        return true;
+    }
+
+
+    private function handleTransferReverse(array $data)
+    {
+        $reference = $data['reference'] ?? null;
+
+        if (!$reference) {
+            Log::warning('PaystackService: Charge success webhook missing reference', [
+                'data' => $data,
+            ]);
+            return;
+        }
+
+        $this->paymentCallback($reference);
+    }
+
+
+    private function handleTransferSuccess(array $data)
+    {
+
+        Log::info('PaystackService: Transfer success webhook', [
+            'data' => $data,
+        ]);
+    }
+
+
+    private function handleTransferFailed(array $data)
+    {
+        Log::info('PaystackService: Transfer failed webhook', [
+            'data' => $data,
+        ]);
+    }
 }

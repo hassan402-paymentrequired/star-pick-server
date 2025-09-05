@@ -58,6 +58,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/transactions/{transactionId}', [WalletController::class, 'getTransactionDetails']);
         Route::post('/bank-account-verify', [WalletController::class, 'verifyBankAccount'])->name('bank.account.verify');
         Route::post('/withdraw-funds', [WalletController::class, 'initiateWithdrawal'])->name('fund.withdraw');
+        // Route::post('/transfer-verify', [WalletController::class, 'VerityTransfer'])->name('fund.transfer.verify');
     });
 
 
@@ -66,9 +67,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
         Route::get('/', [ProfileControlle::class, 'index'])->name('profile.index');
         Route::patch('settings/profile', [ProfileControlle::class, 'update'])->name('profile.update');
     });
-
 });
 
 Route::prefix('webhooks')->group(function () {
-    // Route::post('/paystack/payment', [\App\Http\Controllers\Customers\WalletController::class, 'processWebhook']);
+    Route::post('/paystack/transfer-verify', [WalletController::class, 'VerityTransfer'])->name('fund.transfer.verify');
 });

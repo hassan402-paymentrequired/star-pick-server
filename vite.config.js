@@ -39,9 +39,9 @@ export default defineConfig({
     server: {
         host: true,
         port: 5173,
-        origin: 'http://83.147.36.29:5173',
+        origin: 'https://starpick.com.ng',
         cors: {
-            origin: 'http://83.147.36.29',
+            origin: 'https://starpick.com.ng',
             credentials: true,
         },
     },

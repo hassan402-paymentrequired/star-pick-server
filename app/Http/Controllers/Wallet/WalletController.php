@@ -110,4 +110,22 @@ class WalletController extends Controller
       return back()->with('error', 'Unable to verify bank account. Please check the account number.');
     }
   }
+
+
+  public function VerityTransfer(Request $request)
+  {
+    try {
+      $transferData = $this->walletService->processWebhook($request);
+
+      if (!$transferData) {
+        return back()->with('error', 'Unable to verify transfer. Please check the transfer code.');
+      }
+
+      return back()->with('data', $transferData);
+    } catch (\Exception $e) {
+      // dd($e->getMessage());
+      Log::error('Transfer verification failed: ' . $e->getMessage());
+      return back()->with('error', 'Unable to verify transfer. Please check the transfer code.');
+    }
+  }
 }
