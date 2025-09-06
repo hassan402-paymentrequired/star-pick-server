@@ -20,6 +20,15 @@ export default defineConfig({
             '@': '/resources/js',
         },
     },
+    server: {
+        host: true,
+        port: 5173,
+        origin: 'https://starpick.com.ng:5173',
+        cors: {
+            origin: 'https://starpick.com.ng',
+            credentials: true,
+        },
+    },
 
 
 });
