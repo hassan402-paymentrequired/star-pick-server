@@ -31,9 +31,9 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     @routes
     {{-- ✅ REMOVED: @viteReactRefresh --}}
-    @if (app()->environment('local'))
+    {{-- @if (app()->environment('local'))
         @viteReactRefresh
-    @endif
+    @endif --}}
     @vite('resources/js/app.tsx')
     @inertiaHead
 </head>
