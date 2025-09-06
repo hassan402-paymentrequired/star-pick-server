@@ -8,29 +8,18 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
-            ssr: 'resources/js/ssr.tsx',
+            // ssr: 'resources/js/ssr.tsx',
             refresh: true,
         }),
         react(),
         tailwindcss(),
     ],
-    esbuild: {
-        jsx: 'automatic',
-    },
     resolve: {
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
             '@': '/resources/js',
         },
     },
-    server: {
-        host: true,
-        port: 5173,
-        origin: 'https://starpick.com.ng',
-        cors: {
-            origin: 'https://starpick.com.ng',
-            credentials: true,
-        },
-    },
+
 
 });
